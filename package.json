@@ -38,7 +38,7 @@
     "url": "http://vizzuality.com/"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=11"
   },
   "license": "MIT",
   "bugs": {

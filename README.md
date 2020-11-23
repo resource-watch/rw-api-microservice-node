@@ -7,6 +7,11 @@ Library to register and integrate microservices in the [RW API](https://api.reso
 
 Supports [Koa](https://koajs.com/) 2.x and 1.x frameworks. 
 
+
+## Requirements
+
+- Nodej́s v11 or greater
+
 ## Install
 
 Using NPM:
