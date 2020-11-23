@@ -21,7 +21,37 @@ describe('Microservice register - Koa v1.x', () => {
         nock.cleanAll();
     });
 
-    it('Microservice register with Koa v1 should register the Koa middleware and make a call to the microservice endpoint on CT (happy case)', async () => {
+    it('Microservice register without Koa v1 and auto-register should register the Koa middleware and make a call to the microservice endpoint on CT (happy case)', async () => {
+        const app = new Koa();
+
+        app.middleware.should.have.length(0);
+
+        const logger = bunyan.createLogger({
+            name: 'logger name',
+            src: true,
+            streams: []
+        });
+
+        const registerOptions: RWAPIMicroservice.RegisterOptions = {
+            info: { name: 'test MS' },
+            swagger: { swagger: 'test swagger' },
+            mode: microservice.MODE_NORMAL,
+            framework: microservice.KOA1,
+            app,
+            logger,
+            name: 'test MS',
+            ctUrl: 'https://controltower.dev',
+            url: 'https://microservice.dev',
+            token: 'ABCDEF',
+            active: true
+        };
+
+        await microservice.register(registerOptions)
+
+        app.middleware.should.have.length(1);
+    });
+
+    it('Microservice register with Koa v1 and auto-register should register the Koa middleware and make a call to the microservice endpoint on CT (happy case)', async () => {
         const app = new Koa();
 
         app.middleware.should.have.length(0);
@@ -33,14 +63,7 @@ describe('Microservice register - Koa v1.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice', (body) => {
-                return body ===
-                    {
-                        "name": "test MS",
-                        "url": "https://microservice.dev",
-                        "active": true
-                    };
-            })
+            .post('/api/v1/microservice')
             .reply(200);
 
         const registerOptions: RWAPIMicroservice.RegisterOptions = {
@@ -61,7 +84,6 @@ describe('Microservice register - Koa v1.x', () => {
 
         app.middleware.should.have.length(1);
     });
-
 
     afterEach(() => {
         if (!nock.isDone()) {
