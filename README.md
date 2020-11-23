@@ -1,6 +1,9 @@
 # RW API microservice utility for Nodejs applications
 
-Library to register and integrate microservice in the [RW API](https://api.resourcewatch.org/).
+[![Build Status](https://travis-ci.com/resource-watch/rw-api-microservice-node.svg?branch=main)](https://travis-ci.com/resource-watch/rw-api-microservice-node)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/ee1ee2cab3d50b46fcd1/test_coverage)](https://codeclimate.com/github/resource-watch/rw-api-microservice-node/test_coverage)
+
+Library to register and integrate microservices in the [RW API](https://api.resourcewatch.org/).
 
 Supports [Koa](https://koajs.com/) 2.x and 1.x frameworks. 
 
