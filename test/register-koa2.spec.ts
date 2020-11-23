@@ -21,7 +21,7 @@ describe('Microservice register - Koa v2.x', () => {
         nock.cleanAll();
     });
 
-    it('Microservice register without Koa v1 and auto-register should register the Koa middleware and make a call to the microservice endpoint on CT (happy case)', async () => {
+    it('Microservice register without Koa v2 and auto-register should register the Koa middleware and make a call to the microservice endpoint on CT (happy case)', async () => {
         const app = new Koa();
 
         app.middleware.should.have.length(0);
@@ -51,7 +51,7 @@ describe('Microservice register - Koa v2.x', () => {
         app.middleware.should.have.length(1);
     });
 
-    it('Microservice register with Koa v1 and auto-register should register the Koa middleware and make a call to the microservice endpoint on CT (happy case)', async () => {
+    it('Microservice register with Koa v2 and auto-register should register the Koa middleware and make a call to the microservice endpoint on CT (happy case)', async () => {
         const app = new Koa();
 
         app.middleware.should.have.length(0);
