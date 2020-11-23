@@ -4,14 +4,14 @@ import chai from 'chai';
 import microservice from 'main';
 import bunyan from "bunyan";
 // @ts-ignore
-import Koa from "koa1";
+import Koa from "koa2";
 import type RWAPIMicroservice from '../types';
 
 chai.should();
 
 nock.disableNetConnect();
 
-describe('Microservice register - Koa v1.x', () => {
+describe('Microservice register - Koa v2.x', () => {
 
     before(async () => {
         if (process.env.NODE_ENV !== 'test') {
@@ -21,7 +21,7 @@ describe('Microservice register - Koa v1.x', () => {
         nock.cleanAll();
     });
 
-    it('Microservice register with Koa v1 should register the Koa middleware and make a call to the microservice endpoint on CT (happy case)', async () => {
+    it('Microservice register v2 (happy case)', async () => {
         const app = new Koa();
 
         app.middleware.should.have.length(0);
@@ -47,7 +47,7 @@ describe('Microservice register - Koa v1.x', () => {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
             mode: microservice.MODE_AUTOREGISTER,
-            framework: microservice.KOA1,
+            framework: microservice.KOA2,
             app,
             logger,
             name: 'test MS',
