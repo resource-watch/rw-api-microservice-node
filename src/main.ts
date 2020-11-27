@@ -127,10 +127,10 @@ class Microservice implements RWAPIMicroservice.RWAPIMicroservice {
 
     public async requestToMicroservice(requestConfig: request.OptionsWithUri & RWAPIMicroservice.RequestToMicroserviceOptions): Promise<Record<string, any>> {
         this.options.logger.info('Adding authentication header');
-        // @ts-ignore
         const axiosRequestConfig: AxiosRequestConfig = {
             baseURL: this.options.baseURL,
             data: requestConfig.body,
+            // @ts-ignore
             method: requestConfig.method
         }
 
