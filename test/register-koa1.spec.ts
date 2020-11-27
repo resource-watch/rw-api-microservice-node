@@ -48,7 +48,7 @@ describe('Microservice register - Koa v1.x', () => {
             app,
             logger,
             name: 'test MS',
-            ctUrl: 'https://controltower.dev',
+            baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
             active: true
@@ -71,7 +71,11 @@ describe('Microservice register - Koa v1.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice')
+            .post('/api/v1/microservice', {
+                name: "test MS",
+                url: "https://microservice.dev",
+                active: true
+            })
             .reply(200);
 
         const registerOptions: RWAPIMicroservice.RegisterOptions = {
@@ -82,7 +86,7 @@ describe('Microservice register - Koa v1.x', () => {
             app,
             logger,
             name: 'test MS',
-            ctUrl: 'https://controltower.dev',
+            baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
             active: true
@@ -103,8 +107,11 @@ describe('Microservice register - Koa v1.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice')
-            .reply(200);
+            .post('/api/v1/microservice', {
+                name: "test MS",
+                url: "https://microservice.dev",
+                active: true
+            })            .reply(200);
 
         const registerOptions: RWAPIMicroservice.RegisterOptions = {
             info: { name: 'test MS' },
@@ -114,7 +121,7 @@ describe('Microservice register - Koa v1.x', () => {
             app,
             logger,
             name: 'test MS',
-            ctUrl: 'https://controltower.dev',
+            baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
             active: true
@@ -147,7 +154,11 @@ describe('Microservice register - Koa v1.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice')
+             .post('/api/v1/microservice', {
+                name: "test MS",
+                url: "https://microservice.dev",
+                active: true
+            })
             .reply(200);
 
         const registerOptions: RWAPIMicroservice.RegisterOptions = {
@@ -158,7 +169,7 @@ describe('Microservice register - Koa v1.x', () => {
             app,
             logger,
             name: 'test MS',
-            ctUrl: 'https://controltower.dev',
+            baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
             active: true

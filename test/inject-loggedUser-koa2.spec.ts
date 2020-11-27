@@ -40,7 +40,11 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice')
+             .post('/api/v1/microservice', {
+                name: "test MS",
+                url: "https://microservice.dev",
+                active: true
+            })
             .reply(200);
 
         nock('https://controltower.dev')
@@ -55,7 +59,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
             app,
             logger,
             name: 'test MS',
-            ctUrl: 'https://controltower.dev',
+            baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
             active: true
@@ -99,7 +103,11 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice')
+             .post('/api/v1/microservice', {
+                name: "test MS",
+                url: "https://microservice.dev",
+                active: true
+            })
             .reply(200);
 
         nock('https://controltower.dev')
@@ -114,7 +122,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
             app,
             logger,
             name: 'test MS',
-            ctUrl: 'https://controltower.dev',
+            baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
             active: true
@@ -158,7 +166,11 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice')
+             .post('/api/v1/microservice', {
+                name: "test MS",
+                url: "https://microservice.dev",
+                active: true
+            })
             .reply(200);
 
         nock('https://controltower.dev')
@@ -173,7 +185,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
             app,
             logger,
             name: 'test MS',
-            ctUrl: 'https://controltower.dev',
+            baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
             active: true
@@ -220,7 +232,11 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice')
+             .post('/api/v1/microservice', {
+                name: "test MS",
+                url: "https://microservice.dev",
+                active: true
+            })
             .reply(200);
 
         nock('https://controltower.dev')
@@ -235,7 +251,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
             app,
             logger,
             name: 'test MS',
-            ctUrl: 'https://controltower.dev',
+            baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
             active: true
@@ -282,7 +298,11 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice')
+             .post('/api/v1/microservice', {
+                name: "test MS",
+                url: "https://microservice.dev",
+                active: true
+            })
             .reply(200);
 
         nock('https://controltower.dev')
@@ -297,7 +317,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
             app,
             logger,
             name: 'test MS',
-            ctUrl: 'https://controltower.dev',
+            baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
             active: true

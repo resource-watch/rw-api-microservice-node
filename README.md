@@ -39,7 +39,7 @@ const promise = RWAPIMicroservice.register({
     mode: 'auto',
     framework: ctRegisterMicroservice.KOA2,
     token: '<your control tower token>',
-    ctUrl: '<your control tower instance URL>'
+    baseURL: '<your control tower instance URL>'
 });
 
 promise.then(function() {
