@@ -5,16 +5,28 @@ import type RWAPIMicroservice from '../types';
 import type request from "request";
 import type Logger from "bunyan";
 
+/**
+ * @deprecated Koa1 support will be removed soon
+ */
 const KOA1 = 'KOA1';
 const KOA2 = 'KOA2';
+/**
+ * @deprecated
+ */
 const EXPRESS = 'EXPRESS';
+/**
+ * @deprecated
+ */
 const MODE_AUTOREGISTER = 'MODE_AUTOREGISTER';
+/**
+ * @deprecated
+ */
 const MODE_NORMAL = 'MODE_NORMAL';
 
 class Microservice implements RWAPIMicroservice.RWAPIMicroservice {
     public options: RWAPIMicroservice.RegisterOptions;
     public KOA1: string = KOA1;
-    public KOA2: string = KOA1;
+    public KOA2: string = KOA2;
     public EXPRESS: string = EXPRESS;
     public MODE_AUTOREGISTER: string = MODE_AUTOREGISTER;
     public MODE_NORMAL: string = MODE_NORMAL;
