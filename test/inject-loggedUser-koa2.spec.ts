@@ -62,7 +62,6 @@ describe('Injecting logged user data - Koa v2.x', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
-            active: true
         };
 
         const testRouter: Router = new Router();
@@ -125,7 +124,6 @@ describe('Injecting logged user data - Koa v2.x', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
-            active: true
         };
 
         const testRouter: Router = new Router();
@@ -188,7 +186,6 @@ describe('Injecting logged user data - Koa v2.x', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
-            active: true
         };
 
         const testRouter: Router = new Router();
@@ -254,7 +251,6 @@ describe('Injecting logged user data - Koa v2.x', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
-            active: true
         };
 
         const testRouter: Router = new Router();
@@ -320,7 +316,6 @@ describe('Injecting logged user data - Koa v2.x', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
-            active: true
         };
 
         const testRouter: Router = new Router();

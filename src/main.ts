@@ -25,8 +25,8 @@ const MODE_NORMAL = 'MODE_NORMAL';
 
 class Microservice implements RWAPIMicroservice.RWAPIMicroservice {
     public options: RWAPIMicroservice.RegisterOptions;
-    public KOA1: string = KOA1;
-    public KOA2: string = KOA2;
+    public KOA1: 'KOA1' = KOA1;
+    public KOA2: 'KOA2' = KOA2;
     public EXPRESS: string = EXPRESS;
     public MODE_AUTOREGISTER: string = MODE_AUTOREGISTER;
     public MODE_NORMAL: string = MODE_NORMAL;
@@ -127,10 +127,10 @@ class Microservice implements RWAPIMicroservice.RWAPIMicroservice {
 
     public async requestToMicroservice(requestConfig: request.OptionsWithUri & RWAPIMicroservice.RequestToMicroserviceOptions): Promise<Record<string, any>> {
         this.options.logger.info('Adding authentication header');
+        // @ts-ignore
         const axiosRequestConfig: AxiosRequestConfig = {
             baseURL: this.options.baseURL,
             data: requestConfig.body,
-            // @ts-ignore
             method: requestConfig.method
         }
 
