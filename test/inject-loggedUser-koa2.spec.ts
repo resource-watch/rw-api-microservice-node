@@ -1,6 +1,7 @@
 import nock from 'nock';
-import chai from 'chai';
+import chai, { expect } from 'chai';
 import microservice from 'main';
+import type Logger from "bunyan";
 import bunyan from "bunyan";
 import type Koa from "koa";
 import Router from "koa-router";
@@ -11,7 +12,6 @@ import type RWAPIMicroservice from '../types';
 import type { Server } from "http";
 import type Request from "superagent";
 import constants from './utils/test.constants';
-import { expect } from 'chai';
 
 chai.should();
 
@@ -40,7 +40,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         nock('https://controltower.dev')
-             .post('/api/v1/microservice', {
+            .post('/api/v1/microservice', {
                 name: "test MS",
                 url: "https://microservice.dev",
                 active: true
@@ -102,7 +102,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         nock('https://controltower.dev')
-             .post('/api/v1/microservice', {
+            .post('/api/v1/microservice', {
                 name: "test MS",
                 url: "https://microservice.dev",
                 active: true
@@ -164,7 +164,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         nock('https://controltower.dev')
-             .post('/api/v1/microservice', {
+            .post('/api/v1/microservice', {
                 name: "test MS",
                 url: "https://microservice.dev",
                 active: true
@@ -229,7 +229,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         nock('https://controltower.dev')
-             .post('/api/v1/microservice', {
+            .post('/api/v1/microservice', {
                 name: "test MS",
                 url: "https://microservice.dev",
                 active: true
@@ -294,7 +294,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         nock('https://controltower.dev')
-             .post('/api/v1/microservice', {
+            .post('/api/v1/microservice', {
                 name: "test MS",
                 url: "https://microservice.dev",
                 active: true

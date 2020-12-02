@@ -1,7 +1,7 @@
 import convert from 'koa-convert';
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import type { Context, Next } from "koa";
-import type { RWAPIMicroservice, RegisterOptions, RequestToMicroserviceOptions } from '../types';
+import type { RegisterOptions, RequestToMicroserviceOptions, RWAPIMicroservice } from '../types';
 import type request from "request";
 import type Logger from "bunyan";
 

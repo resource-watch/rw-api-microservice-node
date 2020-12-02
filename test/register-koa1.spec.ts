@@ -2,6 +2,7 @@ import nock from 'nock';
 import chai from 'chai';
 
 import microservice from 'main';
+import type Logger from "bunyan";
 import bunyan from "bunyan";
 import type Koa from "koa";
 // @ts-ignore
@@ -109,7 +110,7 @@ describe('Microservice register - Koa v1.x', () => {
                 name: "test MS",
                 url: "https://microservice.dev",
                 active: true
-            })            .reply(200);
+            }).reply(200);
 
         const registerOptions: RWAPIMicroservice.RegisterOptions = {
             info: { name: 'test MS' },
@@ -151,7 +152,7 @@ describe('Microservice register - Koa v1.x', () => {
         });
 
         nock('https://controltower.dev')
-             .post('/api/v1/microservice', {
+            .post('/api/v1/microservice', {
                 name: "test MS",
                 url: "https://microservice.dev",
                 active: true

@@ -49,3 +49,19 @@ promise.then(function() {
     process.exit(1);
 });
 ```
+
+
+## Configuration
+
+These are the values you'll need to provide when using this library:
+
+- info: (**deprecated**) Object containing the microservice details. See [this link](https://github.com/resource-watch/dataset/blob/ab23e379362680e9899ac8f191589988f0b7c1cd/app/microservice/register.json) for an example.
+- swagger: (**deprecated**) Object, in Swagger format, of the endpoints offered by the microservice to API end users.
+- mode: (**deprecated**) Use `microservice.MODE_AUTOREGISTER` for the microservice to register automatically.
+- framework: use `microservice.KOA1` or `microservice.KOA2`, matching the version of Koa you're using. Koa v1 should be considered deprecated. 
+- app: the Koa application object (from `const koa = new Koa()`).
+- logger: a `bunyan` logger object, for logging purposes.
+- name: the name of the service.
+- baseURL: the URL of the API as a whole, where all other services will be reachable.
+- url: the URL where your service will be reachable
+- token: JWT token to use on calls to other services.
