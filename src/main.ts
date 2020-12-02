@@ -1,7 +1,7 @@
 import convert from 'koa-convert';
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import type { Context, Next } from "koa";
-import type RWAPIMicroservice from '../types';
+import type { RWAPIMicroservice, RegisterOptions, RequestToMicroserviceOptions } from '../types';
 import type request from "request";
 import type Logger from "bunyan";
 
@@ -23,8 +23,8 @@ const MODE_AUTOREGISTER: 'MODE_AUTOREGISTER' = 'MODE_AUTOREGISTER';
  */
 const MODE_NORMAL: 'MODE_NORMAL' = 'MODE_NORMAL';
 
-class Microservice implements RWAPIMicroservice.RWAPIMicroservice {
-    public options: RWAPIMicroservice.RegisterOptions;
+class Microservice implements RWAPIMicroservice {
+    public options: RegisterOptions;
     public KOA1: 'KOA1' = KOA1;
     public KOA2: 'KOA2' = KOA2;
     public EXPRESS: string = EXPRESS;
@@ -90,7 +90,7 @@ class Microservice implements RWAPIMicroservice.RWAPIMicroservice {
         };
     }
 
-    public async register(opts: RWAPIMicroservice.RegisterOptions): Promise<any> {
+    public async register(opts: RegisterOptions): Promise<any> {
         this.options = opts;
 
         const { app, logger, baseURL, info, swagger, mode } = this.options;
@@ -125,7 +125,7 @@ class Microservice implements RWAPIMicroservice.RWAPIMicroservice {
         }
     }
 
-    public async requestToMicroservice(requestConfig: request.OptionsWithUri & RWAPIMicroservice.RequestToMicroserviceOptions): Promise<Record<string, any>> {
+    public async requestToMicroservice(requestConfig: request.OptionsWithUri & RequestToMicroserviceOptions): Promise<Record<string, any>> {
         this.options.logger.info('Adding authentication header');
         const axiosRequestConfig: AxiosRequestConfig = {
             baseURL: this.options.baseURL,
