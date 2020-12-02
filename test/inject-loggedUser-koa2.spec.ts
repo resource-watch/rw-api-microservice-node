@@ -33,7 +33,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
     it('GET request with a JWT token in the header should fetch the user data and pass it along as loggedUser (happy case)', async () => {
         const app: Koa = new Koa2();
 
-        const logger = bunyan.createLogger({
+        const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
             streams: []
@@ -73,7 +73,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
 
         app.use(koaBody());
 
-        await microservice.register(registerOptions)
+        await microservice.register(registerOptions);
 
         app
             .use(testRouter.routes())
@@ -95,7 +95,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
     it('DELETE request with a JWT token in the header should fetch the user data and pass it along as loggedUser (happy case)', async () => {
         const app: Koa = new Koa2();
 
-        const logger = bunyan.createLogger({
+        const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
             streams: []
@@ -135,7 +135,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
 
         app.use(koaBody());
 
-        await microservice.register(registerOptions)
+        await microservice.register(registerOptions);
 
         app
             .use(testRouter.routes())
@@ -157,7 +157,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
     it('POST request with a JWT token in the header should fetch the user data and pass it along as loggedUser (happy case)', async () => {
         const app: Koa = new Koa2();
 
-        const logger = bunyan.createLogger({
+        const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
             streams: []
@@ -198,7 +198,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
 
         app.use(koaBody());
 
-        await microservice.register(registerOptions)
+        await microservice.register(registerOptions);
 
         app
             .use(testRouter.routes())
@@ -222,7 +222,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
     it('PATCH request with a JWT token in the header should fetch the user data and pass it along as loggedUser (happy case)', async () => {
         const app: Koa = new Koa2();
 
-        const logger = bunyan.createLogger({
+        const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
             streams: []
@@ -263,7 +263,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
 
         app.use(koaBody());
 
-        await microservice.register(registerOptions)
+        await microservice.register(registerOptions);
 
         app
             .use(testRouter.routes())
@@ -287,7 +287,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
     it('PUT request with a JWT token in the header should fetch the user data and pass it along as loggedUser (happy case)', async () => {
         const app: Koa = new Koa2();
 
-        const logger = bunyan.createLogger({
+        const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
             streams: []
@@ -328,7 +328,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
 
         app.use(koaBody());
 
-        await microservice.register(registerOptions)
+        await microservice.register(registerOptions);
 
         app
             .use(testRouter.routes())

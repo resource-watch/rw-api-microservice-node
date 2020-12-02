@@ -1,5 +1,5 @@
 import convert from 'koa-convert';
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import type { Context, Next } from "koa";
 import type RWAPIMicroservice from '../types';
 import type request from "request";
@@ -8,20 +8,20 @@ import type Logger from "bunyan";
 /**
  * @deprecated Koa1 support will be removed soon
  */
-const KOA1 = 'KOA1';
-const KOA2 = 'KOA2';
+const KOA1: 'KOA1' = 'KOA1';
+const KOA2: 'KOA2' = 'KOA2';
 /**
  * @deprecated
  */
-const EXPRESS = 'EXPRESS';
+const EXPRESS: 'EXPRESS' = 'EXPRESS';
 /**
  * @deprecated
  */
-const MODE_AUTOREGISTER = 'MODE_AUTOREGISTER';
+const MODE_AUTOREGISTER: 'MODE_AUTOREGISTER' = 'MODE_AUTOREGISTER';
 /**
  * @deprecated
  */
-const MODE_NORMAL = 'MODE_NORMAL';
+const MODE_NORMAL: 'MODE_NORMAL' = 'MODE_NORMAL';
 
 class Microservice implements RWAPIMicroservice.RWAPIMicroservice {
     public options: RWAPIMicroservice.RegisterOptions;
@@ -31,8 +31,8 @@ class Microservice implements RWAPIMicroservice.RWAPIMicroservice {
     public MODE_AUTOREGISTER: string = MODE_AUTOREGISTER;
     public MODE_NORMAL: string = MODE_NORMAL;
 
-    private async registerOnCT(name: string, url: string, baseURL: string) {
-        const response = await axios({
+    private async registerOnCT(name: string, url: string, baseURL: string): Promise<Record<string, any>> {
+        const response: AxiosResponse<any> = await axios({
             baseURL,
             url: `/api/v1/microservice`,
             data: {
@@ -45,7 +45,7 @@ class Microservice implements RWAPIMicroservice.RWAPIMicroservice {
         return response.data;
     }
 
-    private registerCTRoutesMiddleware(info: Record<string, any>, swagger: Record<string, any>, logger: Logger) {
+    private registerCTRoutesMiddleware(info: Record<string, any>, swagger: Record<string, any>, logger: Logger): (ctx: Context, next: Next) => Promise<void> {
         return async (ctx: Context, next: Next) => {
             if (ctx.path === '/info') {
                 logger.info('Obtaining info to register microservice');
@@ -57,14 +57,14 @@ class Microservice implements RWAPIMicroservice.RWAPIMicroservice {
                 return;
             }
             await next();
-        }
+        };
     }
 
-    private getLoggedUserMiddleware(logger: Logger, baseURL: string) {
+    private getLoggedUserMiddleware(logger: Logger, baseURL: string): (ctx: Context, next: Next) => Promise<void> {
         return async (ctx: Context, next: Next) => {
             if (!ctx.request.header.authorization) {
                 await next();
-                return
+                return;
             }
 
             logger.info('Obtaining loggedUser for token');
@@ -78,16 +78,16 @@ class Microservice implements RWAPIMicroservice.RWAPIMicroservice {
                 }
             };
 
-            const response = await axios(getUserDetailsRequestConfig);
+            const response: AxiosResponse<Record<string, any>> = await axios(getUserDetailsRequestConfig);
 
             if (['GET', 'DELETE'].includes(ctx.request.method.toUpperCase())) {
                 ctx.request.query.loggedUser = JSON.stringify(response.data);
             } else if (['POST', 'PATCH', 'PUT'].includes(ctx.request.method.toUpperCase())) {
                 ctx.request.body.loggedUser = response.data;
-            };
+            }
 
             await next();
-        }
+        };
     }
 
     public async register(opts: RWAPIMicroservice.RegisterOptions): Promise<any> {
@@ -109,7 +109,7 @@ class Microservice implements RWAPIMicroservice.RWAPIMicroservice {
                 app.use(this.registerCTRoutesMiddleware(info, swagger, logger));
                 break;
             default:
-                throw new Error('Unsupported framework')
+                throw new Error('Unsupported framework');
         }
 
         logger.debug('Checking mode');
@@ -132,10 +132,10 @@ class Microservice implements RWAPIMicroservice.RWAPIMicroservice {
             data: requestConfig.body,
             // @ts-ignore
             method: requestConfig.method
-        }
+        };
 
         try {
-            let version = '';
+            let version: string = '';
 
             if (process.env.API_VERSION && requestConfig.version !== false) {
                 version = `/${process.env.API_VERSION}`;
@@ -148,7 +148,7 @@ class Microservice implements RWAPIMicroservice.RWAPIMicroservice {
                 axiosRequestConfig.headers.app_key = JSON.stringify({ application: requestConfig.application });
             }
 
-            const response = await axios(axiosRequestConfig);
+            const response: AxiosResponse<Record<string, any>> = await axios(axiosRequestConfig);
             return response.data;
         } catch (err) {
             this.options.logger.error('Error to doing request', err);

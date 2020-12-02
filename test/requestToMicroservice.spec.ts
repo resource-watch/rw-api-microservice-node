@@ -31,7 +31,7 @@ describe('Request to microservice', () => {
             .get('/dataset/1')
             .reply(200, 'ok');
 
-        const response = await microservice.requestToMicroservice(requestOptions);
+        const response: Record<string, any> = await microservice.requestToMicroservice(requestOptions);
 
         response.should.equal('ok');
     });
@@ -50,7 +50,7 @@ describe('Request to microservice', () => {
             .post('/dataset/1', { array: ['a', 'b', 'c'] })
             .reply(200, 'ok');
 
-        const response = await microservice.requestToMicroservice(requestOptions);
+        const response: Record<string, any> = await microservice.requestToMicroservice(requestOptions);
 
         response.should.equal('ok');
     });
@@ -66,9 +66,9 @@ describe('Request to microservice', () => {
             .get('/dataset/1')
             .reply(200, 'ok');
 
-        microservice.options.token = 'token'
+        microservice.options.token = 'token';
 
-        const response = await microservice.requestToMicroservice(requestOptions);
+        const response: Record<string, any> = await microservice.requestToMicroservice(requestOptions);
 
         response.should.equal('ok');
     });
@@ -84,9 +84,9 @@ describe('Request to microservice', () => {
             .delete('/dataset/1')
             .reply(200, 'ok');
 
-        microservice.options.token = 'token'
+        microservice.options.token = 'token';
 
-        const response = await microservice.requestToMicroservice(requestOptions);
+        const response: Record<string, any> = await microservice.requestToMicroservice(requestOptions);
 
         response.should.equal('ok');
     });
@@ -105,10 +105,10 @@ describe('Request to microservice', () => {
             .post('/dataset/1', { array: ['a', 'b', 'c'] })
             .reply(200, 'ok');
 
-        microservice.options.token = 'token'
+        microservice.options.token = 'token';
 
 
-        const response = await microservice.requestToMicroservice(requestOptions);
+        const response: Record<string, any> = await microservice.requestToMicroservice(requestOptions);
 
         response.should.equal('ok');
     });
@@ -127,10 +127,10 @@ describe('Request to microservice', () => {
             .patch('/dataset/1', { array: ['a', 'b', 'c'] })
             .reply(200, 'ok');
 
-        microservice.options.token = 'token'
+        microservice.options.token = 'token';
 
 
-        const response = await microservice.requestToMicroservice(requestOptions);
+        const response: Record<string, any> = await microservice.requestToMicroservice(requestOptions);
 
         response.should.equal('ok');
     });
@@ -149,10 +149,10 @@ describe('Request to microservice', () => {
             .put('/dataset/1', { array: ['a', 'b', 'c'] })
             .reply(200, 'ok');
 
-        microservice.options.token = 'token'
+        microservice.options.token = 'token';
 
 
-        const response = await microservice.requestToMicroservice(requestOptions);
+        const response: Record<string, any> = await microservice.requestToMicroservice(requestOptions);
 
         response.should.equal('ok');
     });

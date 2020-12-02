@@ -34,7 +34,7 @@ describe('Microservice register - Koa v1.x', () => {
 
         app.middleware.should.have.length(0);
 
-        const logger = bunyan.createLogger({
+        const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
             streams: []
@@ -53,7 +53,7 @@ describe('Microservice register - Koa v1.x', () => {
             token: 'ABCDEF',
         };
 
-        await microservice.register(registerOptions)
+        await microservice.register(registerOptions);
 
         app.middleware.should.have.length(2);
     });
@@ -63,7 +63,7 @@ describe('Microservice register - Koa v1.x', () => {
 
         app.middleware.should.have.length(0);
 
-        const logger = bunyan.createLogger({
+        const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
             streams: []
@@ -90,7 +90,7 @@ describe('Microservice register - Koa v1.x', () => {
             token: 'ABCDEF',
         };
 
-        await microservice.register(registerOptions)
+        await microservice.register(registerOptions);
 
         app.middleware.should.have.length(2);
     });
@@ -98,7 +98,7 @@ describe('Microservice register - Koa v1.x', () => {
     it('Test registered /info endpoint returns the MS info (happy case)', async () => {
         const app: Koa = new Koa1();
 
-        const logger = bunyan.createLogger({
+        const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
             streams: []
@@ -124,13 +124,13 @@ describe('Microservice register - Koa v1.x', () => {
             token: 'ABCDEF',
         };
 
-        await microservice.register(registerOptions)
+        await microservice.register(registerOptions);
 
         const server: Server = app.listen(3010);
 
         requester = chai.request(server).keepOpen();
 
-        const response: Request.Response = await requester.get('/info')
+        const response: Request.Response = await requester.get('/info');
 
         response.status.should.equal(200);
         response.body.should.deep.equal({
@@ -144,7 +144,7 @@ describe('Microservice register - Koa v1.x', () => {
     it('Test registered /ping endpoint returns pong response (happy case)', async () => {
         const app: Koa = new Koa1();
 
-        const logger = bunyan.createLogger({
+        const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
             streams: []
@@ -171,13 +171,13 @@ describe('Microservice register - Koa v1.x', () => {
             token: 'ABCDEF',
         };
 
-        await microservice.register(registerOptions)
+        await microservice.register(registerOptions);
 
         const server: Server = app.listen(3010);
 
         requester = chai.request(server).keepOpen();
 
-        const response: Request.Response = await requester.get('/ping')
+        const response: Request.Response = await requester.get('/ping');
 
         response.status.should.equal(200);
         response.text.should.equal('pong');
