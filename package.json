@@ -2,10 +2,11 @@
   "name": "rw-api-microservice-node",
   "version": "1.0.0",
   "description": "Integration library for the RW API microservice",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "coverage": "nyc ts-mocha -b --project tsconfig.json -r tsconfig-paths/register --timeout 20000 'test/**/*.ts' --exit",
-    "test": "ts-mocha -b --project tsconfig.json -r tsconfig-paths/register --timeout 20000 'test/**/*.ts' --exit"
+    "test": "ts-mocha -b --project tsconfig.json -r tsconfig-paths/register --timeout 20000 'test/**/*.ts' --exit",
+    "build": "tsc --project tsconfig.json"
   },
   "nyc": {
     "extension": [
@@ -40,6 +41,7 @@
   "engines": {
     "node": ">=11"
   },
+  "types": "dist/index.d.ts",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/resourcewatch/rw-api-microservice-node/issues"

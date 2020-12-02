@@ -83,6 +83,7 @@ class Microservice implements RWAPIMicroservice {
             if (['GET', 'DELETE'].includes(ctx.request.method.toUpperCase())) {
                 ctx.request.query.loggedUser = JSON.stringify(response.data);
             } else if (['POST', 'PATCH', 'PUT'].includes(ctx.request.method.toUpperCase())) {
+                // @ts-ignore
                 ctx.request.body.loggedUser = response.data;
             }
 

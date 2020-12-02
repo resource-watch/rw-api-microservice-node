@@ -20,5 +20,6 @@
       "variable-declaration"
     ]
   },
-  "rulesDirectory": []
+  "rulesDirectory": [],
+  "declaration": true
 }
