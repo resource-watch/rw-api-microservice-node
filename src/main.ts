@@ -32,7 +32,7 @@ class Microservice implements RWAPIMicroservice.RWAPIMicroservice {
     public MODE_NORMAL: string = MODE_NORMAL;
 
     private async registerOnCT(name: string, url: string, baseURL: string): Promise<Record<string, any>> {
-        const response: AxiosResponse<any> = await axios({
+        const response: AxiosResponse<Record<string, any>> = await axios({
             baseURL,
             url: `/api/v1/microservice`,
             data: {
