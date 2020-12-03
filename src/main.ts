@@ -4,6 +4,7 @@ import type { Context, Next } from "koa";
 import type request from "request";
 import type Logger from "bunyan";
 import Application from "koa";
+import { ResponseError } from "./response.error";
 
 export interface IRWAPIMicroservice {
     register: (opts: RegisterOptions) => Promise<any>;
@@ -177,7 +178,10 @@ class Microservice implements IRWAPIMicroservice {
             return response.data;
         } catch (err) {
             this.options.logger.error('Error to doing request', err);
-            throw err;
+            if (err?.response?.data) {
+                throw new ResponseError(err.response.status, err.response.data, err.response);
+            }
+            return err;
         }
 
     }
