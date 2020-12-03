@@ -1,8 +1,6 @@
 import nock from 'nock';
 import chai from 'chai';
-
-import { microservice } from 'main';
-import type RWAPIMicroservice from '../types';
+import { RWAPIMicroservice, RequestToMicroserviceOptions } from "main";
 import request from "request";
 
 chai.should();
@@ -10,7 +8,7 @@ chai.should();
 nock.disableNetConnect();
 nock.enableNetConnect('127.0.0.1');
 
-describe('Request to microservice', () => {
+describe('Request to RWAPIMicroservice', () => {
 
     before(async () => {
         if (process.env.NODE_ENV !== 'test') {
@@ -21,7 +19,7 @@ describe('Request to microservice', () => {
     });
 
     it('Basic requestToMicroservice - GET request (happy case)', async () => {
-        const requestOptions: request.OptionsWithUri & RWAPIMicroservice.RequestToMicroserviceOptions = {
+        const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
             uri: `/dataset/1`,
             method: 'GET',
             json: true
@@ -31,13 +29,13 @@ describe('Request to microservice', () => {
             .get('/dataset/1')
             .reply(200, 'ok');
 
-        const response: Record<string, any> = await microservice.requestToMicroservice(requestOptions);
+        const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
 
         response.should.equal('ok');
     });
 
     it('Basic requestToMicroservice - POST request (happy case)', async () => {
-        const requestOptions: request.OptionsWithUri & RWAPIMicroservice.RequestToMicroserviceOptions = {
+        const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
             uri: `/dataset/1`,
             method: 'POST',
             json: true,
@@ -50,13 +48,13 @@ describe('Request to microservice', () => {
             .post('/dataset/1', { array: ['a', 'b', 'c'] })
             .reply(200, 'ok');
 
-        const response: Record<string, any> = await microservice.requestToMicroservice(requestOptions);
+        const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
 
         response.should.equal('ok');
     });
 
     it('requestToMicroservice GET request with token should pass the token along', async () => {
-        const requestOptions: request.OptionsWithUri & RWAPIMicroservice.RequestToMicroserviceOptions = {
+        const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
             uri: `/dataset/1`,
             method: 'GET',
             json: true
@@ -66,15 +64,15 @@ describe('Request to microservice', () => {
             .get('/dataset/1')
             .reply(200, 'ok');
 
-        microservice.options.token = 'token';
+        RWAPIMicroservice.options.token = 'token';
 
-        const response: Record<string, any> = await microservice.requestToMicroservice(requestOptions);
+        const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
 
         response.should.equal('ok');
     });
 
     it('requestToMicroservice DELETE request with token should pass the token along', async () => {
-        const requestOptions: request.OptionsWithUri & RWAPIMicroservice.RequestToMicroserviceOptions = {
+        const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
             uri: `/dataset/1`,
             method: 'DELETE',
             json: true
@@ -84,15 +82,15 @@ describe('Request to microservice', () => {
             .delete('/dataset/1')
             .reply(200, 'ok');
 
-        microservice.options.token = 'token';
+        RWAPIMicroservice.options.token = 'token';
 
-        const response: Record<string, any> = await microservice.requestToMicroservice(requestOptions);
+        const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
 
         response.should.equal('ok');
     });
 
     it('requestToMicroservice POST request with token should pass the token along', async () => {
-        const requestOptions: request.OptionsWithUri & RWAPIMicroservice.RequestToMicroserviceOptions = {
+        const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
             uri: `/dataset/1`,
             method: 'POST',
             json: true,
@@ -105,16 +103,16 @@ describe('Request to microservice', () => {
             .post('/dataset/1', { array: ['a', 'b', 'c'] })
             .reply(200, 'ok');
 
-        microservice.options.token = 'token';
+        RWAPIMicroservice.options.token = 'token';
 
 
-        const response: Record<string, any> = await microservice.requestToMicroservice(requestOptions);
+        const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
 
         response.should.equal('ok');
     });
 
     it('requestToMicroservice PATCH request with token should pass the token along', async () => {
-        const requestOptions: request.OptionsWithUri & RWAPIMicroservice.RequestToMicroserviceOptions = {
+        const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
             uri: `/dataset/1`,
             method: 'PATCH',
             json: true,
@@ -127,16 +125,16 @@ describe('Request to microservice', () => {
             .patch('/dataset/1', { array: ['a', 'b', 'c'] })
             .reply(200, 'ok');
 
-        microservice.options.token = 'token';
+        RWAPIMicroservice.options.token = 'token';
 
 
-        const response: Record<string, any> = await microservice.requestToMicroservice(requestOptions);
+        const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
 
         response.should.equal('ok');
     });
 
     it('requestToMicroservice PUT request with token should pass the token along', async () => {
-        const requestOptions: request.OptionsWithUri & RWAPIMicroservice.RequestToMicroserviceOptions = {
+        const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
             uri: `/dataset/1`,
             method: 'PUT',
             json: true,
@@ -149,10 +147,10 @@ describe('Request to microservice', () => {
             .put('/dataset/1', { array: ['a', 'b', 'c'] })
             .reply(200, 'ok');
 
-        microservice.options.token = 'token';
+        RWAPIMicroservice.options.token = 'token';
 
 
-        const response: Record<string, any> = await microservice.requestToMicroservice(requestOptions);
+        const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
 
         response.should.equal('ok');
     });

@@ -1,6 +1,6 @@
 {
   "name": "rw-api-microservice-node",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Integration library for the RW API microservice",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",

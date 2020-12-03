@@ -1,16 +1,14 @@
 import nock from 'nock';
 import chai from 'chai';
-
-import { microservice } from 'main';
 import type Logger from "bunyan";
 import bunyan from "bunyan";
 import type Koa from "koa";
 // @ts-ignore
 import Koa1 from "koa1";
-import type RWAPIMicroservice from '../types';
 import chaiHttp from 'chai-http';
 import { Server } from "http";
 import Request from "superagent";
+import { RWAPIMicroservice, RegisterOptions } from "main";
 
 chai.should();
 chai.use(chaiHttp);
@@ -20,7 +18,7 @@ nock.enableNetConnect('127.0.0.1');
 
 let requester: ChaiHttp.Agent;
 
-describe('Microservice register - Koa v1.x', () => {
+describe('RWAPIMicroservice register - Koa v1.x', () => {
 
     before(async () => {
         if (process.env.NODE_ENV !== 'test') {
@@ -30,7 +28,7 @@ describe('Microservice register - Koa v1.x', () => {
         nock.cleanAll();
     });
 
-    it('Microservice register without Koa v1 and auto-register should register the Koa middleware and make a call to the microservice endpoint on CT (happy case)', async () => {
+    it('RWAPIMicroservice register without Koa v1 and auto-register should register the Koa middleware and make a call to the RWAPIMicroservice endpoint on CT (happy case)', async () => {
         const app: Koa = new Koa1();
 
         app.middleware.should.have.length(0);
@@ -41,11 +39,11 @@ describe('Microservice register - Koa v1.x', () => {
             streams: []
         });
 
-        const registerOptions: RWAPIMicroservice.RegisterOptions = {
+        const registerOptions: RegisterOptions = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
-            mode: microservice.MODE_NORMAL,
-            framework: microservice.KOA1,
+            mode: RWAPIMicroservice.MODE_NORMAL,
+            framework: RWAPIMicroservice.KOA1,
             app,
             logger,
             name: 'test MS',
@@ -54,12 +52,12 @@ describe('Microservice register - Koa v1.x', () => {
             token: 'ABCDEF',
         };
 
-        await microservice.register(registerOptions);
+        await RWAPIMicroservice.register(registerOptions);
 
         app.middleware.should.have.length(2);
     });
 
-    it('Microservice register with Koa v1 and auto-register should register the Koa middleware and make a call to the microservice endpoint on CT (happy case)', async () => {
+    it('RWAPIMicroservice register with Koa v1 and auto-register should register the Koa middleware and make a call to the RWAPIMicroservice endpoint on CT (happy case)', async () => {
         const app: Koa = new Koa1();
 
         app.middleware.should.have.length(0);
@@ -78,11 +76,11 @@ describe('Microservice register - Koa v1.x', () => {
             })
             .reply(200);
 
-        const registerOptions: RWAPIMicroservice.RegisterOptions = {
+        const registerOptions: RegisterOptions = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
-            mode: microservice.MODE_AUTOREGISTER,
-            framework: microservice.KOA1,
+            mode: RWAPIMicroservice.MODE_AUTOREGISTER,
+            framework: RWAPIMicroservice.KOA1,
             app,
             logger,
             name: 'test MS',
@@ -91,7 +89,7 @@ describe('Microservice register - Koa v1.x', () => {
             token: 'ABCDEF',
         };
 
-        await microservice.register(registerOptions);
+        await RWAPIMicroservice.register(registerOptions);
 
         app.middleware.should.have.length(2);
     });
@@ -112,11 +110,11 @@ describe('Microservice register - Koa v1.x', () => {
                 active: true
             }).reply(200);
 
-        const registerOptions: RWAPIMicroservice.RegisterOptions = {
+        const registerOptions: RegisterOptions = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
-            mode: microservice.MODE_AUTOREGISTER,
-            framework: microservice.KOA1,
+            mode: RWAPIMicroservice.MODE_AUTOREGISTER,
+            framework: RWAPIMicroservice.KOA1,
             app,
             logger,
             name: 'test MS',
@@ -125,7 +123,7 @@ describe('Microservice register - Koa v1.x', () => {
             token: 'ABCDEF',
         };
 
-        await microservice.register(registerOptions);
+        await RWAPIMicroservice.register(registerOptions);
 
         const server: Server = app.listen(3010);
 
@@ -159,11 +157,11 @@ describe('Microservice register - Koa v1.x', () => {
             })
             .reply(200);
 
-        const registerOptions: RWAPIMicroservice.RegisterOptions = {
+        const registerOptions: RegisterOptions = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
-            mode: microservice.MODE_AUTOREGISTER,
-            framework: microservice.KOA1,
+            mode: RWAPIMicroservice.MODE_AUTOREGISTER,
+            framework: RWAPIMicroservice.KOA1,
             app,
             logger,
             name: 'test MS',
@@ -172,7 +170,7 @@ describe('Microservice register - Koa v1.x', () => {
             token: 'ABCDEF',
         };
 
-        await microservice.register(registerOptions);
+        await RWAPIMicroservice.register(registerOptions);
 
         const server: Server = app.listen(3010);
 

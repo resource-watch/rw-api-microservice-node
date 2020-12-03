@@ -1,5 +1,5 @@
 import chai from 'chai';
-import { microservice } from 'main';
+import { RWAPIMicroservice } from 'main';
 
 chai.should();
 
@@ -12,11 +12,11 @@ describe('Constants', () => {
     });
 
     it('Test constant calls', async () => {
-        microservice.KOA1.should.equal('KOA1');
-        microservice.KOA2.should.equal('KOA2');
-        microservice.EXPRESS.should.equal('EXPRESS');
-        microservice.MODE_AUTOREGISTER.should.equal('MODE_AUTOREGISTER');
-        microservice.MODE_NORMAL.should.equal('MODE_NORMAL');
+        RWAPIMicroservice.KOA1.should.equal('KOA1');
+        RWAPIMicroservice.KOA2.should.equal('KOA2');
+        RWAPIMicroservice.EXPRESS.should.equal('EXPRESS');
+        RWAPIMicroservice.MODE_AUTOREGISTER.should.equal('MODE_AUTOREGISTER');
+        RWAPIMicroservice.MODE_NORMAL.should.equal('MODE_NORMAL');
     });
 
 });

@@ -1,6 +1,6 @@
 import nock from 'nock';
 import chai, { expect } from 'chai';
-import { microservice } from 'main';
+import { RWAPIMicroservice, RegisterOptions } from 'main';
 import type Logger from "bunyan";
 import bunyan from "bunyan";
 import type Koa from "koa";
@@ -8,10 +8,10 @@ import Router from "koa-router";
 // @ts-ignore
 import Koa2 from "koa2";
 import koaBody from "koa-body";
-import type RWAPIMicroservice from '../types';
 import type { Server } from "http";
 import type Request from "superagent";
 import constants from './utils/test.constants';
+import ChaiHttp from 'chai-http';
 
 chai.should();
 
@@ -51,11 +51,11 @@ describe('Injecting logged user data - Koa v2.x', () => {
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
-        const registerOptions: RWAPIMicroservice.RegisterOptions = {
+        const registerOptions: RegisterOptions = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
-            mode: microservice.MODE_AUTOREGISTER,
-            framework: microservice.KOA2,
+            mode: RWAPIMicroservice.MODE_AUTOREGISTER,
+            framework: RWAPIMicroservice.KOA2,
             app,
             logger,
             name: 'test MS',
@@ -73,7 +73,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
 
         app.use(koaBody());
 
-        await microservice.register(registerOptions);
+        await RWAPIMicroservice.register(registerOptions);
 
         app
             .use(testRouter.routes())
@@ -113,11 +113,11 @@ describe('Injecting logged user data - Koa v2.x', () => {
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
-        const registerOptions: RWAPIMicroservice.RegisterOptions = {
+        const registerOptions: RegisterOptions = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
-            mode: microservice.MODE_AUTOREGISTER,
-            framework: microservice.KOA2,
+            mode: RWAPIMicroservice.MODE_AUTOREGISTER,
+            framework: RWAPIMicroservice.KOA2,
             app,
             logger,
             name: 'test MS',
@@ -135,7 +135,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
 
         app.use(koaBody());
 
-        await microservice.register(registerOptions);
+        await RWAPIMicroservice.register(registerOptions);
 
         app
             .use(testRouter.routes())
@@ -175,11 +175,11 @@ describe('Injecting logged user data - Koa v2.x', () => {
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
-        const registerOptions: RWAPIMicroservice.RegisterOptions = {
+        const registerOptions: RegisterOptions = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
-            mode: microservice.MODE_AUTOREGISTER,
-            framework: microservice.KOA2,
+            mode: RWAPIMicroservice.MODE_AUTOREGISTER,
+            framework: RWAPIMicroservice.KOA2,
             app,
             logger,
             name: 'test MS',
@@ -198,7 +198,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
 
         app.use(koaBody());
 
-        await microservice.register(registerOptions);
+        await RWAPIMicroservice.register(registerOptions);
 
         app
             .use(testRouter.routes())
@@ -240,11 +240,11 @@ describe('Injecting logged user data - Koa v2.x', () => {
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
-        const registerOptions: RWAPIMicroservice.RegisterOptions = {
+        const registerOptions: RegisterOptions = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
-            mode: microservice.MODE_AUTOREGISTER,
-            framework: microservice.KOA2,
+            mode: RWAPIMicroservice.MODE_AUTOREGISTER,
+            framework: RWAPIMicroservice.KOA2,
             app,
             logger,
             name: 'test MS',
@@ -263,7 +263,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
 
         app.use(koaBody());
 
-        await microservice.register(registerOptions);
+        await RWAPIMicroservice.register(registerOptions);
 
         app
             .use(testRouter.routes())
@@ -305,11 +305,11 @@ describe('Injecting logged user data - Koa v2.x', () => {
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
-        const registerOptions: RWAPIMicroservice.RegisterOptions = {
+        const registerOptions: RegisterOptions = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
-            mode: microservice.MODE_AUTOREGISTER,
-            framework: microservice.KOA2,
+            mode: RWAPIMicroservice.MODE_AUTOREGISTER,
+            framework: RWAPIMicroservice.KOA2,
             app,
             logger,
             name: 'test MS',
@@ -328,7 +328,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
 
         app.use(koaBody());
 
-        await microservice.register(registerOptions);
+        await RWAPIMicroservice.register(registerOptions);
 
         app
             .use(testRouter.routes())

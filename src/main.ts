@@ -1,9 +1,33 @@
 import convert from 'koa-convert';
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import type { Context, Next } from "koa";
-import type { RegisterOptions, RequestToMicroserviceOptions, RWAPIMicroservice } from 'types';
 import type request from "request";
 import type Logger from "bunyan";
+import Application from "koa";
+
+export interface IRWAPIMicroservice {
+    register: (opts: RegisterOptions) => Promise<any>;
+    requestToMicroservice: (config: request.OptionsWithUri & RequestToMicroserviceOptions) => Promise<Record<string, any>>;
+}
+
+export interface RegisterOptions {
+    info: Record<string, any>;
+    swagger: Record<string, any>;
+    mode: string;
+    framework: 'KOA1' | "KOA2";
+    app: Application;
+    logger: Logger;
+    name: string;
+    baseURL: string;
+    url: string;
+    token: string;
+}
+
+export interface RequestToMicroserviceOptions {
+    version?: string & boolean;
+    application?: string;
+}
+
 
 /**
  * @deprecated Koa1 support will be removed soon
@@ -23,7 +47,7 @@ const MODE_AUTOREGISTER: 'MODE_AUTOREGISTER' = 'MODE_AUTOREGISTER';
  */
 const MODE_NORMAL: 'MODE_NORMAL' = 'MODE_NORMAL';
 
-class Microservice implements RWAPIMicroservice {
+class Microservice implements IRWAPIMicroservice {
     public options: RegisterOptions;
     public KOA1: 'KOA1' = KOA1;
     public KOA2: 'KOA2' = KOA2;
@@ -162,4 +186,4 @@ class Microservice implements RWAPIMicroservice {
 
 const microservice: Microservice = new Microservice();
 
-export { microservice };
+export { microservice as RWAPIMicroservice };
