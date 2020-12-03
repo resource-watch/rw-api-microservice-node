@@ -1,6 +1,6 @@
 import nock from 'nock';
 import chai from 'chai';
-import microservice from 'main';
+import { microservice } from 'main';
 import type Logger from "bunyan";
 import bunyan from "bunyan";
 import type Koa from "koa";

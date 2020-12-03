@@ -1,5 +1,5 @@
 import chai from 'chai';
-import microservice from 'main';
+import { microservice } from 'main';
 
 chai.should();
 

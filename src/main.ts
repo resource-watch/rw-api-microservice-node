@@ -1,7 +1,7 @@
 import convert from 'koa-convert';
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import type { Context, Next } from "koa";
-import type { RegisterOptions, RequestToMicroserviceOptions, RWAPIMicroservice } from '../types';
+import type { RegisterOptions, RequestToMicroserviceOptions, RWAPIMicroservice } from 'types';
 import type request from "request";
 import type Logger from "bunyan";
 
@@ -27,9 +27,9 @@ class Microservice implements RWAPIMicroservice {
     public options: RegisterOptions;
     public KOA1: 'KOA1' = KOA1;
     public KOA2: 'KOA2' = KOA2;
-    public EXPRESS: string = EXPRESS;
-    public MODE_AUTOREGISTER: string = MODE_AUTOREGISTER;
-    public MODE_NORMAL: string = MODE_NORMAL;
+    public EXPRESS: 'EXPRESS' = EXPRESS;
+    public MODE_AUTOREGISTER: 'MODE_AUTOREGISTER' = MODE_AUTOREGISTER;
+    public MODE_NORMAL: 'MODE_NORMAL' = MODE_NORMAL;
 
     private async registerOnCT(name: string, url: string, baseURL: string): Promise<Record<string, any>> {
         const response: AxiosResponse<Record<string, any>> = await axios({
@@ -160,4 +160,6 @@ class Microservice implements RWAPIMicroservice {
 
 }
 
-export default new Microservice();
+const microservice: Microservice = new Microservice();
+
+export { microservice };

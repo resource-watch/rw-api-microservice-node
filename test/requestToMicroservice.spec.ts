@@ -1,7 +1,7 @@
 import nock from 'nock';
 import chai from 'chai';
 
-import microservice from 'main';
+import { microservice } from 'main';
 import type RWAPIMicroservice from '../types';
 import request from "request";
 
