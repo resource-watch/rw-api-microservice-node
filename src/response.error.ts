@@ -3,7 +3,7 @@ export class ResponseError extends Error {
     private error: any;
     private response: any;
 
-    constructor(statusCode:number, body:any, response?:any) {
+    constructor(statusCode: number, body: any, response?: any) {
         super();
         this.name = 'ResponseError';
         this.statusCode = statusCode;

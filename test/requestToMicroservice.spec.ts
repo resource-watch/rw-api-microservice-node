@@ -1,6 +1,6 @@
 import nock from 'nock';
 import chai from 'chai';
-import { RWAPIMicroservice, RequestToMicroserviceOptions } from "main";
+import { RequestToMicroserviceOptions, RWAPIMicroservice } from "main";
 import request from "request";
 
 chai.should();

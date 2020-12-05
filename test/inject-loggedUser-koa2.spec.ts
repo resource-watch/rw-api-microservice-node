@@ -1,6 +1,6 @@
 import nock from 'nock';
 import chai, { expect } from 'chai';
-import { RWAPIMicroservice, RegisterOptions } from 'main';
+import { RegisterOptions, RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
 import bunyan from "bunyan";
 import type Koa from "koa";
@@ -40,14 +40,6 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice', {
-                name: "test MS",
-                url: "https://microservice.dev",
-                active: true
-            })
-            .reply(200);
-
-        nock('https://controltower.dev')
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
@@ -72,8 +64,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         app.use(koaBody());
-
-        await RWAPIMicroservice.register(registerOptions);
+        app.use(RWAPIMicroservice.bootstrap(registerOptions));
 
         app
             .use(testRouter.routes())
@@ -102,14 +93,6 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice', {
-                name: "test MS",
-                url: "https://microservice.dev",
-                active: true
-            })
-            .reply(200);
-
-        nock('https://controltower.dev')
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
@@ -134,8 +117,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         app.use(koaBody());
-
-        await RWAPIMicroservice.register(registerOptions);
+        app.use(RWAPIMicroservice.bootstrap(registerOptions));
 
         app
             .use(testRouter.routes())
@@ -164,14 +146,6 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice', {
-                name: "test MS",
-                url: "https://microservice.dev",
-                active: true
-            })
-            .reply(200);
-
-        nock('https://controltower.dev')
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
@@ -197,8 +171,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         app.use(koaBody());
-
-        await RWAPIMicroservice.register(registerOptions);
+        app.use(RWAPIMicroservice.bootstrap(registerOptions));
 
         app
             .use(testRouter.routes())
@@ -229,14 +202,6 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice', {
-                name: "test MS",
-                url: "https://microservice.dev",
-                active: true
-            })
-            .reply(200);
-
-        nock('https://controltower.dev')
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
@@ -262,8 +227,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         app.use(koaBody());
-
-        await RWAPIMicroservice.register(registerOptions);
+        app.use(RWAPIMicroservice.bootstrap(registerOptions));
 
         app
             .use(testRouter.routes())
@@ -294,14 +258,6 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice', {
-                name: "test MS",
-                url: "https://microservice.dev",
-                active: true
-            })
-            .reply(200);
-
-        nock('https://controltower.dev')
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
@@ -327,8 +283,7 @@ describe('Injecting logged user data - Koa v2.x', () => {
         });
 
         app.use(koaBody());
-
-        await RWAPIMicroservice.register(registerOptions);
+        app.use(RWAPIMicroservice.bootstrap(registerOptions));
 
         app
             .use(testRouter.routes())

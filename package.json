@@ -1,6 +1,6 @@
 {
   "name": "rw-api-microservice-node",
-  "version": "1.0.7",
+  "version": "2.0.0",
   "description": "Integration library for the RW API microservice",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
@@ -51,8 +51,7 @@
   },
   "homepage": "https://github.com/resource-watch/rw-api-microservice-node",
   "dependencies": {
-    "axios": "^0.21.0",
-    "koa-convert": "^2.0.0"
+    "axios": "^0.21.0"
   },
   "devDependencies": {
     "@types/bunyan": "^1.8.6",
@@ -69,6 +68,7 @@
     "chai-as-promised": "^7.1.1",
     "chai-http": "^4.3.0",
     "koa-body": "^4.2.0",
+    "koa-convert": "^2.0.0",
     "koa-router": "^10.0.0",
     "koa1": "npm:koa@^1.7.0",
     "koa2": "npm:koa@^2.13.0",

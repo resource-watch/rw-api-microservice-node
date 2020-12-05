@@ -1,6 +1,6 @@
 import nock from 'nock';
 import chai, { expect } from 'chai';
-import { RWAPIMicroservice, RegisterOptions } from 'main';
+import { RegisterOptions, RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
 import bunyan from "bunyan";
 import type Koa from "koa";
@@ -41,23 +41,12 @@ describe('Injecting logged user data - Koa v1.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice', {
-                name: "test MS",
-                url: "https://microservice.dev",
-                active: true
-            })
-            .reply(200);
-
-        nock('https://controltower.dev')
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
         const registerOptions: RegisterOptions = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
-            mode: RWAPIMicroservice.MODE_AUTOREGISTER,
-            framework: RWAPIMicroservice.KOA1,
-            app,
             logger,
             name: 'test MS',
             baseURL: 'https://controltower.dev',
@@ -74,8 +63,8 @@ describe('Injecting logged user data - Koa v1.x', () => {
 
         // @ts-ignore
         app.use(convert.back(koaBody()));
-
-        await RWAPIMicroservice.register(registerOptions);
+        // @ts-ignore
+        app.use(convert.back(RWAPIMicroservice.bootstrap(registerOptions)));
 
         app
             // @ts-ignore
@@ -106,23 +95,12 @@ describe('Injecting logged user data - Koa v1.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice', {
-                name: "test MS",
-                url: "https://microservice.dev",
-                active: true
-            })
-            .reply(200);
-
-        nock('https://controltower.dev')
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
         const registerOptions: RegisterOptions = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
-            mode: RWAPIMicroservice.MODE_AUTOREGISTER,
-            framework: RWAPIMicroservice.KOA1,
-            app,
             logger,
             name: 'test MS',
             baseURL: 'https://controltower.dev',
@@ -139,8 +117,8 @@ describe('Injecting logged user data - Koa v1.x', () => {
 
         // @ts-ignore
         app.use(convert.back(koaBody()));
-
-        await RWAPIMicroservice.register(registerOptions);
+        // @ts-ignore
+        app.use(convert.back(RWAPIMicroservice.bootstrap(registerOptions)));
 
         app
             // @ts-ignore
@@ -171,23 +149,12 @@ describe('Injecting logged user data - Koa v1.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice', {
-                name: "test MS",
-                url: "https://microservice.dev",
-                active: true
-            })
-            .reply(200);
-
-        nock('https://controltower.dev')
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
         const registerOptions: RegisterOptions = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
-            mode: RWAPIMicroservice.MODE_AUTOREGISTER,
-            framework: RWAPIMicroservice.KOA1,
-            app,
             logger,
             name: 'test MS',
             baseURL: 'https://controltower.dev',
@@ -205,8 +172,8 @@ describe('Injecting logged user data - Koa v1.x', () => {
 
         // @ts-ignore
         app.use(convert.back(koaBody()));
-
-        await RWAPIMicroservice.register(registerOptions);
+        // @ts-ignore
+        app.use(convert.back(RWAPIMicroservice.bootstrap(registerOptions)));
 
         app
             // @ts-ignore
@@ -239,23 +206,12 @@ describe('Injecting logged user data - Koa v1.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice', {
-                name: "test MS",
-                url: "https://microservice.dev",
-                active: true
-            })
-            .reply(200);
-
-        nock('https://controltower.dev')
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
         const registerOptions: RegisterOptions = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
-            mode: RWAPIMicroservice.MODE_AUTOREGISTER,
-            framework: RWAPIMicroservice.KOA1,
-            app,
             logger,
             name: 'test MS',
             baseURL: 'https://controltower.dev',
@@ -273,8 +229,8 @@ describe('Injecting logged user data - Koa v1.x', () => {
 
         // @ts-ignore
         app.use(convert.back(koaBody()));
-
-        await RWAPIMicroservice.register(registerOptions);
+        // @ts-ignore
+        app.use(convert.back(RWAPIMicroservice.bootstrap(registerOptions)));
 
         app
             // @ts-ignore
@@ -307,23 +263,12 @@ describe('Injecting logged user data - Koa v1.x', () => {
         });
 
         nock('https://controltower.dev')
-            .post('/api/v1/microservice', {
-                name: "test MS",
-                url: "https://microservice.dev",
-                active: true
-            })
-            .reply(200);
-
-        nock('https://controltower.dev')
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
         const registerOptions: RegisterOptions = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
-            mode: RWAPIMicroservice.MODE_AUTOREGISTER,
-            framework: RWAPIMicroservice.KOA1,
-            app,
             logger,
             name: 'test MS',
             baseURL: 'https://controltower.dev',
@@ -341,8 +286,8 @@ describe('Injecting logged user data - Koa v1.x', () => {
 
         // @ts-ignore
         app.use(convert.back(koaBody()));
-
-        await RWAPIMicroservice.register(registerOptions);
+        // @ts-ignore
+        app.use(convert.back(RWAPIMicroservice.bootstrap(registerOptions)));
 
         app
             // @ts-ignore

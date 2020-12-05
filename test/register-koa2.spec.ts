@@ -1,5 +1,6 @@
 import nock from 'nock';
 import chai from 'chai';
+import type { RegisterOptions } from 'main';
 import { RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
 import bunyan from "bunyan";
@@ -8,7 +9,6 @@ import type Koa from "koa";
 import Koa2 from "koa2";
 import type { Server } from "http";
 import type Request from "superagent";
-import type { RegisterOptions } from 'main';
 import ChaiHttp from 'chai-http';
 
 chai.should();
@@ -26,35 +26,6 @@ describe('RWAPIMicroservice register - Koa v2.x', () => {
         }
 
         nock.cleanAll();
-    });
-
-    it('RWAPIMicroservice register without Koa v2 and auto-register should register the Koa middleware and make a call to the RWAPIMicroservice endpoint on CT (happy case)', async () => {
-        const app: Koa = new Koa2();
-
-        app.middleware.should.have.length(0);
-
-        const logger: Logger = bunyan.createLogger({
-            name: 'logger name',
-            src: true,
-            streams: []
-        });
-
-        const registerOptions: RegisterOptions = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
-            mode: RWAPIMicroservice.MODE_NORMAL,
-            framework: RWAPIMicroservice.KOA2,
-            app,
-            logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
-        };
-
-        await RWAPIMicroservice.register(registerOptions);
-
-        app.middleware.should.have.length(2);
     });
 
     it('RWAPIMicroservice register with Koa v2 and auto-register should register the Koa middleware and make a call to the RWAPIMicroservice endpoint on CT (happy case)', async () => {
@@ -79,9 +50,6 @@ describe('RWAPIMicroservice register - Koa v2.x', () => {
         const registerOptions: RegisterOptions = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
-            mode: RWAPIMicroservice.MODE_AUTOREGISTER,
-            framework: RWAPIMicroservice.KOA2,
-            app,
             logger,
             name: 'test MS',
             baseURL: 'https://controltower.dev',
@@ -89,9 +57,10 @@ describe('RWAPIMicroservice register - Koa v2.x', () => {
             token: 'ABCDEF',
         };
 
-        await RWAPIMicroservice.register(registerOptions);
+        app.use(RWAPIMicroservice.bootstrap(registerOptions));
+        await RWAPIMicroservice.register();
 
-        app.middleware.should.have.length(2);
+        app.middleware.should.have.length(1);
     });
 
     it('Test registered /info endpoint returns the MS info (happy case)', async () => {
@@ -114,9 +83,6 @@ describe('RWAPIMicroservice register - Koa v2.x', () => {
         const registerOptions: RegisterOptions = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
-            mode: RWAPIMicroservice.MODE_AUTOREGISTER,
-            framework: RWAPIMicroservice.KOA2,
-            app,
             logger,
             name: 'test MS',
             baseURL: 'https://controltower.dev',
@@ -124,7 +90,8 @@ describe('RWAPIMicroservice register - Koa v2.x', () => {
             token: 'ABCDEF',
         };
 
-        await RWAPIMicroservice.register(registerOptions);
+        app.use(RWAPIMicroservice.bootstrap(registerOptions));
+        await RWAPIMicroservice.register();
 
         const server: Server = app.listen(3010);
 
@@ -161,9 +128,6 @@ describe('RWAPIMicroservice register - Koa v2.x', () => {
         const registerOptions: RegisterOptions = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
-            mode: RWAPIMicroservice.MODE_AUTOREGISTER,
-            framework: RWAPIMicroservice.KOA2,
-            app,
             logger,
             name: 'test MS',
             baseURL: 'https://controltower.dev',
@@ -171,7 +135,8 @@ describe('RWAPIMicroservice register - Koa v2.x', () => {
             token: 'ABCDEF',
         };
 
-        await RWAPIMicroservice.register(registerOptions);
+        app.use(RWAPIMicroservice.bootstrap(registerOptions));
+        await RWAPIMicroservice.register();
 
         const server: Server = app.listen(3010);
 

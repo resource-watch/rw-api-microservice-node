@@ -29,24 +29,29 @@ yarn add rw-api-microservice-node
 In the `listen` callback of your Koa application, add the following code snippet:
 
 ```javascript
+const Koa = require('koa');
 const RWAPIMicroservice = require('rw-api-microservice-node')
 
-const promise = RWAPIMicroservice.register({
+const app = new Koa();
+
+app.use(RWAPIMicroservice.bootstrap({
     info: info,
     swagger: swagger,
-    logger: logger, 
-    app: app,
-    mode: 'auto',
-    framework: ctRegisterMicroservice.KOA2,
+    logger: logger,
+    url: '<your microservice URL>',
     token: '<your control tower token>',
     baseURL: '<your control tower instance URL>'
-});
+}))
 
-promise.then(function() {
-    logger.info('Success!!!')
-}, function(err) {
-    logger.error(err);
-    process.exit(1);
+// Make sure you add your auth-depending routes *after* bootstraping this module
+
+const server = app.listen(process.env.PORT, () => {
+    // the register() method registers the MS on CT. Can only be used after calling bootstrap().
+    RWAPIMicroservice.register().then(() => {
+    }, (error) => {
+        logger.error(error);
+        process.exit(1);
+    });
 });
 ```
 
@@ -57,9 +62,6 @@ These are the values you'll need to provide when using this library:
 
 - info: (**deprecated**) Object containing the microservice details. See [this link](https://github.com/resource-watch/dataset/blob/ab23e379362680e9899ac8f191589988f0b7c1cd/app/microservice/register.json) for an example.
 - swagger: (**deprecated**) Object, in Swagger format, of the endpoints offered by the microservice to API end users.
-- mode: (**deprecated**) Use `microservice.MODE_AUTOREGISTER` for the microservice to register automatically.
-- framework: use `microservice.KOA1` or `microservice.KOA2`, matching the version of Koa you're using. Koa v1 should be considered deprecated. 
-- app: the Koa application object (from `const koa = new Koa()`).
 - logger: a `bunyan` logger object, for logging purposes.
 - name: the name of the service.
 - baseURL: the URL of the API as a whole, where all other services will be reachable.
