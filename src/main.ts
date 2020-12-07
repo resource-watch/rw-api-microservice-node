@@ -28,6 +28,30 @@ export interface RequestToMicroserviceOptions {
 class Microservice implements IRWAPIMicroservice {
     public options: RegisterOptions;
 
+    private validateBootstrapOptions(options:RegisterOptions):void {
+        if (!options.info) {
+            throw new Error('RW API microservice - "info" cannot be empty');
+        }
+        if (!options.swagger) {
+            throw new Error('RW API microservice - "swagger" cannot be empty');
+        }
+        if (!options.logger) {
+            throw new Error('RW API microservice - "logger" cannot be empty');
+        }
+        if (!options.name) {
+            throw new Error('RW API microservice - "name" cannot be empty');
+        }
+        if (!options.baseURL) {
+            throw new Error('RW API microservice - "baseURL" cannot be empty');
+        }
+        if (!options.url) {
+            throw new Error('RW API microservice - "url" cannot be empty');
+        }
+        if (!options.token) {
+            throw new Error('RW API microservice - "token" cannot be empty');
+        }
+    }
+
     private registerCTRoutes(info: Record<string, any>, swagger: Record<string, any>, logger: Logger, ctx: Context): void {
         if (ctx.path === '/info') {
             logger.info('Obtaining info to register microservice');
@@ -39,11 +63,12 @@ class Microservice implements IRWAPIMicroservice {
     }
 
     private async getLoggedUser(logger: Logger, baseURL: string, ctx: Context): Promise<void> {
+        logger.debug('[getLoggedUser] Obtaining loggedUser for token');
         if (!ctx.request.header.authorization) {
+            logger.debug('[getLoggedUser] No authorization header found, returning');
             return;
         }
 
-        logger.info('Obtaining loggedUser for token');
 
         const getUserDetailsRequestConfig: AxiosRequestConfig = {
             method: 'GET',
@@ -56,6 +81,8 @@ class Microservice implements IRWAPIMicroservice {
 
         const response: AxiosResponse<Record<string, any>> = await axios(getUserDetailsRequestConfig);
 
+        logger.debug('[getLoggedUser] Retrieved token data, response status:', response.status);
+
         if (['GET', 'DELETE'].includes(ctx.request.method.toUpperCase())) {
             ctx.request.query.loggedUser = JSON.stringify(response.data);
         } else if (['POST', 'PATCH', 'PUT'].includes(ctx.request.method.toUpperCase())) {
@@ -66,11 +93,12 @@ class Microservice implements IRWAPIMicroservice {
 
     public bootstrap(opts: RegisterOptions): Middleware<{}, {}> {
         this.options = opts;
+        this.options.logger.info('RW API integration middleware registered');
+
+        this.validateBootstrapOptions(opts);
 
         return async (ctx: Context, next: Next) => {
             const { logger, baseURL, info, swagger } = this.options;
-
-            this.options.logger.info('Initializing register microservice');
 
             await this.getLoggedUser(logger, baseURL, ctx);
             this.registerCTRoutes(info, swagger, logger, ctx);
@@ -80,6 +108,8 @@ class Microservice implements IRWAPIMicroservice {
     }
 
     public async register(): Promise<Record<string, any>> {
+        this.options.logger.info('Starting CT registration process');
+
         const response: AxiosResponse<Record<string, any>> = await axios({
             baseURL: this.options.baseURL,
             url: `/api/v1/microservice`,
@@ -90,6 +120,9 @@ class Microservice implements IRWAPIMicroservice {
             },
             method: 'POST',
         });
+
+        this.options.logger.debug('[register] Registration response status:', response.status);
+
         return response.data;
     }
 
