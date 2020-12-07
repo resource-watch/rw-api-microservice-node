@@ -18,6 +18,7 @@ export interface RegisterOptions {
     baseURL: string;
     url: string;
     token: string;
+    skipGetLoggedUser?: boolean;
 }
 
 export interface RequestToMicroserviceOptions {
@@ -26,9 +27,9 @@ export interface RequestToMicroserviceOptions {
 }
 
 class Microservice implements IRWAPIMicroservice {
-    public options: RegisterOptions;
+    public options: RegisterOptions & { skipGetLoggedUser: boolean };
 
-    private validateBootstrapOptions(options:RegisterOptions):void {
+    private validateBootstrapOptions(options: RegisterOptions): void {
         if (!options.info) {
             throw new Error('RW API microservice - "info" cannot be empty');
         }
@@ -92,7 +93,10 @@ class Microservice implements IRWAPIMicroservice {
     }
 
     public bootstrap(opts: RegisterOptions): Middleware<{}, {}> {
-        this.options = opts;
+        this.options = {
+            ...opts,
+            skipGetLoggedUser: ('skipGetLoggedUser' in opts) ? opts.skipGetLoggedUser : false
+        };
         this.options.logger.info('RW API integration middleware registered');
 
         this.validateBootstrapOptions(opts);
@@ -100,7 +104,18 @@ class Microservice implements IRWAPIMicroservice {
         return async (ctx: Context, next: Next) => {
             const { logger, baseURL, info, swagger } = this.options;
 
-            await this.getLoggedUser(logger, baseURL, ctx);
+            /**
+             * This is a temporary hack to allow this library to be used with the Authorization
+             * Microservice without resulting in an endless loop. It allows the Authorization MS
+             * to register in CT for route publishing, while not causing requests with token to generate
+             * an endless loop.
+             *
+             * Once the Authorization MS is working without being registered in CT, the surrounding
+             * `if` statement can be safely removed, as well as all references to skipGetLoggedUser
+             */
+            if (!opts.skipGetLoggedUser) {
+                await this.getLoggedUser(logger, baseURL, ctx);
+            }
             this.registerCTRoutes(info, swagger, logger, ctx);
 
             return next();

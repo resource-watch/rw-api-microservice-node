@@ -67,3 +67,4 @@ These are the values you'll need to provide when using this library:
 - baseURL: the URL of the API as a whole, where all other services will be reachable.
 - url: the URL where your service will be reachable
 - token: JWT token to use on calls to other services.
+- skipGetLoggedUser: if set to `true`, the library will not intercept `authorization` headers nor fetch and inject the associated user data. This is a temporary functionality, and will be removed soon.
