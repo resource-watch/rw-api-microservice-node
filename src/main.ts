@@ -3,6 +3,7 @@ import type { Context, Middleware, Next } from "koa";
 import type request from "request";
 import type Logger from "bunyan";
 import { ResponseError } from "./response.error";
+import get = Reflect.get;
 
 export interface IRWAPIMicroservice {
     register: () => Promise<any>;
@@ -70,25 +71,32 @@ class Microservice implements IRWAPIMicroservice {
             return;
         }
 
+        try {
+            const getUserDetailsRequestConfig: AxiosRequestConfig = {
+                method: 'GET',
+                baseURL,
+                url: `/auth/user/me`,
+                headers: {
+                    'authorization': ctx.request.header.authorization
+                }
+            };
 
-        const getUserDetailsRequestConfig: AxiosRequestConfig = {
-            method: 'GET',
-            baseURL,
-            url: `/auth/user/me`,
-            headers: {
-                'authorization': ctx.request.header.authorization
+            const response: AxiosResponse<Record<string, any>> = await axios(getUserDetailsRequestConfig);
+
+            logger.debug('[getLoggedUser] Retrieved token data, response status:', response.status);
+
+            if (['GET', 'DELETE'].includes(ctx.request.method.toUpperCase())) {
+                ctx.request.query.loggedUser = JSON.stringify(response.data);
+            } else if (['POST', 'PATCH', 'PUT'].includes(ctx.request.method.toUpperCase())) {
+                // @ts-ignore
+                ctx.request.body.loggedUser = response.data;
             }
-        };
-
-        const response: AxiosResponse<Record<string, any>> = await axios(getUserDetailsRequestConfig);
-
-        logger.debug('[getLoggedUser] Retrieved token data, response status:', response.status);
-
-        if (['GET', 'DELETE'].includes(ctx.request.method.toUpperCase())) {
-            ctx.request.query.loggedUser = JSON.stringify(response.data);
-        } else if (['POST', 'PATCH', 'PUT'].includes(ctx.request.method.toUpperCase())) {
-            // @ts-ignore
-            ctx.request.body.loggedUser = response.data;
+        } catch (err) {
+            this.options.logger.error('Error getting user data', err);
+            if (err?.response?.data) {
+                throw new ResponseError(err.response.status, err.response.data, err.response);
+            }
+            throw err;
         }
     }
 
@@ -114,7 +122,11 @@ class Microservice implements IRWAPIMicroservice {
              * `if` statement can be safely removed, as well as all references to skipGetLoggedUser
              */
             if (!opts.skipGetLoggedUser) {
-                await this.getLoggedUser(logger, baseURL, ctx);
+                try {
+                    await this.getLoggedUser(logger, baseURL, ctx);
+                } catch (getLoggedUserError) {
+                    ctx.throw(500, `Error loading user info from token - ${getLoggedUserError.toString()}`);
+                }
             }
             this.registerCTRoutes(info, swagger, logger, ctx);
 
@@ -167,7 +179,7 @@ class Microservice implements IRWAPIMicroservice {
             const response: AxiosResponse<Record<string, any>> = await axios(axiosRequestConfig);
             return response.data;
         } catch (err) {
-            this.options.logger.error('Error to doing request', err);
+            this.options.logger.error('Error doing request', err);
             if (err?.response?.data) {
                 throw new ResponseError(err.response.status, err.response.data, err.response);
             }

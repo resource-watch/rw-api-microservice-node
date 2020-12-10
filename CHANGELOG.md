@@ -1,3 +1,7 @@
+# v2.0.3
+
+- Improved error handling when loading user data from token.
+
 # v2.0.2
 
 - Add `skipGetLoggedUser` temporary flag.
