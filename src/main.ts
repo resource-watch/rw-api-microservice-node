@@ -25,6 +25,8 @@ export interface RegisterOptions {
 export interface RequestToMicroserviceOptions {
     version?: string & boolean;
     application?: string;
+    simple?: boolean;
+    resolveWithFullResponse?: boolean;
 }
 
 class Microservice implements IRWAPIMicroservice {
@@ -177,10 +179,32 @@ class Microservice implements IRWAPIMicroservice {
             }
 
             const response: AxiosResponse<Record<string, any>> = await axios(axiosRequestConfig);
+
+            if (requestConfig.resolveWithFullResponse === true) {
+                return {
+                    statusCode: response.status,
+                    body: response.data
+                };
+            }
             return response.data;
         } catch (err) {
             this.options.logger.error('Error doing request', err);
+            if (requestConfig.simple === false && err.response.status < 500) {
+                if (requestConfig.resolveWithFullResponse === true) {
+                    return {
+                        statusCode: err.response.status,
+                        body: err.response.data
+                    };
+                }
+                return err.response.data;
+            }
             if (err?.response?.data) {
+                if (requestConfig.resolveWithFullResponse === true) {
+                    return {
+                        statusCode: err.response.status,
+                        body: err.response.data
+                    };
+                }
                 throw new ResponseError(err.response.status, err.response.data, err.response);
             }
             return err;

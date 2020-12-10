@@ -34,6 +34,60 @@ describe('Request to RWAPIMicroservice', () => {
         response.should.equal('ok');
     });
 
+    it('GET requestToMicroservice with resolveWithFullResponse=true', async () => {
+        const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
+            uri: `/dataset/1`,
+            method: 'GET',
+            json: true,
+            resolveWithFullResponse: true
+        };
+
+        nock('https://controltower.dev')
+            .get('/dataset/1')
+            .reply(200, 'ok');
+
+        const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
+
+        response.should.have.property('body').and.equal('ok');
+        response.should.have.property('statusCode').and.equal(200);
+    });
+
+    it('GET requestToMicroservice with simple=false', async () => {
+        const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
+            uri: `/dataset/1`,
+            method: 'GET',
+            json: true,
+            simple: false
+        };
+
+        nock('https://controltower.dev')
+            .get('/dataset/1')
+            .reply(200, 'ok');
+
+        const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
+
+        response.should.equal('ok');
+    });
+
+    it('GET requestToMicroservice with simple=false and resolveWithFullResponse=true', async () => {
+        const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
+            uri: `/dataset/1`,
+            method: 'GET',
+            json: true,
+            simple: false,
+            resolveWithFullResponse: true
+        };
+
+        nock('https://controltower.dev')
+            .get('/dataset/1')
+            .reply(200, 'ok');
+
+        const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
+
+        response.should.have.property('body').and.equal('ok');
+        response.should.have.property('statusCode').and.equal(200);
+    });
+
     it('Basic requestToMicroservice - POST request (happy case)', async () => {
         const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
             uri: `/dataset/1`,
