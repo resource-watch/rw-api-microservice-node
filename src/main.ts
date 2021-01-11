@@ -3,7 +3,6 @@ import type { Context, Middleware, Next } from "koa";
 import type request from "request";
 import type Logger from "bunyan";
 import { ResponseError } from "./response.error";
-import get = Reflect.get;
 
 export interface IRWAPIMicroservice {
     register: () => Promise<any>;
@@ -32,7 +31,7 @@ export interface RequestToMicroserviceOptions {
 class Microservice implements IRWAPIMicroservice {
     public options: RegisterOptions & { skipGetLoggedUser: boolean };
 
-    private validateBootstrapOptions(options: RegisterOptions): void {
+    private static validateBootstrapOptions(options: RegisterOptions): void {
         if (!options.info) {
             throw new Error('RW API microservice - "info" cannot be empty');
         }
@@ -56,7 +55,7 @@ class Microservice implements IRWAPIMicroservice {
         }
     }
 
-    private registerCTRoutes(info: Record<string, any>, swagger: Record<string, any>, logger: Logger, ctx: Context): void {
+    private static registerCTRoutes(info: Record<string, any>, swagger: Record<string, any>, logger: Logger, ctx: Context): void {
         if (ctx.path === '/info') {
             logger.info('Obtaining info to register microservice');
             info.swagger = swagger;
@@ -109,10 +108,12 @@ class Microservice implements IRWAPIMicroservice {
         };
         this.options.logger.info('RW API integration middleware registered');
 
-        this.validateBootstrapOptions(opts);
+        Microservice.validateBootstrapOptions(opts);
 
         return async (ctx: Context, next: Next) => {
             const { logger, baseURL, info, swagger } = this.options;
+
+            Microservice.registerCTRoutes(info, swagger, logger, ctx);
 
             /**
              * This is a temporary hack to allow this library to be used with the Authorization
@@ -130,8 +131,6 @@ class Microservice implements IRWAPIMicroservice {
                     ctx.throw(500, `Error loading user info from token - ${getLoggedUserError.toString()}`);
                 }
             }
-            this.registerCTRoutes(info, swagger, logger, ctx);
-
             return next();
         };
     }
@@ -156,7 +155,7 @@ class Microservice implements IRWAPIMicroservice {
     }
 
     public async requestToMicroservice(requestConfig: request.OptionsWithUri & RequestToMicroserviceOptions): Promise<Record<string, any>> {
-        this.options.logger.info('Adding authentication header');
+        this.options.logger.info('Adding authorization header');
         const axiosRequestConfig: AxiosRequestConfig = {
             baseURL: this.options.baseURL,
             data: requestConfig.body,
