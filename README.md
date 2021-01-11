@@ -68,3 +68,4 @@ These are the values you'll need to provide when using this library:
 - url: the URL where your service will be reachable
 - token: JWT token to use on calls to other services.
 - skipGetLoggedUser: if set to `true`, the library will not intercept `authorization` headers nor fetch and inject the associated user data. This is a temporary functionality, and will be removed soon.
+- fastlyServiceId and fastlyAPIKey: optional data for the Fastly integration. See [this link](https://docs.fastly.com/en/guides/finding-and-managing-your-account-info) for details on how to get these values.

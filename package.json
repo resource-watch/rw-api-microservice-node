@@ -51,7 +51,8 @@
   },
   "homepage": "https://github.com/resource-watch/rw-api-microservice-node",
   "dependencies": {
-    "axios": "^0.21.0"
+    "axios": "^0.21.0",
+    "fastly-promises": "^0.9.0"
   },
   "devDependencies": {
     "@types/bunyan": "^1.8.6",
