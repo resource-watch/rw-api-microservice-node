@@ -2,6 +2,9 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import type { Context, Middleware, Next } from "koa";
 import type request from "request";
 import type Logger from "bunyan";
+// @ts-ignore
+import Fastly from 'fastly-promises';
+
 import { ResponseError } from "./response.error";
 
 export interface IRWAPIMicroservice {
@@ -19,6 +22,8 @@ export interface RegisterOptions {
     url: string;
     token: string;
     skipGetLoggedUser?: boolean;
+    fastlyServiceId?: string;
+    fastlyAPIKey?: string;
 }
 
 export interface RequestToMicroserviceOptions {
@@ -52,6 +57,28 @@ class Microservice implements IRWAPIMicroservice {
         }
         if (!options.token) {
             throw new Error('RW API microservice - "token" cannot be empty');
+        }
+    }
+
+    private static async fastlyIntegrationHandler(ctx: Context, fastlyServiceId: string, fastlyAPIKey: string, logger: Logger): Promise<void> {
+        const fastly: Fastly = Fastly(fastlyAPIKey, fastlyServiceId);
+
+        if (ctx.status >= 200 && ctx.status < 400) {
+            // Non-GET, anonymous requests with the `uncache` header can purge the cache
+            if (ctx.request.method !== 'GET' && ctx.response.headers && ctx.response.headers.uncache) {
+                const tags: string[] = ctx.response.headers.uncache.split(' ').filter((part: string) => part !== '');
+                logger.info('[fastlyIntegrationHandler] Purging cache for tag(s): ', tags.join(' '));
+                await fastly.purgeKeys(tags);
+            }
+
+            // GET anonymous requests with the `cache` header can be cached
+            if (ctx.request.method === 'GET' && !ctx.request.headers?.authorization && ctx.response?.headers?.cache) {
+                const key: string = ctx.response.headers.cache.split(' ').filter((part: string) => part !== '').join(' ');
+                logger.info('[fastlyIntegrationHandler] Caching with key(s): ', key);
+                ctx.set('Surrogate-Key', key);
+            } else {
+                ctx.set('Cache-Control', 'private');
+            }
         }
     }
 
@@ -131,7 +158,11 @@ class Microservice implements IRWAPIMicroservice {
                     ctx.throw(500, `Error loading user info from token - ${getLoggedUserError.toString()}`);
                 }
             }
-            return next();
+            await next();
+
+            if (opts.fastlyAPIKey && opts.fastlyServiceId) {
+                await Microservice.fastlyIntegrationHandler(ctx, opts.fastlyServiceId, opts.fastlyAPIKey, logger);
+            }
         };
     }
 

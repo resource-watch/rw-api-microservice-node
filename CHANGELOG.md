@@ -1,3 +1,7 @@
+# v3.0.0
+
+- Add Fastly integration.
+
 # v2.0.4
 
 - Add support for `simple` and `resolveWithFullResponse` parameters on `requestToMicroservice`.
