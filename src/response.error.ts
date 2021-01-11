@@ -10,9 +10,5 @@ export class ResponseError extends Error {
         this.message = statusCode + ' - ' + (JSON && JSON.stringify ? JSON.stringify(body) : body);
         this.error = body; // legacy attribute
         this.response = response;
-        //
-        // if (Error.captureStackTrace) { // required for non-V8 environments
-        //     Error.captureStackTrace(this);
-        // }
     }
 }
