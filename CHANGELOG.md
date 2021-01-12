@@ -1,3 +1,7 @@
+# v3.1.1
+
+- Restructure Fastly integration configuration variables.
+
 # v3.1.0
 
 - Make Fastly integration required.

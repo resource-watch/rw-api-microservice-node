@@ -55,8 +55,7 @@ describe('RWAPIMicroservice register - Koa v2.x', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
-            fastlyAPIKey: 'fastlyAPIKey',
-            fastlyServiceId: 'fastlyServiceId'
+            fastlyEnabled: false
         };
 
         app.use(RWAPIMicroservice.bootstrap(registerOptions));
@@ -90,8 +89,7 @@ describe('RWAPIMicroservice register - Koa v2.x', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
-            fastlyAPIKey: 'fastlyAPIKey',
-            fastlyServiceId: 'fastlyServiceId'
+            fastlyEnabled: false
         };
 
         app.use(RWAPIMicroservice.bootstrap(registerOptions));
@@ -137,8 +135,7 @@ describe('RWAPIMicroservice register - Koa v2.x', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
-            fastlyAPIKey: 'fastlyAPIKey',
-            fastlyServiceId: 'fastlyServiceId'
+            fastlyEnabled: false
         };
 
         app.use(RWAPIMicroservice.bootstrap(registerOptions));

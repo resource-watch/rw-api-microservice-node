@@ -51,8 +51,7 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
-            fastlyAPIKey: 'fastlyAPIKey',
-            fastlyServiceId: 'fastlyServiceId'
+            fastlyEnabled: false
         };
 
         const testRouter: Router = new Router();
@@ -103,8 +102,7 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
-            fastlyAPIKey: 'fastlyAPIKey',
-            fastlyServiceId: 'fastlyServiceId'
+            fastlyEnabled: false
         };
 
         const testRouter: Router = new Router();

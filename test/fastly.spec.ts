@@ -47,6 +47,7 @@ describe('Fastly integration tests', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
+            fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId'
         };
@@ -97,6 +98,7 @@ describe('Fastly integration tests', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
+            fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId'
         };
@@ -145,6 +147,7 @@ describe('Fastly integration tests', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
+            fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId'
         };
@@ -192,6 +195,7 @@ describe('Fastly integration tests', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
+            fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId'
         };
@@ -285,6 +289,7 @@ describe('Fastly integration tests', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
+            fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId'
         };

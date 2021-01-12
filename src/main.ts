@@ -22,8 +22,9 @@ export interface RegisterOptions {
     url: string;
     token: string;
     skipGetLoggedUser?: boolean;
-    fastlyServiceId: string;
-    fastlyAPIKey: string;
+    fastlyEnabled: boolean;
+    fastlyServiceId?: string;
+    fastlyAPIKey?: string;
 }
 
 export interface RequestToMicroserviceOptions {
@@ -58,10 +59,13 @@ class Microservice implements IRWAPIMicroservice {
         if (!options.token) {
             throw new Error('RW API microservice - "token" cannot be empty');
         }
-        if (!options.fastlyServiceId) {
+        if (options.fastlyEnabled !== true &&  options.fastlyEnabled !== false) {
+            throw new Error('RW API microservice - "fastlyEnabled" needs to be a boolean');
+        }
+        if (options.fastlyEnabled && !options.fastlyServiceId) {
             throw new Error('RW API microservice - "fastlyServiceId" cannot be empty');
         }
-        if (!options.fastlyAPIKey) {
+        if (options.fastlyEnabled && !options.fastlyAPIKey) {
             throw new Error('RW API microservice - "fastlyAPIKey" cannot be empty');
         }
     }
@@ -166,7 +170,10 @@ class Microservice implements IRWAPIMicroservice {
             }
             await next();
 
-            return Microservice.fastlyIntegrationHandler(ctx, opts.fastlyServiceId, opts.fastlyAPIKey, logger);
+            if (opts.fastlyEnabled) {
+                await Microservice.fastlyIntegrationHandler(ctx, opts.fastlyServiceId, opts.fastlyAPIKey, logger);
+            }
+
         };
     }
 

@@ -51,8 +51,7 @@ describe('Injecting logged user data - Koa v2.x with skipGetLoggedUser', () => {
             url: 'https://microservice.dev',
             token: 'ABCDEF',
             skipGetLoggedUser: true,
-            fastlyAPIKey: 'fastlyAPIKey',
-            fastlyServiceId: 'fastlyServiceId'
+            fastlyEnabled: false
         };
 
         const testRouter: Router = new Router();
@@ -99,8 +98,7 @@ describe('Injecting logged user data - Koa v2.x with skipGetLoggedUser', () => {
             url: 'https://microservice.dev',
             token: 'ABCDEF',
             skipGetLoggedUser: true,
-            fastlyAPIKey: 'fastlyAPIKey',
-            fastlyServiceId: 'fastlyServiceId'
+            fastlyEnabled: false
         };
 
         const testRouter: Router = new Router();
@@ -147,8 +145,7 @@ describe('Injecting logged user data - Koa v2.x with skipGetLoggedUser', () => {
             url: 'https://microservice.dev',
             token: 'ABCDEF',
             skipGetLoggedUser: true,
-            fastlyAPIKey: 'fastlyAPIKey',
-            fastlyServiceId: 'fastlyServiceId'
+            fastlyEnabled: false
         };
 
         const testRouter: Router = new Router();
@@ -198,8 +195,7 @@ describe('Injecting logged user data - Koa v2.x with skipGetLoggedUser', () => {
             url: 'https://microservice.dev',
             token: 'ABCDEF',
             skipGetLoggedUser: true,
-            fastlyAPIKey: 'fastlyAPIKey',
-            fastlyServiceId: 'fastlyServiceId'
+            fastlyEnabled: false
         };
 
         const testRouter: Router = new Router();
@@ -249,8 +245,7 @@ describe('Injecting logged user data - Koa v2.x with skipGetLoggedUser', () => {
             url: 'https://microservice.dev',
             token: 'ABCDEF',
             skipGetLoggedUser: true,
-            fastlyAPIKey: 'fastlyAPIKey',
-            fastlyServiceId: 'fastlyServiceId'
+            fastlyEnabled: false
         };
 
         const testRouter: Router = new Router();
