@@ -1,3 +1,7 @@
+# v3.1.0
+
+- Make Fastly integration required.
+
 # v3.0.3
 
 - Add a custom version of `fastly-promises` to address security issue.

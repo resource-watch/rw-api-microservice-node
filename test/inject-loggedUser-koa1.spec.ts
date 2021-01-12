@@ -52,6 +52,8 @@ describe('Injecting logged user data - Koa v1.x', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
+            fastlyAPIKey: 'fastlyAPIKey',
+            fastlyServiceId: 'fastlyServiceId'
         };
 
         const testRouter: Router = new Router();
@@ -106,6 +108,8 @@ describe('Injecting logged user data - Koa v1.x', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
+            fastlyAPIKey: 'fastlyAPIKey',
+            fastlyServiceId: 'fastlyServiceId'
         };
 
         const testRouter: Router = new Router();
@@ -159,7 +163,9 @@ describe('Injecting logged user data - Koa v1.x', () => {
             name: 'test MS',
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
-            token: 'ABCDEF'
+            token: 'ABCDEF',
+            fastlyAPIKey: 'fastlyAPIKey',
+            fastlyServiceId: 'fastlyServiceId'
         };
 
         const testRouter: Router = new Router();
@@ -217,6 +223,8 @@ describe('Injecting logged user data - Koa v1.x', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
+            fastlyAPIKey: 'fastlyAPIKey',
+            fastlyServiceId: 'fastlyServiceId'
         };
 
         const testRouter: Router = new Router();
@@ -274,6 +282,8 @@ describe('Injecting logged user data - Koa v1.x', () => {
             baseURL: 'https://controltower.dev',
             url: 'https://microservice.dev',
             token: 'ABCDEF',
+            fastlyAPIKey: 'fastlyAPIKey',
+            fastlyServiceId: 'fastlyServiceId'
         };
 
         const testRouter: Router = new Router();
