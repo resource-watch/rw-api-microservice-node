@@ -1,3 +1,7 @@
+# v3.0.3
+
+- Add a custom version of `fastly-promises` to address security issue.
+
 # v3.0.2
 
 - Adjust logger level on failure of request to microservice.
