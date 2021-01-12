@@ -1,6 +1,6 @@
 {
   "name": "rw-api-microservice-node",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Integration library for the RW API microservice",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
@@ -51,7 +51,7 @@
   },
   "homepage": "https://github.com/resource-watch/rw-api-microservice-node",
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "fastly-promises": "^0.9.0"
   },
   "devDependencies": {

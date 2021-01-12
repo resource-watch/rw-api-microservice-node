@@ -1,3 +1,7 @@
+# v3.0.1
+
+- Update Axios to 0.21.1 to fix critical security issue.
+
 # v3.0.0
 
 - Add Fastly integration.
