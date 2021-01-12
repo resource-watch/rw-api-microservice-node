@@ -1,3 +1,7 @@
+# v3.0.2
+
+- Adjust logger level on failure of request to microservice.
+
 # v3.0.1
 
 - Update Axios to 0.21.1 to fix critical security issue.

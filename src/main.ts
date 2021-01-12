@@ -218,7 +218,7 @@ class Microservice implements IRWAPIMicroservice {
             }
             return response.data;
         } catch (err) {
-            this.options.logger.error('Error doing request', err);
+            this.options.logger.info('Error doing request', err);
             if (requestConfig.simple === false && err.response.status < 500) {
                 if (requestConfig.resolveWithFullResponse === true) {
                     return {
