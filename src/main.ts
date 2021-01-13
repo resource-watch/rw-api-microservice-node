@@ -43,33 +43,6 @@ class Microservice implements IRWAPIMicroservice {
     public options: ConfigurationOptions & { skipGetLoggedUser: boolean };
 
     private static convertAndValidateBootstrapOptions(options: BootstrapArguments): ConfigurationOptions {
-        const convertedOptions: ConfigurationOptions = {
-            ...options,
-            skipGetLoggedUser: ('skipGetLoggedUser' in options) ? options.skipGetLoggedUser : false,
-            fastlyEnabled: (options.fastlyEnabled === true || options.fastlyEnabled === "true")
-        };
-
-        if (!options.info) {
-            throw new Error('RW API microservice - "info" cannot be empty');
-        }
-        if (!options.swagger) {
-            throw new Error('RW API microservice - "swagger" cannot be empty');
-        }
-        if (!options.logger) {
-            throw new Error('RW API microservice - "logger" cannot be empty');
-        }
-        if (!options.name) {
-            throw new Error('RW API microservice - "name" cannot be empty');
-        }
-        if (!options.baseURL) {
-            throw new Error('RW API microservice - "baseURL" cannot be empty');
-        }
-        if (!options.url) {
-            throw new Error('RW API microservice - "url" cannot be empty');
-        }
-        if (!options.token) {
-            throw new Error('RW API microservice - "token" cannot be empty');
-        }
         if (
             options.fastlyEnabled !== true
             && options.fastlyEnabled !== false
@@ -78,11 +51,39 @@ class Microservice implements IRWAPIMicroservice {
         ) {
             throw new Error('RW API microservice - "fastlyEnabled" needs to be a boolean');
         }
-        if (options.fastlyEnabled === true || options.fastlyEnabled === "true") {
+
+        const convertedOptions: ConfigurationOptions = {
+            ...options,
+            skipGetLoggedUser: ('skipGetLoggedUser' in options) ? options.skipGetLoggedUser : false,
+            fastlyEnabled: (options.fastlyEnabled === true || options.fastlyEnabled === "true")
+        };
+
+        if (!convertedOptions.info) {
+            throw new Error('RW API microservice - "info" cannot be empty');
+        }
+        if (!convertedOptions.swagger) {
+            throw new Error('RW API microservice - "swagger" cannot be empty');
+        }
+        if (!convertedOptions.logger) {
+            throw new Error('RW API microservice - "logger" cannot be empty');
+        }
+        if (!convertedOptions.name) {
+            throw new Error('RW API microservice - "name" cannot be empty');
+        }
+        if (!convertedOptions.baseURL) {
+            throw new Error('RW API microservice - "baseURL" cannot be empty');
+        }
+        if (!convertedOptions.url) {
+            throw new Error('RW API microservice - "url" cannot be empty');
+        }
+        if (!convertedOptions.token) {
+            throw new Error('RW API microservice - "token" cannot be empty');
+        }
+        if (convertedOptions.fastlyEnabled === true) {
             if (!options.fastlyServiceId) {
                 throw new Error('RW API microservice - "fastlyServiceId" cannot be empty');
             }
-            if (!options.fastlyAPIKey) {
+            if (!convertedOptions.fastlyAPIKey) {
                 throw new Error('RW API microservice - "fastlyAPIKey" cannot be empty');
             }
         }

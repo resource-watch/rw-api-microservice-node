@@ -1,6 +1,6 @@
 import nock from 'nock';
 import chai, { expect } from 'chai';
-import { RegisterOptions, RWAPIMicroservice } from 'main';
+import { BootstrapArguments, RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
 import bunyan from "bunyan";
 import type Koa from "koa";
@@ -44,7 +44,7 @@ describe('Injecting logged user data - Koa v1.x', () => {
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
-        const registerOptions: RegisterOptions = {
+        const registerOptions: BootstrapArguments = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
             logger,
@@ -99,7 +99,7 @@ describe('Injecting logged user data - Koa v1.x', () => {
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
-        const registerOptions: RegisterOptions = {
+        const registerOptions: BootstrapArguments = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
             logger,
@@ -154,7 +154,7 @@ describe('Injecting logged user data - Koa v1.x', () => {
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
-        const registerOptions: RegisterOptions = {
+        const registerOptions: BootstrapArguments = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
             logger,
@@ -212,7 +212,7 @@ describe('Injecting logged user data - Koa v1.x', () => {
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
-        const registerOptions: RegisterOptions = {
+        const registerOptions: BootstrapArguments = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
             logger,
@@ -270,7 +270,7 @@ describe('Injecting logged user data - Koa v1.x', () => {
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
-        const registerOptions: RegisterOptions = {
+        const registerOptions: BootstrapArguments = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
             logger,

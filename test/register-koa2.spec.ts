@@ -1,6 +1,6 @@
 import nock from 'nock';
 import chai from 'chai';
-import type { RegisterOptions } from 'main';
+import type { BootstrapArguments } from 'main';
 import { RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
 import bunyan from "bunyan";
@@ -47,7 +47,7 @@ describe('RWAPIMicroservice register - Koa v2.x', () => {
             })
             .reply(200);
 
-        const registerOptions: RegisterOptions = {
+        const registerOptions: BootstrapArguments = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
             logger,
@@ -81,7 +81,7 @@ describe('RWAPIMicroservice register - Koa v2.x', () => {
             })
             .reply(200);
 
-        const registerOptions: RegisterOptions = {
+        const registerOptions: BootstrapArguments = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
             logger,
@@ -127,7 +127,7 @@ describe('RWAPIMicroservice register - Koa v2.x', () => {
             })
             .reply(200);
 
-        const registerOptions: RegisterOptions = {
+        const registerOptions: BootstrapArguments = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
             logger,

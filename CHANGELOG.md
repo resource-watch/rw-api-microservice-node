@@ -1,3 +1,7 @@
+# v3.2.1
+
+- Improve Fastly argument validation.
+
 # v3.2.0
 
 - Fix issue with `fastlyEnabled` set to "false" and Fastly configuration values validation.

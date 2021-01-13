@@ -8,7 +8,7 @@ import Koa1 from "koa1";
 import chaiHttp from 'chai-http';
 import { Server } from "http";
 import Request from "superagent";
-import { RegisterOptions, RWAPIMicroservice } from "main";
+import { BootstrapArguments, RWAPIMicroservice } from "main";
 import convert from "koa-convert";
 
 chai.should();
@@ -48,7 +48,7 @@ describe('RWAPIMicroservice register - Koa v1.x', () => {
             streams: []
         });
 
-        const registerOptions: RegisterOptions = {
+        const registerOptions: BootstrapArguments = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
             logger,
@@ -82,7 +82,7 @@ describe('RWAPIMicroservice register - Koa v1.x', () => {
                 active: true
             }).reply(200);
 
-        const registerOptions: RegisterOptions = {
+        const registerOptions: BootstrapArguments = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
             logger,
@@ -129,7 +129,7 @@ describe('RWAPIMicroservice register - Koa v1.x', () => {
             })
             .reply(200);
 
-        const registerOptions: RegisterOptions = {
+        const registerOptions: BootstrapArguments = {
             info: { name: 'test MS' },
             swagger: { swagger: 'test swagger' },
             logger,
