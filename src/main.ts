@@ -10,10 +10,10 @@ import { ResponseError } from "./response.error";
 export interface IRWAPIMicroservice {
     register: () => Promise<any>;
     requestToMicroservice: (config: request.OptionsWithUri & RequestToMicroserviceOptions) => Promise<Record<string, any>>;
-    bootstrap: (opts: RegisterOptions) => Middleware<{}, {}>;
+    bootstrap: (opts: BootstrapArguments) => Middleware<{}, {}>;
 }
 
-export interface RegisterOptions {
+export interface BootstrapArguments {
     info: Record<string, any>;
     swagger: Record<string, any>;
     logger: Logger;
@@ -27,6 +27,11 @@ export interface RegisterOptions {
     fastlyAPIKey?: string;
 }
 
+export interface ConfigurationOptions extends BootstrapArguments {
+    skipGetLoggedUser: boolean;
+    fastlyEnabled: boolean;
+}
+
 export interface RequestToMicroserviceOptions {
     version?: string & boolean;
     application?: string;
@@ -35,9 +40,15 @@ export interface RequestToMicroserviceOptions {
 }
 
 class Microservice implements IRWAPIMicroservice {
-    public options: RegisterOptions & { skipGetLoggedUser: boolean };
+    public options: ConfigurationOptions & { skipGetLoggedUser: boolean };
 
-    private static validateBootstrapOptions(options: RegisterOptions): void {
+    private static convertAndValidateBootstrapOptions(options: BootstrapArguments): ConfigurationOptions {
+        const convertedOptions: ConfigurationOptions = {
+            ...options,
+            skipGetLoggedUser: ('skipGetLoggedUser' in options) ? options.skipGetLoggedUser : false,
+            fastlyEnabled: (options.fastlyEnabled === true || options.fastlyEnabled === "true")
+        };
+
         if (!options.info) {
             throw new Error('RW API microservice - "info" cannot be empty');
         }
@@ -67,12 +78,16 @@ class Microservice implements IRWAPIMicroservice {
         ) {
             throw new Error('RW API microservice - "fastlyEnabled" needs to be a boolean');
         }
-        if (options.fastlyEnabled && !options.fastlyServiceId) {
-            throw new Error('RW API microservice - "fastlyServiceId" cannot be empty');
+        if (options.fastlyEnabled === true || options.fastlyEnabled === "true") {
+            if (!options.fastlyServiceId) {
+                throw new Error('RW API microservice - "fastlyServiceId" cannot be empty');
+            }
+            if (!options.fastlyAPIKey) {
+                throw new Error('RW API microservice - "fastlyAPIKey" cannot be empty');
+            }
         }
-        if (options.fastlyEnabled && !options.fastlyAPIKey) {
-            throw new Error('RW API microservice - "fastlyAPIKey" cannot be empty');
-        }
+
+        return convertedOptions;
     }
 
     private static async fastlyIntegrationHandler(ctx: Context, fastlyServiceId: string, fastlyAPIKey: string, logger: Logger): Promise<void> {
@@ -143,14 +158,10 @@ class Microservice implements IRWAPIMicroservice {
         }
     }
 
-    public bootstrap(opts: RegisterOptions): Middleware<{}, {}> {
-        this.options = {
-            ...opts,
-            skipGetLoggedUser: ('skipGetLoggedUser' in opts) ? opts.skipGetLoggedUser : false
-        };
-        this.options.logger.info('RW API integration middleware registered');
+    public bootstrap(opts: BootstrapArguments): Middleware<{}, {}> {
+        this.options = Microservice.convertAndValidateBootstrapOptions(opts);
 
-        Microservice.validateBootstrapOptions(opts);
+        this.options.logger.info('RW API integration middleware registered');
 
         return async (ctx: Context, next: Next) => {
             const { logger, baseURL, info, swagger } = this.options;
@@ -166,7 +177,7 @@ class Microservice implements IRWAPIMicroservice {
              * Once the Authorization MS is working without being registered in CT, the surrounding
              * `if` statement can be safely removed, as well as all references to skipGetLoggedUser
              */
-            if (!opts.skipGetLoggedUser) {
+            if (!this.options.skipGetLoggedUser) {
                 try {
                     await this.getLoggedUser(logger, baseURL, ctx);
                 } catch (getLoggedUserError) {
@@ -175,8 +186,8 @@ class Microservice implements IRWAPIMicroservice {
             }
             await next();
 
-            if (opts.fastlyEnabled) {
-                await Microservice.fastlyIntegrationHandler(ctx, opts.fastlyServiceId, opts.fastlyAPIKey, logger);
+            if (this.options.fastlyEnabled) {
+                await Microservice.fastlyIntegrationHandler(ctx, this.options.fastlyServiceId, this.options.fastlyAPIKey, logger);
             }
 
         };

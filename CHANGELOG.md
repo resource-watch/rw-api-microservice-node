@@ -1,3 +1,8 @@
+# v3.2.0
+
+- Fix issue with `fastlyEnabled` set to "false" and Fastly configuration values validation.
+- Improve typing for the arguments of the `bootstrap()` method.
+
 # v3.1.2
 
 - Support truthy string values for the `fastlyEnabled` configuration value.
