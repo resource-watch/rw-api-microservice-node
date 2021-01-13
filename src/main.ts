@@ -22,7 +22,7 @@ export interface RegisterOptions {
     url: string;
     token: string;
     skipGetLoggedUser?: boolean;
-    fastlyEnabled: boolean;
+    fastlyEnabled: boolean|"true"|"false";
     fastlyServiceId?: string;
     fastlyAPIKey?: string;
 }
@@ -59,7 +59,12 @@ class Microservice implements IRWAPIMicroservice {
         if (!options.token) {
             throw new Error('RW API microservice - "token" cannot be empty');
         }
-        if (options.fastlyEnabled !== true &&  options.fastlyEnabled !== false) {
+        if (
+            options.fastlyEnabled !== true
+            && options.fastlyEnabled !== false
+            && options.fastlyEnabled !== "true"
+            && options.fastlyEnabled !== "false"
+        ) {
             throw new Error('RW API microservice - "fastlyEnabled" needs to be a boolean');
         }
         if (options.fastlyEnabled && !options.fastlyServiceId) {

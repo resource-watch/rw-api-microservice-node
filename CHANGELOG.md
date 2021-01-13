@@ -1,3 +1,7 @@
+# v3.1.2
+
+- Support truthy string values for the `fastlyEnabled` configuration value.
+
 # v3.1.1
 
 - Restructure Fastly integration configuration variables.
