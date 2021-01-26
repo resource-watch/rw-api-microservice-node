@@ -1,3 +1,7 @@
+# v3.2.2
+
+- Fix issue with GET/DELETE requests and [`koa-qs`](https://www.npmjs.com/package/koa-qs)
+
 # v3.2.1
 
 - Improve Fastly argument validation.

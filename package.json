@@ -1,6 +1,6 @@
 {
   "name": "rw-api-microservice-node",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "description": "Integration library for the RW API microservice",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
@@ -61,6 +61,7 @@
     "@types/debug": "^4.1.5",
     "@types/koa": "^2.11.6",
     "@types/koa-convert": "^1.2.3",
+    "@types/koa-qs": "^2.0.0",
     "@types/koa-router": "^7.4.1",
     "@types/mocha": "^8.0.4",
     "@types/request-promise": "^4.1.46",
@@ -70,6 +71,7 @@
     "chai-http": "^4.3.0",
     "koa-body": "^4.2.0",
     "koa-convert": "^2.0.0",
+    "koa-qs": "^3.0.0",
     "koa-router": "^10.0.0",
     "koa1": "npm:koa@^1.7.0",
     "koa2": "npm:koa@^2.13.0",
