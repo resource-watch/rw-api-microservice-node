@@ -40,7 +40,11 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             streams: []
         });
 
-        nock('https://controltower.dev')
+        nock('https://controltower.dev', {
+            reqheaders: {
+                authorization: `Bearer ${constants.TOKEN}`,
+            }
+        })
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
@@ -92,7 +96,11 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             streams: []
         });
 
-        nock('https://controltower.dev')
+        nock('https://controltower.dev', {
+            reqheaders: {
+                authorization: `Bearer ${constants.TOKEN}`,
+            }
+        })
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
@@ -144,7 +152,11 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             streams: []
         });
 
-        nock('https://controltower.dev')
+        nock('https://controltower.dev', {
+            reqheaders: {
+                authorization: `Bearer ${constants.TOKEN}`,
+            }
+        })
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
@@ -199,7 +211,11 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             streams: []
         });
 
-        nock('https://controltower.dev')
+        nock('https://controltower.dev', {
+            reqheaders: {
+                authorization: `Bearer ${constants.TOKEN}`,
+            }
+        })
             .get('/auth/user/me')
             .reply(200, constants.USER);
 
@@ -254,7 +270,11 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             streams: []
         });
 
-        nock('https://controltower.dev')
+        nock('https://controltower.dev', {
+            reqheaders: {
+                authorization: `Bearer ${constants.TOKEN}`,
+            }
+        })
             .get('/auth/user/me')
             .reply(200, constants.USER);
 

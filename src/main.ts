@@ -231,7 +231,7 @@ class Microservice implements IRWAPIMicroservice {
 
             axiosRequestConfig.url = version + requestConfig.uri;
 
-            axiosRequestConfig.headers = Object.assign(requestConfig.headers || {}, { authentication: this.options.token });
+            axiosRequestConfig.headers = Object.assign(requestConfig.headers || {}, { authorization: `Bearer ${this.options.token}` });
             if (requestConfig.application) {
                 axiosRequestConfig.headers.app_key = JSON.stringify({ application: requestConfig.application });
             }
