@@ -39,7 +39,11 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
             streams: []
         });
 
-        nock('https://controltower.dev')
+        nock('https://controltower.dev', {
+            reqheaders: {
+                authorization: `Bearer ${constants.TOKEN}`,
+            }
+        })
             .get('/auth/user/me')
             .reply(404, 'Not Found');
 
@@ -90,7 +94,11 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
             streams: []
         });
 
-        nock('https://controltower.dev')
+        nock('https://controltower.dev', {
+            reqheaders: {
+                authorization: `Bearer ${constants.TOKEN}`,
+            }
+        })
             .get('/auth/user/me')
             .reply(500, 'Server error');
 

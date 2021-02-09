@@ -1,5 +1,5 @@
 import nock from 'nock';
-import chai, { expect } from 'chai';
+import chai from 'chai';
 import { BootstrapArguments, RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
 import bunyan from "bunyan";
@@ -86,7 +86,11 @@ describe('Fastly integration tests', () => {
             streams: []
         });
 
-        nock('https://controltower.dev')
+        nock('https://controltower.dev', {
+            reqheaders: {
+                authorization: `Bearer ${constants.TOKEN}`,
+            }
+        })
             .get('/auth/user/me')
             .reply(200, constants.USER);
 

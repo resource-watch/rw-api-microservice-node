@@ -2,6 +2,7 @@ import nock from 'nock';
 import chai from 'chai';
 import { RequestToMicroserviceOptions, RWAPIMicroservice } from "main";
 import request from "request";
+import constants from "./utils/test.constants";
 
 chai.should();
 
@@ -114,7 +115,7 @@ describe('Request to RWAPIMicroservice', () => {
             json: true
         };
 
-        nock('https://controltower.dev', { reqheaders: { authentication: 'token' } })
+        nock('https://controltower.dev', { reqheaders: { authorization: 'Bearer token' } })
             .get('/dataset/1')
             .reply(200, 'ok');
 
@@ -132,7 +133,7 @@ describe('Request to RWAPIMicroservice', () => {
             json: true
         };
 
-        nock('https://controltower.dev', { reqheaders: { authentication: 'token' } })
+        nock('https://controltower.dev', { reqheaders: { authorization: 'Bearer token' } })
             .delete('/dataset/1')
             .reply(200, 'ok');
 
@@ -153,7 +154,7 @@ describe('Request to RWAPIMicroservice', () => {
             }
         };
 
-        nock('https://controltower.dev', { reqheaders: { authentication: 'token' } })
+        nock('https://controltower.dev', { reqheaders: { authorization: 'Bearer token' } })
             .post('/dataset/1', { array: ['a', 'b', 'c'] })
             .reply(200, 'ok');
 
@@ -175,7 +176,7 @@ describe('Request to RWAPIMicroservice', () => {
             }
         };
 
-        nock('https://controltower.dev', { reqheaders: { authentication: 'token' } })
+        nock('https://controltower.dev', { reqheaders: { authorization: 'Bearer token' } })
             .patch('/dataset/1', { array: ['a', 'b', 'c'] })
             .reply(200, 'ok');
 
@@ -197,7 +198,7 @@ describe('Request to RWAPIMicroservice', () => {
             }
         };
 
-        nock('https://controltower.dev', { reqheaders: { authentication: 'token' } })
+        nock('https://controltower.dev', { reqheaders: { authorization: 'Bearer token' } })
             .put('/dataset/1', { array: ['a', 'b', 'c'] })
             .reply(200, 'ok');
 

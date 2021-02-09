@@ -1,3 +1,7 @@
+# v3.3.0
+
+- Remove support for `authentication: <token>` headers in favor of `authorization: Bearer <token>`
+
 # v3.2.2
 
 - Fix issue with GET/DELETE requests and [`koa-qs`](https://www.npmjs.com/package/koa-qs)
