@@ -96,17 +96,23 @@ class Microservice implements IRWAPIMicroservice {
 
         if (ctx.status >= 200 && ctx.status < 400) {
             // Non-GET, anonymous requests with the `uncache` header can purge the cache
-            if (ctx.request.method !== 'GET' && ctx.response.headers && ctx.response.headers.uncache) {
-                const tags: string[] = ctx.response.headers.uncache.split(' ').filter((part: string) => part !== '');
+            if (ctx.request.method !== 'GET' && ctx.response.headers && ctx?.response?.headers?.uncache) {
+                let tags: string[] = ctx.response.headers.uncache;
+                if (typeof ctx.response.headers.uncache === "string") {
+                    tags = ctx.response.headers.uncache.split(' ').filter((part: string) => part !== '');
+                }
                 logger.info('[fastlyIntegrationHandler] Purging cache for tag(s): ', tags.join(' '));
                 await fastly.purgeKeys(tags);
             }
 
             // GET anonymous requests with the `cache` header can be cached
             if (ctx.request.method === 'GET' && !ctx.request.headers?.authorization && ctx.response?.headers?.cache) {
-                const key: string = ctx.response.headers.cache.split(' ').filter((part: string) => part !== '').join(' ');
-                logger.info('[fastlyIntegrationHandler] Caching with key(s): ', key);
-                ctx.set('Surrogate-Key', key);
+                let keys: string | string[] = ctx.response.headers.cache;
+                if (Array.isArray(ctx.response.headers.cache)) {
+                    keys = ctx.response.headers.cache.join(' ');
+                }
+                logger.info('[fastlyIntegrationHandler] Caching with key(s): ', keys);
+                ctx.set('Surrogate-Key', keys);
             } else {
                 ctx.set('Cache-Control', 'private');
             }

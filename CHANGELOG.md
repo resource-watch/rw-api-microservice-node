@@ -1,3 +1,7 @@
+# v3.3.1
+
+- Fix issue with Fastly header handling.
+
 # v3.3.0
 
 - Remove support for `authentication: <token>` headers in favor of `authorization: Bearer <token>`

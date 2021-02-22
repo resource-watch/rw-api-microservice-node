@@ -134,7 +134,7 @@ describe('Fastly integration tests', () => {
         response.should.have.header('Cache-Control', 'private');
     });
 
-    it('Anonymous GET requests with cache headers should be cached by Fastly (happy case)', async () => {
+    it('Anonymous GET requests with cache headers (space separated strings) should be cached by Fastly (happy case)', async () => {
         const app: Koa = new Koa2();
 
         const logger: Logger = bunyan.createLogger({
@@ -159,6 +159,54 @@ describe('Fastly integration tests', () => {
         const testRouter: Router = new Router();
         testRouter.get('/test', (ctx: Koa.Context) => {
             ctx.set('cache', `abc def`);
+            ctx.body = 'ok';
+        });
+
+        app.use(koaBody());
+        app.use(RWAPIMicroservice.bootstrap(registerOptions));
+
+        app
+            .use(testRouter.routes())
+            .use(testRouter.allowedMethods());
+
+        const server: Server = app.listen(3010);
+
+        requester = chai.request(server).keepOpen();
+
+        const response: Request.Response = await requester
+            .get('/test');
+
+        response.status.should.equal(200);
+        response.text.should.equal('ok');
+        response.should.have.header('Surrogate-Key', 'abc def');
+        response.should.not.have.header('Cache-Control');
+    });
+
+    it('Anonymous GET requests with cache headers (string array) should be cached by Fastly (happy case)', async () => {
+        const app: Koa = new Koa2();
+
+        const logger: Logger = bunyan.createLogger({
+            name: 'logger name',
+            src: true,
+            streams: []
+        });
+
+        const registerOptions: BootstrapArguments = {
+            info: { name: 'test MS' },
+            swagger: { swagger: 'test swagger' },
+            logger,
+            name: 'test MS',
+            baseURL: 'https://controltower.dev',
+            url: 'https://microservice.dev',
+            token: 'ABCDEF',
+            fastlyEnabled: true,
+            fastlyAPIKey: 'fastlyAPIKey',
+            fastlyServiceId: 'fastlyServiceId'
+        };
+
+        const testRouter: Router = new Router();
+        testRouter.get('/test', (ctx: Koa.Context) => {
+            ctx.set('cache', [`abc`, `def`]);
             ctx.body = 'ok';
         });
 
@@ -266,7 +314,7 @@ describe('Fastly integration tests', () => {
         deleteResponse.should.have.header('Cache-Control', 'private');
     });
 
-    it('POST/PUT/PATCH/DELETE requests with nocache headers should clear Fastly caches', async () => {
+    it('POST/PUT/PATCH/DELETE requests with nocache headers (space separated strings) should clear Fastly caches', async () => {
         const app: Koa = new Koa2();
 
         const logger: Logger = bunyan.createLogger({
@@ -313,6 +361,100 @@ describe('Fastly integration tests', () => {
         });
         testRouter.delete('/test', (ctx: Koa.Context) => {
             ctx.set('uncache', `abc def`);
+            ctx.body = 'ok';
+        });
+
+        app.use(koaBody());
+        app.use(RWAPIMicroservice.bootstrap(registerOptions));
+
+        app
+            .use(testRouter.routes())
+            .use(testRouter.allowedMethods());
+
+        const server: Server = app.listen(3010);
+
+        requester = chai.request(server).keepOpen();
+
+        const postResponse: Request.Response = await requester
+            .post('/test');
+
+        postResponse.status.should.equal(200);
+        postResponse.text.should.equal('ok');
+        postResponse.should.not.have.header('Surrogate-Key');
+        postResponse.should.have.header('Cache-Control', 'private');
+
+        const putResponse: Request.Response = await requester
+            .put('/test');
+
+        putResponse.status.should.equal(200);
+        putResponse.text.should.equal('ok');
+        putResponse.should.not.have.header('Surrogate-Key');
+        putResponse.should.have.header('Cache-Control', 'private');
+
+        const patchResponse: Request.Response = await requester
+            .patch('/test');
+
+        patchResponse.status.should.equal(200);
+        patchResponse.text.should.equal('ok');
+        patchResponse.should.not.have.header('Surrogate-Key');
+        patchResponse.should.have.header('Cache-Control', 'private');
+
+        const deleteResponse: Request.Response = await requester
+            .delete('/test');
+
+        deleteResponse.status.should.equal(200);
+        deleteResponse.text.should.equal('ok');
+        deleteResponse.should.not.have.header('Surrogate-Key');
+        deleteResponse.should.have.header('Cache-Control', 'private');
+    });
+
+    it('POST/PUT/PATCH/DELETE requests with nocache headers (string array) should clear Fastly caches', async () => {
+        const app: Koa = new Koa2();
+
+        const logger: Logger = bunyan.createLogger({
+            name: 'logger name',
+            src: true,
+            streams: []
+        });
+
+        nock('https://api.fastly.com')
+            .post('/service/fastlyServiceId/purge', {
+                "surrogate_keys": [
+                    "abc",
+                    "def"
+                ]
+            })
+            .times(4)
+            .reply(200);
+
+        const registerOptions: BootstrapArguments = {
+            info: { name: 'test MS' },
+            swagger: { swagger: 'test swagger' },
+            logger,
+            name: 'test MS',
+            baseURL: 'https://controltower.dev',
+            url: 'https://microservice.dev',
+            token: 'ABCDEF',
+            fastlyEnabled: true,
+            fastlyAPIKey: 'fastlyAPIKey',
+            fastlyServiceId: 'fastlyServiceId'
+        };
+
+        const testRouter: Router = new Router();
+        testRouter.post('/test', (ctx: Koa.Context) => {
+            ctx.set('uncache', [`abc`, `def`]);
+            ctx.body = 'ok';
+        });
+        testRouter.put('/test', (ctx: Koa.Context) => {
+            ctx.set('uncache', [`abc`, `def`]);
+            ctx.body = 'ok';
+        });
+        testRouter.patch('/test', (ctx: Koa.Context) => {
+            ctx.set('uncache', [`abc`, `def`]);
+            ctx.body = 'ok';
+        });
+        testRouter.delete('/test', (ctx: Koa.Context) => {
+            ctx.set('uncache', [`abc`, `def`]);
             ctx.body = 'ok';
         });
 
