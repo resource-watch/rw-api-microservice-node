@@ -1,3 +1,7 @@
+# v3.3.3
+
+- Fix tests for handling `getLoggedUser()` error scenarios
+
 # v3.3.2
 
 - Fix issue when handling invalid/outdated token
