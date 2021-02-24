@@ -1,3 +1,7 @@
+# v3.3.2
+
+- Fix issue when handling invalid/outdated token
+
 # v3.3.1
 
 - Fix issue with Fastly header handling.

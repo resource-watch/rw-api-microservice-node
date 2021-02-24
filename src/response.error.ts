@@ -1,6 +1,6 @@
 export class ResponseError extends Error {
-    private statusCode: number;
-    private error: any;
+    statusCode: number;
+    error: any;
     private response: any;
 
     constructor(statusCode: number, body: any, response?: any) {

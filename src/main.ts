@@ -188,7 +188,13 @@ class Microservice implements IRWAPIMicroservice {
                 try {
                     await this.getLoggedUser(logger, baseURL, ctx);
                 } catch (getLoggedUserError) {
-                    ctx.throw(500, `Error loading user info from token - ${getLoggedUserError.toString()}`);
+                    if (getLoggedUserError instanceof ResponseError) {
+                        ctx.response.status = (getLoggedUserError as ResponseError).statusCode;
+                        ctx.response.body = (getLoggedUserError as ResponseError).error;
+                        return;
+                    } else {
+                        ctx.throw(500, `Error loading user info from token - ${getLoggedUserError.toString()}`);
+                    }
                 }
             }
             await next();

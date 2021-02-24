@@ -30,7 +30,117 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
         nock.cleanAll();
     });
 
-    it('404 when getting user data', async () => {
+    // it('404 when getting user data', async () => {
+    //     const app: Koa = new Koa2();
+    //
+    //     const logger: Logger = bunyan.createLogger({
+    //         name: 'logger name',
+    //         src: true,
+    //         streams: []
+    //     });
+    //
+    //     nock('https://controltower.dev', {
+    //         reqheaders: {
+    //             authorization: `Bearer ${constants.TOKEN}`,
+    //         }
+    //     })
+    //         .get('/auth/user/me')
+    //         .reply(404, 'Not Found');
+    //
+    //     const registerOptions: BootstrapArguments = {
+    //         info: { name: 'test MS' },
+    //         swagger: { swagger: 'test swagger' },
+    //         logger,
+    //         name: 'test MS',
+    //         baseURL: 'https://controltower.dev',
+    //         url: 'https://microservice.dev',
+    //         token: 'ABCDEF',
+    //         fastlyEnabled: false
+    //     };
+    //
+    //     const testRouter: Router = new Router();
+    //     testRouter.get('/test', (ctx: Koa.Context) => {
+    //         ctx.request.should.have.header('Authorization', `Bearer ${constants.TOKEN}`);
+    //         expect(ctx.request.query).to.have.property('loggedUser').and.equal(JSON.stringify(constants.USER));
+    //         ctx.body = 'ok';
+    //     });
+    //
+    //     app.use(koaBody());
+    //     app.use(RWAPIMicroservice.bootstrap(registerOptions));
+    //
+    //     app
+    //         .use(testRouter.routes())
+    //         .use(testRouter.allowedMethods());
+    //
+    //     const server: Server = app.listen(3010);
+    //
+    //     requester = chai.request(server).keepOpen();
+    //
+    //     const response: Request.Response = await requester
+    //         .get('/test')
+    //         .set('Authorization', `Bearer ${constants.TOKEN}`);
+    //
+    //
+    //     response.status.should.equal(500);
+    //     response.text.should.equal('Internal Server Error');
+    // });
+    //
+    // it('500 when getting user data', async () => {
+    //     const app: Koa = new Koa2();
+    //
+    //     const logger: Logger = bunyan.createLogger({
+    //         name: 'logger name',
+    //         src: true,
+    //         streams: []
+    //     });
+    //
+    //     nock('https://controltower.dev', {
+    //         reqheaders: {
+    //             authorization: `Bearer ${constants.TOKEN}`,
+    //         }
+    //     })
+    //         .get('/auth/user/me')
+    //         .reply(500, 'Server error');
+    //
+    //     const registerOptions: BootstrapArguments = {
+    //         info: { name: 'test MS' },
+    //         swagger: { swagger: 'test swagger' },
+    //         logger,
+    //         name: 'test MS',
+    //         baseURL: 'https://controltower.dev',
+    //         url: 'https://microservice.dev',
+    //         token: 'ABCDEF',
+    //         fastlyEnabled: false
+    //     };
+    //
+    //     const testRouter: Router = new Router();
+    //     testRouter.get('/test', (ctx: Koa.Context) => {
+    //         ctx.request.should.have.header('Authorization', `Bearer ${constants.TOKEN}`);
+    //         expect(ctx.request.query).to.have.property('loggedUser').and.equal(JSON.stringify(constants.USER));
+    //         ctx.body = 'ok';
+    //     });
+    //
+    //     app.use(koaBody());
+    //     app.use(RWAPIMicroservice.bootstrap(registerOptions));
+    //
+    //     app
+    //         .use(testRouter.routes())
+    //         .use(testRouter.allowedMethods());
+    //
+    //     const server: Server = app.listen(3010);
+    //
+    //     requester = chai.request(server).keepOpen();
+    //
+    //     const response: Request.Response = await requester
+    //         .get('/test')
+    //         .set('Authorization', `Bearer ${constants.TOKEN}`);
+    //
+    //
+    //     response.status.should.equal(500);
+    //     response.text.should.equal('Internal Server Error');
+    // });
+
+    it('"Your token is outdated" when getting user data', async () => {
         const app: Koa = new Koa2();
 
         const logger: Logger = bunyan.createLogger({
@@ -45,7 +155,14 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
             }
         })
             .get('/auth/user/me')
-            .reply(404, 'Not Found');
+            .reply(401, {
+                "errors": [
+                    {
+                        "status": 401,
+                        "detail": "Your token is outdated. Please use /auth/login to login and /auth/generate-token to generate a new token."
+                    }
+                ]
+            });
 
         const registerOptions: BootstrapArguments = {
             info: { name: 'test MS' },
@@ -80,64 +197,9 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
             .get('/test')
             .set('Authorization', `Bearer ${constants.TOKEN}`);
 
-
-        response.status.should.equal(500);
-        response.text.should.equal('Internal Server Error');
-    });
-
-    it('500 when getting user data', async () => {
-        const app: Koa = new Koa2();
-
-        const logger: Logger = bunyan.createLogger({
-            name: 'logger name',
-            src: true,
-            streams: []
-        });
-
-        nock('https://controltower.dev', {
-            reqheaders: {
-                authorization: `Bearer ${constants.TOKEN}`,
-            }
-        })
-            .get('/auth/user/me')
-            .reply(500, 'Server error');
-
-        const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
-            logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
-            fastlyEnabled: false
-        };
-
-        const testRouter: Router = new Router();
-        testRouter.get('/test', (ctx: Koa.Context) => {
-            ctx.request.should.have.header('Authorization', `Bearer ${constants.TOKEN}`);
-            expect(ctx.request.query).to.have.property('loggedUser').and.equal(JSON.stringify(constants.USER));
-            ctx.body = 'ok';
-        });
-
-        app.use(koaBody());
-        app.use(RWAPIMicroservice.bootstrap(registerOptions));
-
-        app
-            .use(testRouter.routes())
-            .use(testRouter.allowedMethods());
-
-        const server: Server = app.listen(3010);
-
-        requester = chai.request(server).keepOpen();
-
-        const response: Request.Response = await requester
-            .get('/test')
-            .set('Authorization', `Bearer ${constants.TOKEN}`);
-
-
-        response.status.should.equal(500);
-        response.text.should.equal('Internal Server Error');
+        response.status.should.equal(401);
+        response.body.should.have.property('errors').and.be.an('array');
+        response.body.errors[0].should.have.property('detail').and.equal(`Your token is outdated. Please use /auth/login to login and /auth/generate-token to generate a new token.`);
     });
 
     afterEach(() => {
