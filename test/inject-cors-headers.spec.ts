@@ -72,6 +72,7 @@ describe('Adding CORS headers', () => {
         response.status.should.equal(200);
         response.text.should.equal('ok');
         response.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
+        response.should.have.header('access-control-allow-headers', 'upgrade-insecure-requests');
         response.should.have.header('access-control-allow-credentials', 'true');
     });
 
@@ -119,6 +120,7 @@ describe('Adding CORS headers', () => {
         response.status.should.equal(200);
         response.text.should.equal('ok');
         response.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
+        response.should.have.header('access-control-allow-headers', 'upgrade-insecure-requests');
         response.should.have.header('access-control-allow-credentials', 'true');
     });
 
@@ -168,6 +170,7 @@ describe('Adding CORS headers', () => {
         response.status.should.equal(200);
         response.text.should.equal('ok');
         response.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
+        response.should.have.header('access-control-allow-headers', 'upgrade-insecure-requests');
         response.should.have.header('access-control-allow-credentials', 'true');
     });
 
@@ -217,6 +220,7 @@ describe('Adding CORS headers', () => {
         response.status.should.equal(200);
         response.text.should.equal('ok');
         response.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
+        response.should.have.header('access-control-allow-headers', 'upgrade-insecure-requests');
         response.should.have.header('access-control-allow-credentials', 'true');
     });
 
@@ -266,6 +270,7 @@ describe('Adding CORS headers', () => {
         response.status.should.equal(200);
         response.text.should.equal('ok');
         response.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
+        response.should.have.header('access-control-allow-headers', 'upgrade-insecure-requests');
         response.should.have.header('access-control-allow-credentials', 'true');
     });
 

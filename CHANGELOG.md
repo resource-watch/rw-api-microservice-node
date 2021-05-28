@@ -1,3 +1,7 @@
+# v3.4.1
+
+- Add `access-control-allow-headers: upgrade-insecure-requests` CORS header
+
 # v3.4.0
 
 - Add CORS headers

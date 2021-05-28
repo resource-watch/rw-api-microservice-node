@@ -174,7 +174,8 @@ class Microservice implements IRWAPIMicroservice {
         this.options.logger.info('RW API integration middleware registered');
 
         const corsOptions: corsType.Options = {
-            credentials: true
+            credentials: true,
+            allowHeaders: 'upgrade-insecure-requests'
         };
 
         const bootstrapMiddleware:Middleware = async (ctx: Context, next: Next) => {
