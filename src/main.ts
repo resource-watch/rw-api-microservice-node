@@ -1,5 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import type { Context, Middleware, Next } from "koa";
+import cors from "@koa/cors";
+import compose from "koa-compose";
+import type corsType from "@koa/cors";
 import type request from "request";
 import type Logger from "bunyan";
 // @ts-ignore
@@ -170,7 +173,12 @@ class Microservice implements IRWAPIMicroservice {
 
         this.options.logger.info('RW API integration middleware registered');
 
-        return async (ctx: Context, next: Next) => {
+        const corsOptions: corsType.Options = {
+            credentials: true
+        };
+
+        const bootstrapMiddleware:Middleware = async (ctx: Context, next: Next) => {
+
             const { logger, baseURL, info, swagger } = this.options;
 
             Microservice.registerCTRoutes(info, swagger, logger, ctx);
@@ -204,6 +212,8 @@ class Microservice implements IRWAPIMicroservice {
             }
 
         };
+
+        return compose([cors(corsOptions), bootstrapMiddleware]);
     }
 
     public async register(): Promise<Record<string, any>> {

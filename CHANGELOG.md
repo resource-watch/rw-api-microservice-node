@@ -1,3 +1,7 @@
+# v3.4.0
+
+- Add CORS headers
+
 # v3.3.3
 
 - Fix tests for handling `getLoggedUser()` error scenarios

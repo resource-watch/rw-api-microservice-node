@@ -1,6 +1,6 @@
 {
   "name": "rw-api-microservice-node",
-  "version": "3.3.3",
+  "version": "3.4.0",
   "description": "Integration library for the RW API microservice",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
@@ -51,8 +51,10 @@
   },
   "homepage": "https://github.com/resource-watch/rw-api-microservice-node",
   "dependencies": {
+    "@koa/cors": "^3.1.0",
     "axios": "^0.21.1",
-    "fastly-promises": "tiagojsag/fastly-promises#master"
+    "fastly-promises": "tiagojsag/fastly-promises#master",
+    "koa-compose": "^4.1.0"
   },
   "devDependencies": {
     "@types/bunyan": "^1.8.6",
@@ -63,6 +65,7 @@
     "@types/koa-convert": "^1.2.3",
     "@types/koa-qs": "^2.0.0",
     "@types/koa-router": "^7.4.1",
+    "@types/koa__cors": "^3.0.2",
     "@types/mocha": "^8.0.4",
     "@types/request-promise": "^4.1.46",
     "bunyan": "^1.8.14",
