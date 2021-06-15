@@ -2,7 +2,6 @@ import nock from 'nock';
 import chai from 'chai';
 import { RequestToMicroserviceOptions, RWAPIMicroservice } from "main";
 import request from "request";
-import constants from "./utils/test.constants";
 
 chai.should();
 
@@ -11,23 +10,17 @@ nock.enableNetConnect('127.0.0.1');
 
 describe('Request to RWAPIMicroservice', () => {
 
-    before(async () => {
-        if (process.env.NODE_ENV !== 'test') {
-            throw Error(`Running the test suite with NODE_ENV ${process.env.NODE_ENV} may result in permanent data loss. Please use NODE_ENV=test.`);
-        }
-
-        nock.cleanAll();
-    });
+    before(nock.cleanAll);
 
     it('Basic requestToMicroservice - GET request (happy case)', async () => {
         const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
-            uri: `/dataset/1`,
+            uri: `/v1/dataset/1`,
             method: 'GET',
             json: true
         };
 
         nock('https://controltower.dev')
-            .get('/dataset/1')
+            .get('/v1/dataset/1')
             .reply(200, 'ok');
 
         const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
@@ -37,14 +30,14 @@ describe('Request to RWAPIMicroservice', () => {
 
     it('GET requestToMicroservice with resolveWithFullResponse=true', async () => {
         const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
-            uri: `/dataset/1`,
+            uri: `/v1/dataset/1`,
             method: 'GET',
             json: true,
             resolveWithFullResponse: true
         };
 
         nock('https://controltower.dev')
-            .get('/dataset/1')
+            .get('/v1/dataset/1')
             .reply(200, 'ok');
 
         const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
@@ -55,14 +48,14 @@ describe('Request to RWAPIMicroservice', () => {
 
     it('GET requestToMicroservice with simple=false', async () => {
         const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
-            uri: `/dataset/1`,
+            uri: `/v1/dataset/1`,
             method: 'GET',
             json: true,
             simple: false
         };
 
         nock('https://controltower.dev')
-            .get('/dataset/1')
+            .get('/v1/dataset/1')
             .reply(200, 'ok');
 
         const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
@@ -72,7 +65,7 @@ describe('Request to RWAPIMicroservice', () => {
 
     it('GET requestToMicroservice with simple=false and resolveWithFullResponse=true', async () => {
         const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
-            uri: `/dataset/1`,
+            uri: `/v1/dataset/1`,
             method: 'GET',
             json: true,
             simple: false,
@@ -80,7 +73,7 @@ describe('Request to RWAPIMicroservice', () => {
         };
 
         nock('https://controltower.dev')
-            .get('/dataset/1')
+            .get('/v1/dataset/1')
             .reply(200, 'ok');
 
         const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
@@ -91,7 +84,7 @@ describe('Request to RWAPIMicroservice', () => {
 
     it('Basic requestToMicroservice - POST request (happy case)', async () => {
         const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
-            uri: `/dataset/1`,
+            uri: `/v1/dataset/1`,
             method: 'POST',
             json: true,
             body: {
@@ -100,7 +93,7 @@ describe('Request to RWAPIMicroservice', () => {
         };
 
         nock('https://controltower.dev')
-            .post('/dataset/1', { array: ['a', 'b', 'c'] })
+            .post('/v1/dataset/1', { array: ['a', 'b', 'c'] })
             .reply(200, 'ok');
 
         const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
@@ -108,45 +101,45 @@ describe('Request to RWAPIMicroservice', () => {
         response.should.equal('ok');
     });
 
-    it('requestToMicroservice GET request with token should pass the token along', async () => {
+    it('requestToMicroservice GET request with microserviceToken should pass the token along', async () => {
         const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
-            uri: `/dataset/1`,
+            uri: `/v1/dataset/1`,
             method: 'GET',
             json: true
         };
 
         nock('https://controltower.dev', { reqheaders: { authorization: 'Bearer token' } })
-            .get('/dataset/1')
+            .get('/v1/dataset/1')
             .reply(200, 'ok');
 
-        RWAPIMicroservice.options.token = 'token';
+        RWAPIMicroservice.options.microserviceToken = 'token';
 
         const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
 
         response.should.equal('ok');
     });
 
-    it('requestToMicroservice DELETE request with token should pass the token along', async () => {
+    it('requestToMicroservice DELETE request with microserviceToken should pass the token along', async () => {
         const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
-            uri: `/dataset/1`,
+            uri: `/v1/dataset/1`,
             method: 'DELETE',
             json: true
         };
 
         nock('https://controltower.dev', { reqheaders: { authorization: 'Bearer token' } })
-            .delete('/dataset/1')
+            .delete('/v1/dataset/1')
             .reply(200, 'ok');
 
-        RWAPIMicroservice.options.token = 'token';
+        RWAPIMicroservice.options.microserviceToken = 'token';
 
         const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
 
         response.should.equal('ok');
     });
 
-    it('requestToMicroservice POST request with token should pass the token along', async () => {
+    it('requestToMicroservice POST request with microserviceToken should pass the token along', async () => {
         const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
-            uri: `/dataset/1`,
+            uri: `/v1/dataset/1`,
             method: 'POST',
             json: true,
             body: {
@@ -155,10 +148,10 @@ describe('Request to RWAPIMicroservice', () => {
         };
 
         nock('https://controltower.dev', { reqheaders: { authorization: 'Bearer token' } })
-            .post('/dataset/1', { array: ['a', 'b', 'c'] })
+            .post('/v1/dataset/1', { array: ['a', 'b', 'c'] })
             .reply(200, 'ok');
 
-        RWAPIMicroservice.options.token = 'token';
+        RWAPIMicroservice.options.microserviceToken = 'token';
 
 
         const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
@@ -166,9 +159,9 @@ describe('Request to RWAPIMicroservice', () => {
         response.should.equal('ok');
     });
 
-    it('requestToMicroservice PATCH request with token should pass the token along', async () => {
+    it('requestToMicroservice PATCH request with microserviceToken should pass the token along', async () => {
         const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
-            uri: `/dataset/1`,
+            uri: `/v1/dataset/1`,
             method: 'PATCH',
             json: true,
             body: {
@@ -177,10 +170,10 @@ describe('Request to RWAPIMicroservice', () => {
         };
 
         nock('https://controltower.dev', { reqheaders: { authorization: 'Bearer token' } })
-            .patch('/dataset/1', { array: ['a', 'b', 'c'] })
+            .patch('/v1/dataset/1', { array: ['a', 'b', 'c'] })
             .reply(200, 'ok');
 
-        RWAPIMicroservice.options.token = 'token';
+        RWAPIMicroservice.options.microserviceToken = 'token';
 
 
         const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
@@ -188,9 +181,9 @@ describe('Request to RWAPIMicroservice', () => {
         response.should.equal('ok');
     });
 
-    it('requestToMicroservice PUT request with token should pass the token along', async () => {
+    it('requestToMicroservice PUT request with microserviceToken should pass the token along', async () => {
         const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
-            uri: `/dataset/1`,
+            uri: `/v1/dataset/1`,
             method: 'PUT',
             json: true,
             body: {
@@ -199,10 +192,10 @@ describe('Request to RWAPIMicroservice', () => {
         };
 
         nock('https://controltower.dev', { reqheaders: { authorization: 'Bearer token' } })
-            .put('/dataset/1', { array: ['a', 'b', 'c'] })
+            .put('/v1/dataset/1', { array: ['a', 'b', 'c'] })
             .reply(200, 'ok');
 
-        RWAPIMicroservice.options.token = 'token';
+        RWAPIMicroservice.options.microserviceToken = 'token';
 
 
         const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);

@@ -13,13 +13,7 @@ nock.enableNetConnect('127.0.0.1');
 
 describe('Request to RWAPIMicroservice with error responses', () => {
 
-    before(async () => {
-        if (process.env.NODE_ENV !== 'test') {
-            throw Error(`Running the test suite with NODE_ENV ${process.env.NODE_ENV} may result in permanent data loss. Please use NODE_ENV=test.`);
-        }
-
-        nock.cleanAll();
-    });
+    before(nock.cleanAll);
 
     it('Basic requestToMicroservice - GET request with 404 response', async () => {
         const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {

@@ -22,13 +22,7 @@ let requester: ChaiHttp.Agent;
 
 describe('Injecting logged user data - error cases - Koa v2.x', () => {
 
-    before(async () => {
-        if (process.env.NODE_ENV !== 'test') {
-            throw Error(`Running the test suite with NODE_ENV ${process.env.NODE_ENV} may result in permanent data loss. Please use NODE_ENV=test.`);
-        }
-
-        nock.cleanAll();
-    });
+    before(nock.cleanAll);
 
     it('404 when getting user data', async () => {
         const app: Koa = new Koa2();
@@ -55,13 +49,9 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
             });
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: false
         };
 
@@ -112,13 +102,9 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
             .reply(500, 'Server error');
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: false
         };
 
@@ -174,13 +160,9 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
             });
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: false
         };
 

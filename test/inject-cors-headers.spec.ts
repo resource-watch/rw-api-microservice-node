@@ -21,13 +21,7 @@ let requester: ChaiHttp.Agent;
 
 describe('Adding CORS headers', () => {
 
-    before(async () => {
-        if (process.env.NODE_ENV !== 'test') {
-            throw Error(`Running the test suite with NODE_ENV ${process.env.NODE_ENV} may result in permanent data loss. Please use NODE_ENV=test.`);
-        }
-
-        nock.cleanAll();
-    });
+    before(nock.cleanAll);
 
     it('GET request with a Origin header should return a response with CORS headers present (happy case)', async () => {
         const app: Koa = new Koa2();
@@ -39,13 +33,9 @@ describe('Adding CORS headers', () => {
         });
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: false
         };
 
@@ -65,15 +55,25 @@ describe('Adding CORS headers', () => {
 
         requester = chai.request(server).keepOpen();
 
-        const response: Request.Response = await requester
+        const preflightResponse: Request.Response = await requester
+            .options('/test')
+            .set('Origin', `https://staging.resourcewatch.org/`)
+            .set('Access-Control-Request-Headers', `upgrade-insecure-requests`)
+            .set('Access-Control-Request-Method', `GET`);
+
+        preflightResponse.status.should.equal(204);
+        preflightResponse.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
+        preflightResponse.should.have.header('access-control-allow-headers', 'upgrade-insecure-requests');
+        preflightResponse.should.have.header('access-control-allow-credentials', 'true');
+
+        const mainResponse: Request.Response = await requester
             .get('/test')
             .set('Origin', `https://staging.resourcewatch.org/`);
 
-        response.status.should.equal(200);
-        response.text.should.equal('ok');
-        response.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
-        response.should.have.header('access-control-allow-headers', 'upgrade-insecure-requests');
-        response.should.have.header('access-control-allow-credentials', 'true');
+        mainResponse.status.should.equal(200);
+        mainResponse.text.should.equal('ok');
+        mainResponse.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
+        mainResponse.should.have.header('access-control-allow-credentials', 'true');
     });
 
     it('DELETE request with a Origin header should return a response with CORS headers present (happy case)', async () => {
@@ -86,13 +86,9 @@ describe('Adding CORS headers', () => {
         });
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: false
         };
 
@@ -112,16 +108,26 @@ describe('Adding CORS headers', () => {
 
         requester = chai.request(server).keepOpen();
 
-        const response: Request.Response = await requester
+        const preflightResponse: Request.Response = await requester
+            .options('/test')
+            .set('Origin', `https://staging.resourcewatch.org/`)
+            .set('Access-Control-Request-Headers', `upgrade-insecure-requests`)
+            .set('Access-Control-Request-Method', `DELETE`);
+
+        preflightResponse.status.should.equal(204);
+        preflightResponse.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
+        preflightResponse.should.have.header('access-control-allow-headers', 'upgrade-insecure-requests');
+        preflightResponse.should.have.header('access-control-allow-credentials', 'true');
+
+        const mainResponse: Request.Response = await requester
             .delete('/test')
             .set('Origin', `https://staging.resourcewatch.org/`);
 
 
-        response.status.should.equal(200);
-        response.text.should.equal('ok');
-        response.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
-        response.should.have.header('access-control-allow-headers', 'upgrade-insecure-requests');
-        response.should.have.header('access-control-allow-credentials', 'true');
+        mainResponse.status.should.equal(200);
+        mainResponse.text.should.equal('ok');
+        mainResponse.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
+        mainResponse.should.have.header('access-control-allow-credentials', 'true');
     });
 
     it('POST request with a Origin header should return a response with CORS headers present (happy case)', async () => {
@@ -134,13 +140,9 @@ describe('Adding CORS headers', () => {
         });
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: false
         };
 
@@ -160,18 +162,28 @@ describe('Adding CORS headers', () => {
 
         requester = chai.request(server).keepOpen();
 
-        const response: Request.Response = await requester
+        const preflightResponse: Request.Response = await requester
+            .options('/test')
+            .set('Origin', `https://staging.resourcewatch.org/`)
+            .set('Access-Control-Request-Headers', `upgrade-insecure-requests`)
+            .set('Access-Control-Request-Method', `POST`);
+
+        preflightResponse.status.should.equal(204);
+        preflightResponse.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
+        preflightResponse.should.have.header('access-control-allow-headers', 'upgrade-insecure-requests');
+        preflightResponse.should.have.header('access-control-allow-credentials', 'true');
+
+        const mainResponse: Request.Response = await requester
             .post('/test')
             .set('Origin', `https://staging.resourcewatch.org/`)
             .send({
                 data: 'test'
             });
 
-        response.status.should.equal(200);
-        response.text.should.equal('ok');
-        response.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
-        response.should.have.header('access-control-allow-headers', 'upgrade-insecure-requests');
-        response.should.have.header('access-control-allow-credentials', 'true');
+        mainResponse.status.should.equal(200);
+        mainResponse.text.should.equal('ok');
+        mainResponse.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
+        mainResponse.should.have.header('access-control-allow-credentials', 'true');
     });
 
     it('PATCH request with a Origin header should return a response with CORS headers present (happy case)', async () => {
@@ -184,13 +196,9 @@ describe('Adding CORS headers', () => {
         });
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: false
         };
 
@@ -210,18 +218,28 @@ describe('Adding CORS headers', () => {
 
         requester = chai.request(server).keepOpen();
 
-        const response: Request.Response = await requester
+        const preflightResponse: Request.Response = await requester
+            .options('/test')
+            .set('Origin', `https://staging.resourcewatch.org/`)
+            .set('Access-Control-Request-Headers', `upgrade-insecure-requests`)
+            .set('Access-Control-Request-Method', `PATCH`);
+
+        preflightResponse.status.should.equal(204);
+        preflightResponse.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
+        preflightResponse.should.have.header('access-control-allow-headers', 'upgrade-insecure-requests');
+        preflightResponse.should.have.header('access-control-allow-credentials', 'true');
+
+        const mainResponse: Request.Response = await requester
             .patch('/test')
             .set('Origin', `https://staging.resourcewatch.org/`)
             .send({
                 data: 'test'
             });
 
-        response.status.should.equal(200);
-        response.text.should.equal('ok');
-        response.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
-        response.should.have.header('access-control-allow-headers', 'upgrade-insecure-requests');
-        response.should.have.header('access-control-allow-credentials', 'true');
+        mainResponse.status.should.equal(200);
+        mainResponse.text.should.equal('ok');
+        mainResponse.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
+        mainResponse.should.have.header('access-control-allow-credentials', 'true');
     });
 
     it('PUT request with a Origin header should return a response with CORS headers present (happy case)', async () => {
@@ -234,13 +252,9 @@ describe('Adding CORS headers', () => {
         });
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: false
         };
 
@@ -260,18 +274,28 @@ describe('Adding CORS headers', () => {
 
         requester = chai.request(server).keepOpen();
 
-        const response: Request.Response = await requester
+        const preflightResponse: Request.Response = await requester
+            .options('/test')
+            .set('Origin', `https://staging.resourcewatch.org/`)
+            .set('Access-Control-Request-Headers', `upgrade-insecure-requests`)
+            .set('Access-Control-Request-Method', `PUT`);
+
+        preflightResponse.status.should.equal(204);
+        preflightResponse.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
+        preflightResponse.should.have.header('access-control-allow-headers', 'upgrade-insecure-requests');
+        preflightResponse.should.have.header('access-control-allow-credentials', 'true');
+
+        const mainResponse: Request.Response = await requester
             .put('/test')
             .set('Origin', `https://staging.resourcewatch.org/`)
             .send({
                 data: 'test'
             });
 
-        response.status.should.equal(200);
-        response.text.should.equal('ok');
-        response.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
-        response.should.have.header('access-control-allow-headers', 'upgrade-insecure-requests');
-        response.should.have.header('access-control-allow-credentials', 'true');
+        mainResponse.status.should.equal(200);
+        mainResponse.text.should.equal('ok');
+        mainResponse.should.have.header('access-control-allow-origin', 'https://staging.resourcewatch.org/');
+        mainResponse.should.have.header('access-control-allow-credentials', 'true');
     });
 
     afterEach(() => {

@@ -1,3 +1,9 @@
+# v4.0.0
+
+- Remove Control Tower support
+- `requestToMicroservice` no longer prefixes request uris with `/v1`
+- Remove `/info` and `/ping` endpoints
+
 # v3.4.1
 
 - Add `access-control-allow-headers: upgrade-insecure-requests` CORS header

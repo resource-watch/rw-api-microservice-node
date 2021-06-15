@@ -23,15 +23,9 @@ let requester: ChaiHttp.Agent;
 
 describe('Injecting logged user data - Koa v1.x', () => {
 
-    before(async () => {
-        if (process.env.NODE_ENV !== 'test') {
-            throw Error(`Running the test suite with NODE_ENV ${process.env.NODE_ENV} may result in permanent data loss. Please use NODE_ENV=test.`);
-        }
+    before(nock.cleanAll);
 
-        nock.cleanAll();
-    });
-
-    it('GET request with a JWT token in the header should fetch the user data and pass it along as loggedUser (happy case)', async () => {
+    it('GET request with a JWT microserviceToken in the header should fetch the user data and pass it along as loggedUser (happy case)', async () => {
         const app: Koa = new Koa1();
 
         const logger: Logger = bunyan.createLogger({
@@ -49,13 +43,9 @@ describe('Injecting logged user data - Koa v1.x', () => {
             .reply(200, constants.USER);
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: false
         };
 
@@ -90,7 +80,7 @@ describe('Injecting logged user data - Koa v1.x', () => {
         response.text.should.equal('ok');
     });
 
-    it('DELETE request with a JWT token in the header should fetch the user data and pass it along as loggedUser (happy case)', async () => {
+    it('DELETE request with a JWT microserviceToken in the header should fetch the user data and pass it along as loggedUser (happy case)', async () => {
         const app: Koa = new Koa1();
 
         const logger: Logger = bunyan.createLogger({
@@ -108,13 +98,9 @@ describe('Injecting logged user data - Koa v1.x', () => {
             .reply(200, constants.USER);
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: false
         };
 
@@ -149,7 +135,7 @@ describe('Injecting logged user data - Koa v1.x', () => {
         response.text.should.equal('ok');
     });
 
-    it('POST request with a JWT token in the header should fetch the user data and pass it along as loggedUser (happy case)', async () => {
+    it('POST request with a JWT microserviceToken in the header should fetch the user data and pass it along as loggedUser (happy case)', async () => {
         const app: Koa = new Koa1();
 
         const logger: Logger = bunyan.createLogger({
@@ -167,13 +153,9 @@ describe('Injecting logged user data - Koa v1.x', () => {
             .reply(200, constants.USER);
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: false
         };
 
@@ -211,7 +193,7 @@ describe('Injecting logged user data - Koa v1.x', () => {
         response.text.should.equal('ok');
     });
 
-    it('PATCH request with a JWT token in the header should fetch the user data and pass it along as loggedUser (happy case)', async () => {
+    it('PATCH request with a JWT microserviceToken in the header should fetch the user data and pass it along as loggedUser (happy case)', async () => {
         const app: Koa = new Koa1();
 
         const logger: Logger = bunyan.createLogger({
@@ -229,13 +211,9 @@ describe('Injecting logged user data - Koa v1.x', () => {
             .reply(200, constants.USER);
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: false
         };
 
@@ -273,7 +251,7 @@ describe('Injecting logged user data - Koa v1.x', () => {
         response.text.should.equal('ok');
     });
 
-    it('PUT request with a JWT token in the header should fetch the user data and pass it along as loggedUser (happy case)', async () => {
+    it('PUT request with a JWT microserviceToken in the header should fetch the user data and pass it along as loggedUser (happy case)', async () => {
         const app: Koa = new Koa1();
 
         const logger: Logger = bunyan.createLogger({
@@ -291,13 +269,9 @@ describe('Injecting logged user data - Koa v1.x', () => {
             .reply(200, constants.USER);
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: false
         };
 

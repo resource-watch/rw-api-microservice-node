@@ -11,27 +11,20 @@ import Fastly from 'fastly-promises';
 import { ResponseError } from "./response.error";
 
 export interface IRWAPIMicroservice {
-    register: () => Promise<any>;
     requestToMicroservice: (config: request.OptionsWithUri & RequestToMicroserviceOptions) => Promise<Record<string, any>>;
     bootstrap: (opts: BootstrapArguments) => Middleware<{}, {}>;
 }
 
 export interface BootstrapArguments {
-    info: Record<string, any>;
-    swagger: Record<string, any>;
     logger: Logger;
-    name: string;
-    baseURL: string;
-    url: string;
-    token: string;
-    skipGetLoggedUser?: boolean;
+    gatewayURL: string;
+    microserviceToken: string;
     fastlyEnabled: boolean | "true" | "false";
     fastlyServiceId?: string;
     fastlyAPIKey?: string;
 }
 
 export interface ConfigurationOptions extends BootstrapArguments {
-    skipGetLoggedUser: boolean;
     fastlyEnabled: boolean;
 }
 
@@ -43,7 +36,7 @@ export interface RequestToMicroserviceOptions {
 }
 
 class Microservice implements IRWAPIMicroservice {
-    public options: ConfigurationOptions & { skipGetLoggedUser: boolean };
+    public options: ConfigurationOptions;
 
     private static convertAndValidateBootstrapOptions(options: BootstrapArguments): ConfigurationOptions {
         if (
@@ -57,30 +50,17 @@ class Microservice implements IRWAPIMicroservice {
 
         const convertedOptions: ConfigurationOptions = {
             ...options,
-            skipGetLoggedUser: ('skipGetLoggedUser' in options) ? options.skipGetLoggedUser : false,
             fastlyEnabled: (options.fastlyEnabled === true || options.fastlyEnabled === "true")
         };
 
-        if (!convertedOptions.info) {
-            throw new Error('RW API microservice - "info" cannot be empty');
-        }
-        if (!convertedOptions.swagger) {
-            throw new Error('RW API microservice - "swagger" cannot be empty');
-        }
         if (!convertedOptions.logger) {
             throw new Error('RW API microservice - "logger" cannot be empty');
         }
-        if (!convertedOptions.name) {
-            throw new Error('RW API microservice - "name" cannot be empty');
+        if (!convertedOptions.gatewayURL) {
+            throw new Error('RW API microservice - "gatewayURL" cannot be empty');
         }
-        if (!convertedOptions.baseURL) {
-            throw new Error('RW API microservice - "baseURL" cannot be empty');
-        }
-        if (!convertedOptions.url) {
-            throw new Error('RW API microservice - "url" cannot be empty');
-        }
-        if (!convertedOptions.token) {
-            throw new Error('RW API microservice - "token" cannot be empty');
+        if (!convertedOptions.microserviceToken) {
+            throw new Error('RW API microservice - "microserviceToken" cannot be empty');
         }
         if (convertedOptions.fastlyEnabled === true) {
             if (!options.fastlyServiceId) {
@@ -122,18 +102,8 @@ class Microservice implements IRWAPIMicroservice {
         }
     }
 
-    private static registerCTRoutes(info: Record<string, any>, swagger: Record<string, any>, logger: Logger, ctx: Context): void {
-        if (ctx.path === '/info') {
-            logger.info('Obtaining info to register microservice');
-            info.swagger = swagger;
-            ctx.body = info;
-        } else if (ctx.path === '/ping') {
-            ctx.body = 'pong';
-        }
-    }
-
     private async getLoggedUser(logger: Logger, baseURL: string, ctx: Context): Promise<void> {
-        logger.debug('[getLoggedUser] Obtaining loggedUser for token');
+        logger.debug('[getLoggedUser] Obtaining loggedUser for microserviceToken');
         if (!ctx.request.header.authorization) {
             logger.debug('[getLoggedUser] No authorization header found, returning');
             return;
@@ -151,7 +121,7 @@ class Microservice implements IRWAPIMicroservice {
 
             const response: AxiosResponse<Record<string, any>> = await axios(getUserDetailsRequestConfig);
 
-            logger.debug('[getLoggedUser] Retrieved token data, response status:', response.status);
+            logger.debug('[getLoggedUser] Retrieved microserviceToken data, response status:', response.status);
 
             if (['GET', 'DELETE'].includes(ctx.request.method.toUpperCase())) {
                 ctx.request.query = { ...ctx.request.query, loggedUser: JSON.stringify(response.data) };
@@ -180,30 +150,17 @@ class Microservice implements IRWAPIMicroservice {
 
         const bootstrapMiddleware:Middleware = async (ctx: Context, next: Next) => {
 
-            const { logger, baseURL, info, swagger } = this.options;
+            const { logger, gatewayURL } = this.options;
 
-            Microservice.registerCTRoutes(info, swagger, logger, ctx);
-
-            /**
-             * This is a temporary hack to allow this library to be used with the Authorization
-             * Microservice without resulting in an endless loop. It allows the Authorization MS
-             * to register in CT for route publishing, while not causing requests with token to generate
-             * an endless loop.
-             *
-             * Once the Authorization MS is working without being registered in CT, the surrounding
-             * `if` statement can be safely removed, as well as all references to skipGetLoggedUser
-             */
-            if (!this.options.skipGetLoggedUser) {
-                try {
-                    await this.getLoggedUser(logger, baseURL, ctx);
-                } catch (getLoggedUserError) {
-                    if (getLoggedUserError instanceof ResponseError) {
-                        ctx.response.status = (getLoggedUserError as ResponseError).statusCode;
-                        ctx.response.body = (getLoggedUserError as ResponseError).error;
-                        return;
-                    } else {
-                        ctx.throw(500, `Error loading user info from token - ${getLoggedUserError.toString()}`);
-                    }
+            try {
+                await this.getLoggedUser(logger, gatewayURL, ctx);
+            } catch (getLoggedUserError) {
+                if (getLoggedUserError instanceof ResponseError) {
+                    ctx.response.status = (getLoggedUserError as ResponseError).statusCode;
+                    ctx.response.body = (getLoggedUserError as ResponseError).error;
+                    return;
+                } else {
+                    ctx.throw(500, `Error loading user info from token - ${getLoggedUserError.toString()}`);
                 }
             }
             await next();
@@ -217,44 +174,19 @@ class Microservice implements IRWAPIMicroservice {
         return compose([cors(corsOptions), bootstrapMiddleware]);
     }
 
-    public async register(): Promise<Record<string, any>> {
-        this.options.logger.info('Starting CT registration process');
-
-        const response: AxiosResponse<Record<string, any>> = await axios({
-            baseURL: this.options.baseURL,
-            url: `/api/v1/microservice`,
-            data: {
-                name: this.options.name,
-                url: this.options.url,
-                active: true,
-            },
-            method: 'POST',
-        });
-
-        this.options.logger.debug('[register] Registration response status:', response.status);
-
-        return response.data;
-    }
-
     public async requestToMicroservice(requestConfig: request.OptionsWithUri & RequestToMicroserviceOptions): Promise<Record<string, any>> {
         this.options.logger.info('Adding authorization header');
         const axiosRequestConfig: AxiosRequestConfig = {
-            baseURL: this.options.baseURL,
+            baseURL: this.options.gatewayURL,
             data: requestConfig.body,
             // @ts-ignore
             method: requestConfig.method
         };
 
         try {
-            let version: string = '';
+            axiosRequestConfig.url = requestConfig.uri.toString();
 
-            if (process.env.API_VERSION && requestConfig.version !== false) {
-                version = `/${process.env.API_VERSION}`;
-            }
-
-            axiosRequestConfig.url = version + requestConfig.uri;
-
-            axiosRequestConfig.headers = Object.assign(requestConfig.headers || {}, { authorization: `Bearer ${this.options.token}` });
+            axiosRequestConfig.headers = Object.assign(requestConfig.headers || {}, { authorization: `Bearer ${this.options.microserviceToken}` });
             if (requestConfig.application) {
                 axiosRequestConfig.headers.app_key = JSON.stringify({ application: requestConfig.application });
             }

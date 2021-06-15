@@ -14,6 +14,7 @@ import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
 
 chai.should();
+chai.use(ChaiHttp);
 
 nock.disableNetConnect();
 nock.enableNetConnect('127.0.0.1');
@@ -22,13 +23,7 @@ let requester: ChaiHttp.Agent;
 
 describe('Fastly integration tests', () => {
 
-    before(async () => {
-        if (process.env.NODE_ENV !== 'test') {
-            throw Error(`Running the test suite with NODE_ENV ${process.env.NODE_ENV} may result in permanent data loss. Please use NODE_ENV=test.`);
-        }
-
-        nock.cleanAll();
-    });
+    before(nock.cleanAll);
 
     it('Requests with no cache headers should not be cached by Fastly', async () => {
         const app: Koa = new Koa2();
@@ -40,13 +35,9 @@ describe('Fastly integration tests', () => {
         });
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: "true",
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId'
@@ -95,13 +86,9 @@ describe('Fastly integration tests', () => {
             .reply(200, constants.USER);
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId'
@@ -144,13 +131,9 @@ describe('Fastly integration tests', () => {
         });
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId'
@@ -192,13 +175,9 @@ describe('Fastly integration tests', () => {
         });
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId'
@@ -240,13 +219,9 @@ describe('Fastly integration tests', () => {
         });
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId'
@@ -334,13 +309,9 @@ describe('Fastly integration tests', () => {
             .reply(200);
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId'
@@ -428,13 +399,9 @@ describe('Fastly integration tests', () => {
             .reply(200);
 
         const registerOptions: BootstrapArguments = {
-            info: { name: 'test MS' },
-            swagger: { swagger: 'test swagger' },
             logger,
-            name: 'test MS',
-            baseURL: 'https://controltower.dev',
-            url: 'https://microservice.dev',
-            token: 'ABCDEF',
+            gatewayURL: 'https://controltower.dev',
+            microserviceToken: 'ABCDEF',
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId'
