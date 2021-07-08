@@ -19,12 +19,14 @@ export interface BootstrapArguments {
     logger: Logger;
     gatewayURL: string;
     microserviceToken: string;
+    skipGetLoggedUser?: boolean;
     fastlyEnabled: boolean | "true" | "false";
     fastlyServiceId?: string;
     fastlyAPIKey?: string;
 }
 
 export interface ConfigurationOptions extends BootstrapArguments {
+    skipGetLoggedUser: boolean;
     fastlyEnabled: boolean;
 }
 
@@ -50,6 +52,7 @@ class Microservice implements IRWAPIMicroservice {
 
         const convertedOptions: ConfigurationOptions = {
             ...options,
+            skipGetLoggedUser: ('skipGetLoggedUser' in options) ? options.skipGetLoggedUser : false,
             fastlyEnabled: (options.fastlyEnabled === true || options.fastlyEnabled === "true")
         };
 
@@ -152,15 +155,17 @@ class Microservice implements IRWAPIMicroservice {
 
             const { logger, gatewayURL } = this.options;
 
-            try {
-                await this.getLoggedUser(logger, gatewayURL, ctx);
-            } catch (getLoggedUserError) {
-                if (getLoggedUserError instanceof ResponseError) {
-                    ctx.response.status = (getLoggedUserError as ResponseError).statusCode;
-                    ctx.response.body = (getLoggedUserError as ResponseError).error;
-                    return;
-                } else {
-                    ctx.throw(500, `Error loading user info from token - ${getLoggedUserError.toString()}`);
+            if (!this.options.skipGetLoggedUser) {
+                try {
+                    await this.getLoggedUser(logger, gatewayURL, ctx);
+                } catch (getLoggedUserError) {
+                    if (getLoggedUserError instanceof ResponseError) {
+                        ctx.response.status = (getLoggedUserError as ResponseError).statusCode;
+                        ctx.response.body = (getLoggedUserError as ResponseError).error;
+                        return;
+                    } else {
+                        ctx.throw(500, `Error loading user info from token - ${getLoggedUserError.toString()}`);
+                    }
                 }
             }
             await next();

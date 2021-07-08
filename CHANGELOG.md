@@ -1,3 +1,7 @@
+# v4.0.1
+
+- Restore `skipGetLoggedUser` flag as permanent functionality.
+
 # v4.0.0
 
 - Remove Control Tower support
