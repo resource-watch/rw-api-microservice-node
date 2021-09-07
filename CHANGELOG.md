@@ -1,3 +1,7 @@
+# v4.0.3
+
+- Update `axios`
+
 # v4.0.1
 
 - Restore `skipGetLoggedUser` flag as permanent functionality.
