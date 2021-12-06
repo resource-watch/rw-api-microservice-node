@@ -1,5 +1,6 @@
-# v4.0.4
+# v4.0.5
 
+- Drop support for nodejs v11.
 - Update dependencies to address underlying vulnerabilities.
 
 # v4.0.3
