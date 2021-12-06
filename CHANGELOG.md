@@ -1,3 +1,7 @@
+# v4.0.4
+
+- Update dependencies to address underlying vulnerabilities.
+
 # v4.0.3
 
 - Update `axios`

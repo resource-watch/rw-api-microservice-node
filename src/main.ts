@@ -6,7 +6,7 @@ import type corsType from "@koa/cors";
 import type request from "request";
 import type Logger from "bunyan";
 // @ts-ignore
-import Fastly from 'fastly-promises';
+import Fastly from '@tiagojsag/fastly-promises';
 
 import { ResponseError } from "./response.error";
 
