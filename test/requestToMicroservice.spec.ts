@@ -28,6 +28,28 @@ describe('Request to RWAPIMicroservice', () => {
         response.should.equal('ok');
     });
 
+    it('Basic requestToMicroservice - GET request with query arguments', async () => {
+        const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
+            uri: `/v1/dataset/1`,
+            method: 'GET',
+            params: {
+                foo: 'bar'
+            },
+            json: true
+        };
+
+        nock('https://controltower.dev')
+            .get('/v1/dataset/1')
+            .query({
+                foo: 'bar'
+            })
+            .reply(200, 'ok');
+
+        const response: Record<string, any> = await RWAPIMicroservice.requestToMicroservice(requestOptions);
+
+        response.should.equal('ok');
+    });
+
     it('GET requestToMicroservice with resolveWithFullResponse=true', async () => {
         const requestOptions: request.OptionsWithUri & RequestToMicroserviceOptions = {
             uri: `/v1/dataset/1`,

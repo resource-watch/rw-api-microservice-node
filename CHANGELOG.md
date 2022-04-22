@@ -1,3 +1,8 @@
+# v4.0.6
+
+- Add `params` argument to `requestToMicroservice`.
+- Update `fastly-prmomises`, `axios` and dev dependencies to address underlying vulnerabilities.
+
 # v4.0.5
 
 - Drop support for nodejs v11.

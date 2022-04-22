@@ -7,8 +7,9 @@ import type request from "request";
 import type Logger from "bunyan";
 // @ts-ignore
 import Fastly from '@tiagojsag/fastly-promises';
-
 import { ResponseError } from "./response.error";
+import { Headers } from 'request';
+import { Url } from 'url';
 
 export interface IRWAPIMicroservice {
     requestToMicroservice: (config: request.OptionsWithUri & RequestToMicroserviceOptions) => Promise<Record<string, any>>;
@@ -35,6 +36,11 @@ export interface RequestToMicroserviceOptions {
     application?: string;
     simple?: boolean;
     resolveWithFullResponse?: boolean;
+    body?: any;
+    params?: Record<string, any>,
+    headers?: Headers;
+    uri: string | Url;
+    method?: string;
 }
 
 class Microservice implements IRWAPIMicroservice {
@@ -179,13 +185,14 @@ class Microservice implements IRWAPIMicroservice {
         return compose([cors(corsOptions), bootstrapMiddleware]);
     }
 
-    public async requestToMicroservice(requestConfig: request.OptionsWithUri & RequestToMicroserviceOptions): Promise<Record<string, any>> {
+    public async requestToMicroservice(requestConfig: RequestToMicroserviceOptions): Promise<Record<string, any>> {
         this.options.logger.info('Adding authorization header');
         const axiosRequestConfig: AxiosRequestConfig = {
             baseURL: this.options.gatewayURL,
             data: requestConfig.body,
             // @ts-ignore
-            method: requestConfig.method
+            method: requestConfig.method,
+            params: requestConfig.params
         };
 
         try {
