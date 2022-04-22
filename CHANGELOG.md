@@ -1,3 +1,8 @@
+# v4.0.7
+
+- Rollback `@types/koa` and `@types/koa-router`
+- Fix issue 
+
 # v4.0.6
 
 - Add `params` argument to `requestToMicroservice`.
