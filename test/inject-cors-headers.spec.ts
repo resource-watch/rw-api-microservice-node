@@ -11,6 +11,7 @@ import koaBody from "koa-body";
 import type { Server } from "http";
 import type Request from "superagent";
 import ChaiHttp from 'chai-http';
+import constants from './utils/test.constants';
 
 chai.should();
 
@@ -35,8 +36,10 @@ describe('Adding CORS headers', () => {
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
-            microserviceToken: 'ABCDEF',
-            fastlyEnabled: false
+            microserviceToken: constants.MICROSERVICE_TOKEN,
+            fastlyEnabled: false,
+            skipGetLoggedUser: true,
+            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
@@ -88,8 +91,10 @@ describe('Adding CORS headers', () => {
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
-            microserviceToken: 'ABCDEF',
-            fastlyEnabled: false
+            microserviceToken: constants.MICROSERVICE_TOKEN,
+            fastlyEnabled: false,
+            skipGetLoggedUser: true,
+            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
@@ -142,8 +147,10 @@ describe('Adding CORS headers', () => {
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
-            microserviceToken: 'ABCDEF',
-            fastlyEnabled: false
+            microserviceToken: constants.MICROSERVICE_TOKEN,
+            fastlyEnabled: false,
+            skipGetLoggedUser: true,
+            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
@@ -198,8 +205,10 @@ describe('Adding CORS headers', () => {
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
-            microserviceToken: 'ABCDEF',
-            fastlyEnabled: false
+            microserviceToken: constants.MICROSERVICE_TOKEN,
+            fastlyEnabled: false,
+            skipGetLoggedUser: true,
+            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
@@ -254,8 +263,10 @@ describe('Adding CORS headers', () => {
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
-            microserviceToken: 'ABCDEF',
-            fastlyEnabled: false
+            microserviceToken: constants.MICROSERVICE_TOKEN,
+            fastlyEnabled: false,
+            skipGetLoggedUser: true,
+            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();

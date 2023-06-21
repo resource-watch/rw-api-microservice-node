@@ -7,9 +7,10 @@ import type request from "request";
 import type Logger from "bunyan";
 // @ts-ignore
 import Fastly from '@tiagojsag/fastly-promises';
-import { ResponseError } from "./response.error";
 import { Headers } from 'request';
 import { Url } from 'url';
+import { ResponseError } from "errors/response.error";
+import { ApiKeyError } from "errors/apiKey.error";
 
 export interface IRWAPIMicroservice {
     requestToMicroservice: (config: request.OptionsWithUri & RequestToMicroserviceOptions) => Promise<Record<string, any>>;
@@ -24,11 +25,13 @@ export interface BootstrapArguments {
     fastlyEnabled: boolean | "true" | "false";
     fastlyServiceId?: string;
     fastlyAPIKey?: string;
+    requireAPIKey?: boolean | "true" | "false";
 }
 
 export interface ConfigurationOptions extends BootstrapArguments {
     skipGetLoggedUser: boolean;
     fastlyEnabled: boolean;
+    requireAPIKey: boolean;
 }
 
 export interface RequestToMicroserviceOptions {
@@ -37,7 +40,7 @@ export interface RequestToMicroserviceOptions {
     simple?: boolean;
     resolveWithFullResponse?: boolean;
     body?: any;
-    params?: Record<string, any>,
+    params?: Record<string, any>;
     headers?: Headers;
     uri: string | Url;
     method?: string;
@@ -56,10 +59,21 @@ class Microservice implements IRWAPIMicroservice {
             throw new Error('RW API microservice - "fastlyEnabled" needs to be a boolean');
         }
 
+        if (
+            options.hasOwnProperty('requireAPIKey')
+            && options.requireAPIKey !== true
+            && options.requireAPIKey !== false
+            && options.requireAPIKey !== "true"
+            && options.requireAPIKey !== "false"
+        ) {
+            throw new Error('RW API microservice - "requireAPIKey" needs to be a boolean');
+        }
+
         const convertedOptions: ConfigurationOptions = {
             ...options,
             skipGetLoggedUser: ('skipGetLoggedUser' in options) ? options.skipGetLoggedUser : false,
-            fastlyEnabled: (options.fastlyEnabled === true || options.fastlyEnabled === "true")
+            fastlyEnabled: (options.fastlyEnabled === true || options.fastlyEnabled === "true"),
+            requireAPIKey: !(options.requireAPIKey === false || options.requireAPIKey === "false")
         };
 
         if (!convertedOptions.logger) {
@@ -89,9 +103,11 @@ class Microservice implements IRWAPIMicroservice {
         if (ctx.status >= 200 && ctx.status < 400) {
             // Non-GET, anonymous requests with the `uncache` header can purge the cache
             if (ctx.request.method !== 'GET' && ctx.response.headers && ctx?.response?.headers?.uncache) {
-                let tags: string[] = ctx.response.headers.uncache;
-                if (typeof ctx.response.headers.uncache === "string") {
-                    tags = ctx.response.headers.uncache.split(' ').filter((part: string) => part !== '');
+                let tags: string[];
+                if (typeof ctx.response.headers.uncache === "string" || typeof ctx.response.headers.uncache === "number") {
+                    tags = ctx.response.headers.uncache.toString().split(' ').filter((part: string) => part !== '');
+                } else {
+                    tags = ctx.response.headers.uncache;
                 }
                 logger.info('[fastlyIntegrationHandler] Purging cache for tag(s): ', tags.join(' '));
                 await fastly.purgeKeys(tags);
@@ -99,9 +115,11 @@ class Microservice implements IRWAPIMicroservice {
 
             // GET anonymous requests with the `cache` header can be cached
             if (ctx.request.method === 'GET' && !ctx.request.headers?.authorization && ctx.response?.headers?.cache) {
-                let keys: string | string[] = ctx.response.headers.cache;
+                let keys: number | string | string[] = ctx.response.headers.cache;
                 if (Array.isArray(ctx.response.headers.cache)) {
                     keys = ctx.response.headers.cache.join(' ');
+                } else {
+                    keys = ctx.response.headers.cache.toString();
                 }
                 logger.info('[fastlyIntegrationHandler] Caching with key(s): ', keys);
                 ctx.set('Surrogate-Key', keys);
@@ -111,21 +129,35 @@ class Microservice implements IRWAPIMicroservice {
         }
     }
 
-    private async getLoggedUser(logger: Logger, baseURL: string, ctx: Context): Promise<void> {
+    private async validateRequest(logger: Logger, baseURL: string, ctx: Context): Promise<void> {
         logger.debug('[getLoggedUser] Obtaining loggedUser for microserviceToken');
         if (!ctx.request.header.authorization) {
-            logger.debug('[getLoggedUser] No authorization header found, returning');
-            return;
+            logger.debug('[getLoggedUser] No authorization header found');
+        }
+        if (!ctx.request.header["x-api-key"]) {
+            logger.debug('[getLoggedUser] No api key header found');
+            if (this.options.requireAPIKey) {
+                throw new ApiKeyError(403, 'Required API key not found');
+            }
         }
 
         try {
+            const body: Record<string, any> = {
+                userToken: ctx.request.header.authorization,
+            };
+
+            if (ctx.request.header["x-api-key"]) {
+                body.apiKey = ctx.request.header["x-api-key"];
+            }
+
             const getUserDetailsRequestConfig: AxiosRequestConfig = {
-                method: 'GET',
+                method: 'POST',
                 baseURL,
-                url: `/auth/user/me`,
+                url: `/api/v1/request/validate`,
                 headers: {
-                    'authorization': ctx.request.header.authorization
-                }
+                    'authorization': `Bearer ${this.options.microserviceToken}`
+                },
+                data: body
             };
 
             const response: AxiosResponse<Record<string, any>> = await axios(getUserDetailsRequestConfig);
@@ -133,10 +165,10 @@ class Microservice implements IRWAPIMicroservice {
             logger.debug('[getLoggedUser] Retrieved microserviceToken data, response status:', response.status);
 
             if (['GET', 'DELETE'].includes(ctx.request.method.toUpperCase())) {
-                ctx.request.query = { ...ctx.request.query, loggedUser: JSON.stringify(response.data) };
+                ctx.request.query = { ...ctx.request.query, loggedUser: JSON.stringify(response.data.user) };
             } else if (['POST', 'PATCH', 'PUT'].includes(ctx.request.method.toUpperCase())) {
                 // @ts-ignore
-                ctx.request.body.loggedUser = response.data;
+                ctx.request.body.loggedUser = response.data.user;
             }
         } catch (err) {
             this.options.logger.error('Error getting user data', err);
@@ -157,17 +189,19 @@ class Microservice implements IRWAPIMicroservice {
             allowHeaders: 'upgrade-insecure-requests'
         };
 
-        const bootstrapMiddleware:Middleware = async (ctx: Context, next: Next) => {
-
+        const bootstrapMiddleware: Middleware = async (ctx: Context, next: Next) => {
             const { logger, gatewayURL } = this.options;
 
             if (!this.options.skipGetLoggedUser) {
                 try {
-                    await this.getLoggedUser(logger, gatewayURL, ctx);
+                    await this.validateRequest(logger, gatewayURL, ctx);
                 } catch (getLoggedUserError) {
                     if (getLoggedUserError instanceof ResponseError) {
                         ctx.response.status = (getLoggedUserError as ResponseError).statusCode;
                         ctx.response.body = (getLoggedUserError as ResponseError).error;
+                        return;
+                    } else if (getLoggedUserError instanceof ApiKeyError) {
+                        ctx.response.status = (getLoggedUserError as ResponseError).statusCode;
                         return;
                     } else {
                         ctx.throw(500, `Error loading user info from token - ${getLoggedUserError.toString()}`);

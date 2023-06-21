@@ -37,10 +37,12 @@ describe('Fastly integration tests', () => {
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
-            microserviceToken: 'ABCDEF',
-            fastlyEnabled: "true",
+            microserviceToken: constants.MICROSERVICE_TOKEN,
+            fastlyEnabled: 'true',
             fastlyAPIKey: 'fastlyAPIKey',
-            fastlyServiceId: 'fastlyServiceId'
+            fastlyServiceId: 'fastlyServiceId',
+            skipGetLoggedUser: true,
+            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
@@ -77,21 +79,15 @@ describe('Fastly integration tests', () => {
             streams: []
         });
 
-        nock('https://controltower.dev', {
-            reqheaders: {
-                authorization: `Bearer ${constants.TOKEN}`,
-            }
-        })
-            .get('/auth/user/me')
-            .reply(200, constants.USER);
-
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
-            microserviceToken: 'ABCDEF',
+            microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
-            fastlyServiceId: 'fastlyServiceId'
+            fastlyServiceId: 'fastlyServiceId',
+            skipGetLoggedUser: true,
+            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
@@ -113,7 +109,7 @@ describe('Fastly integration tests', () => {
 
         const response: Request.Response = await requester
             .get('/test')
-            .set('Authorization', `Bearer ${constants.TOKEN}`);
+            .set('Authorization', `Bearer ${constants.USER_TOKEN}`);
 
         response.status.should.equal(200);
         response.text.should.equal('ok');
@@ -133,10 +129,12 @@ describe('Fastly integration tests', () => {
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
-            microserviceToken: 'ABCDEF',
+            microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
-            fastlyServiceId: 'fastlyServiceId'
+            fastlyServiceId: 'fastlyServiceId',
+            skipGetLoggedUser: true,
+            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
@@ -177,10 +175,12 @@ describe('Fastly integration tests', () => {
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
-            microserviceToken: 'ABCDEF',
+            microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
-            fastlyServiceId: 'fastlyServiceId'
+            fastlyServiceId: 'fastlyServiceId',
+            skipGetLoggedUser: true,
+            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
@@ -221,10 +221,12 @@ describe('Fastly integration tests', () => {
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
-            microserviceToken: 'ABCDEF',
+            microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
-            fastlyServiceId: 'fastlyServiceId'
+            fastlyServiceId: 'fastlyServiceId',
+            skipGetLoggedUser: true,
+            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
@@ -311,10 +313,12 @@ describe('Fastly integration tests', () => {
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
-            microserviceToken: 'ABCDEF',
+            microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
-            fastlyServiceId: 'fastlyServiceId'
+            fastlyServiceId: 'fastlyServiceId',
+            skipGetLoggedUser: true,
+            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
@@ -401,10 +405,12 @@ describe('Fastly integration tests', () => {
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
-            microserviceToken: 'ABCDEF',
+            microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
-            fastlyServiceId: 'fastlyServiceId'
+            fastlyServiceId: 'fastlyServiceId',
+            skipGetLoggedUser: true,
+            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();

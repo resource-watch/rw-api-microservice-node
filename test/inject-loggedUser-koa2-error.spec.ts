@@ -35,10 +35,10 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
 
         nock('https://controltower.dev', {
             reqheaders: {
-                authorization: `Bearer ${constants.TOKEN}`,
+                authorization: `Bearer ${constants.MICROSERVICE_TOKEN}`,
             }
         })
-            .get('/auth/user/me')
+            .post('/api/v1/request/validate')
             .reply(404, {
                 "errors": [
                     {
@@ -51,13 +51,14 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
-            microserviceToken: 'ABCDEF',
-            fastlyEnabled: false
+            microserviceToken: constants.MICROSERVICE_TOKEN,
+            fastlyEnabled: false,
+            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
         testRouter.get('/test', (ctx: Koa.Context) => {
-            ctx.request.should.have.header('Authorization', `Bearer ${constants.TOKEN}`);
+            ctx.request.should.have.header('Authorization', `Bearer ${constants.USER_TOKEN}`);
             expect(ctx.request.query).to.have.property('loggedUser').and.equal(JSON.stringify(constants.USER));
             ctx.body = 'ok';
         });
@@ -75,7 +76,7 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
 
         const response: Request.Response = await requester
             .get('/test')
-            .set('Authorization', `Bearer ${constants.TOKEN}`);
+            .set('Authorization', `Bearer ${constants.USER_TOKEN}`);
 
 
         response.status.should.equal(404);
@@ -95,22 +96,23 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
 
         nock('https://controltower.dev', {
             reqheaders: {
-                authorization: `Bearer ${constants.TOKEN}`,
+                authorization: `Bearer ${constants.MICROSERVICE_TOKEN}`,
             }
         })
-            .get('/auth/user/me')
+            .post('/api/v1/request/validate')
             .reply(500, 'Server error');
 
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
-            microserviceToken: 'ABCDEF',
-            fastlyEnabled: false
+            microserviceToken: constants.MICROSERVICE_TOKEN,
+            fastlyEnabled: false,
+            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
         testRouter.get('/test', (ctx: Koa.Context) => {
-            ctx.request.should.have.header('Authorization', `Bearer ${constants.TOKEN}`);
+            ctx.request.should.have.header('Authorization', `Bearer ${constants.USER_TOKEN}`);
             expect(ctx.request.query).to.have.property('loggedUser').and.equal(JSON.stringify(constants.USER));
             ctx.body = 'ok';
         });
@@ -128,7 +130,7 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
 
         const response: Request.Response = await requester
             .get('/test')
-            .set('Authorization', `Bearer ${constants.TOKEN}`);
+            .set('Authorization', `Bearer ${constants.USER_TOKEN}`);
 
 
         response.status.should.equal(500);
@@ -146,10 +148,10 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
 
         nock('https://controltower.dev', {
             reqheaders: {
-                authorization: `Bearer ${constants.TOKEN}`,
+                authorization: `Bearer ${constants.MICROSERVICE_TOKEN}`,
             }
         })
-            .get('/auth/user/me')
+            .post('/api/v1/request/validate')
             .reply(401, {
                 "errors": [
                     {
@@ -162,13 +164,14 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
-            microserviceToken: 'ABCDEF',
-            fastlyEnabled: false
+            microserviceToken: constants.MICROSERVICE_TOKEN,
+            fastlyEnabled: false,
+            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
         testRouter.get('/test', (ctx: Koa.Context) => {
-            ctx.request.should.have.header('Authorization', `Bearer ${constants.TOKEN}`);
+            ctx.request.should.have.header('Authorization', `Bearer ${constants.USER_TOKEN}`);
             expect(ctx.request.query).to.have.property('loggedUser').and.equal(JSON.stringify(constants.USER));
             ctx.body = 'ok';
         });
@@ -186,7 +189,7 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
 
         const response: Request.Response = await requester
             .get('/test')
-            .set('Authorization', `Bearer ${constants.TOKEN}`);
+            .set('Authorization', `Bearer ${constants.USER_TOKEN}`);
 
         response.status.should.equal(401);
         response.body.should.have.property('errors').and.be.an('array');

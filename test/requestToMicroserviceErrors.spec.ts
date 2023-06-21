@@ -3,7 +3,7 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { RequestToMicroserviceOptions, RWAPIMicroservice } from "main";
 import request from "request";
-import { ResponseError } from "../src/response.error";
+import { ResponseError } from "../src/errors/response.error";
 
 chai.should();
 chai.use(chaiAsPromised);
