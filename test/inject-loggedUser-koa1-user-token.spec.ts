@@ -13,7 +13,7 @@ import type { Server } from "http";
 import type Request from "superagent";
 import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
-import { mockValidateRequest } from "./utils/mocks";
+import { mockValidateRequestWithUserToken } from "./utils/mocks";
 
 chai.should();
 chai.use(ChaiHttp);
@@ -23,7 +23,7 @@ nock.enableNetConnect('127.0.0.1');
 
 let requester: ChaiHttp.Agent;
 
-describe('Injecting logged user data - Koa v1.x without API key', () => {
+describe('Injecting logged user data - Koa v1.x with user token', () => {
 
     before(nock.cleanAll);
 
@@ -36,7 +36,7 @@ describe('Injecting logged user data - Koa v1.x without API key', () => {
             streams: []
         });
 
-        mockValidateRequest();
+        mockValidateRequestWithUserToken();
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -85,7 +85,7 @@ describe('Injecting logged user data - Koa v1.x without API key', () => {
             streams: []
         });
 
-        mockValidateRequest();
+        mockValidateRequestWithUserToken();
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -135,7 +135,7 @@ describe('Injecting logged user data - Koa v1.x without API key', () => {
             streams: []
         });
 
-        mockValidateRequest();
+        mockValidateRequestWithUserToken();
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -188,7 +188,7 @@ describe('Injecting logged user data - Koa v1.x without API key', () => {
             streams: []
         });
 
-        mockValidateRequest();
+        mockValidateRequestWithUserToken();
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -241,7 +241,7 @@ describe('Injecting logged user data - Koa v1.x without API key', () => {
             streams: []
         });
 
-        mockValidateRequest();
+        mockValidateRequestWithUserToken();
 
         const registerOptions: BootstrapArguments = {
             logger,

@@ -12,7 +12,6 @@ import type { Server } from "http";
 import type Request from "superagent";
 import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
-import koaQs from 'koa-qs';
 import { mockValidateRequestWithUserToken } from "./utils/mocks";
 
 chai.should();
@@ -22,7 +21,7 @@ nock.enableNetConnect('127.0.0.1');
 
 let requester: ChaiHttp.Agent;
 
-describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
+describe('Injecting logged user data - Koa v2.x with user token', () => {
 
     before(nock.cleanAll);
 
@@ -53,7 +52,6 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
         });
 
         app.use(koaBody());
-        koaQs(app);
         app.use(RWAPIMicroservice.bootstrap(registerOptions));
 
         app
@@ -67,7 +65,6 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
         const response: Request.Response = await requester
             .get('/test')
             .set('Authorization', `Bearer ${constants.USER_TOKEN}`);
-
 
         response.status.should.equal(200);
         response.text.should.equal('ok');
@@ -100,7 +97,6 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
         });
 
         app.use(koaBody());
-        koaQs(app);
         app.use(RWAPIMicroservice.bootstrap(registerOptions));
 
         app
@@ -148,7 +144,6 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
         });
 
         app.use(koaBody());
-        koaQs(app);
         app.use(RWAPIMicroservice.bootstrap(registerOptions));
 
         app
@@ -198,7 +193,6 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
         });
 
         app.use(koaBody());
-        koaQs(app);
         app.use(RWAPIMicroservice.bootstrap(registerOptions));
 
         app
@@ -248,7 +242,6 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
         });
 
         app.use(koaBody());
-        koaQs(app);
         app.use(RWAPIMicroservice.bootstrap(registerOptions));
 
         app

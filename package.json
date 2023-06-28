@@ -52,8 +52,9 @@
   "homepage": "https://github.com/resource-watch/rw-api-microservice-node",
   "dependencies": {
     "@koa/cors": "^3.4.3",
-    "axios": "^1.4.0",
     "@tiagojsag/fastly-promises": "^1.0.1",
+    "aws-sdk": "^2.1405.0",
+    "axios": "^1.4.0",
     "koa-compose": "^4.1.0"
   },
   "devDependencies": {

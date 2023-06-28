@@ -1,11 +1,31 @@
 import nock from "nock";
 import constants from "./test.constants";
 
-export const mockValidateRequest: (user?: any, token?: string, apiKey?: string) => void = (user = constants.USER, token = constants.USER_TOKEN, apiKey = null) => {
-    const body: Record<string, any> = {
-        userToken: `Bearer ${token}`
-    };
+type mockValidateRequestArgType = {
+    user?: Record<string, any>,
+    application?: Record<string, any>,
+    token?: string,
+    apiKey?: string,
+}
 
+const mockValidateRequest = ({
+                                 user = null,
+                                 application = null,
+                                 token = null,
+                                 apiKey = null
+                             }: mockValidateRequestArgType): void => {
+    const body: Record<string, any> = {};
+    const response: Record<string, any> = {};
+
+    if (user) {
+        response.user = user;
+    }
+    if (application) {
+        response.application = application;
+    }
+    if (token) {
+        body.userToken = `Bearer ${token}`;
+    }
     if (apiKey) {
         body.apiKey = apiKey;
     }
@@ -16,12 +36,19 @@ export const mockValidateRequest: (user?: any, token?: string, apiKey?: string) 
         }
     })
         .post('/api/v1/request/validate', body)
-        .reply(200, {
-            user
-        });
+        .reply(200, { user, application });
 };
 
 
-export const mockValidateRequestWithApiKey: (user?: any, token?: string) => void = (user = constants.USER, token = constants.USER_TOKEN) => {
-    mockValidateRequest(user, token, 'api-key-test');
+export const mockValidateRequestWithUserToken = (user = constants.USER, token = constants.USER_TOKEN): void => {
+    mockValidateRequest({ user, token });
+};
+
+export const mockValidateRequestWithApiKey = (apiKey = 'api-key-test', application = constants.APPLICATION): void => {
+    mockValidateRequest({ apiKey, application });
+};
+
+
+export const mockValidateRequestWithApiKeyAndUserToken = (apiKey = 'api-key-test', token = constants.USER_TOKEN, application = constants.APPLICATION, user = constants.USER): void => {
+    mockValidateRequest({ apiKey, application, user, token });
 };

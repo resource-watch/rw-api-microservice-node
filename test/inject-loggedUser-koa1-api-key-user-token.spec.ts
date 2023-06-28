@@ -1,3 +1,5 @@
+// @ts-ignore
+import Koa1 from "koa1";
 import nock from 'nock';
 import chai, { expect } from 'chai';
 import { BootstrapArguments, RWAPIMicroservice } from 'main';
@@ -5,15 +7,13 @@ import type Logger from "bunyan";
 import bunyan from "bunyan";
 import type Koa from "koa";
 import Router from "koa-router";
-// @ts-ignore
-import Koa1 from "koa1";
 import koaBody from "koa-body";
 import convert from "koa-convert";
 import type { Server } from "http";
 import type Request from "superagent";
 import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
-import { mockValidateRequestWithApiKey } from "./utils/mocks";
+import { mockValidateRequestWithApiKeyAndUserToken } from "./utils/mocks";
 
 chai.should();
 chai.use(ChaiHttp);
@@ -23,7 +23,7 @@ nock.enableNetConnect('127.0.0.1');
 
 let requester: ChaiHttp.Agent;
 
-describe('Injecting logged user data - Koa v1.x with API key', () => {
+describe('Injecting logged user data - Koa v1.x with API key and user token', () => {
 
     before(nock.cleanAll);
 
@@ -36,7 +36,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
             streams: []
         });
 
-        mockValidateRequestWithApiKey();
+        mockValidateRequestWithApiKeyAndUserToken();
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -53,9 +53,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
             ctx.body = 'ok';
         });
 
-        // @ts-ignore
         app.use(convert.back(koaBody()));
-        // @ts-ignore
         app.use(convert.back(RWAPIMicroservice.bootstrap(registerOptions)));
 
         app
@@ -86,7 +84,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
             streams: []
         });
 
-        mockValidateRequestWithApiKey();
+        mockValidateRequestWithApiKeyAndUserToken();
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -137,7 +135,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
             streams: []
         });
 
-        mockValidateRequestWithApiKey();
+        mockValidateRequestWithApiKeyAndUserToken();
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -191,7 +189,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
             streams: []
         });
 
-        mockValidateRequestWithApiKey();
+        mockValidateRequestWithApiKeyAndUserToken();
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -245,7 +243,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
             streams: []
         });
 
-        mockValidateRequestWithApiKey();
+        mockValidateRequestWithApiKeyAndUserToken();
 
         const registerOptions: BootstrapArguments = {
             logger,

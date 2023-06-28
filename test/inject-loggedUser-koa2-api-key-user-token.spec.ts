@@ -1,3 +1,5 @@
+// @ts-ignore
+import Koa2 from "koa2";
 import nock from 'nock';
 import chai, { expect } from 'chai';
 import { BootstrapArguments, RWAPIMicroservice } from 'main';
@@ -5,24 +7,22 @@ import type Logger from "bunyan";
 import bunyan from "bunyan";
 import type Koa from "koa";
 import Router from "koa-router";
-// @ts-ignore
-import Koa2 from "koa2";
 import koaBody from "koa-body";
 import type { Server } from "http";
 import type Request from "superagent";
 import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
-import koaQs from 'koa-qs';
-import { mockValidateRequestWithUserToken } from "./utils/mocks";
+import { mockValidateRequestWithApiKeyAndUserToken } from "./utils/mocks";
 
 chai.should();
+chai.use(ChaiHttp);
 
 nock.disableNetConnect();
 nock.enableNetConnect('127.0.0.1');
 
 let requester: ChaiHttp.Agent;
 
-describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
+describe('Injecting logged user data - Koa v2.x with API key and user token', () => {
 
     before(nock.cleanAll);
 
@@ -35,14 +35,13 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             streams: []
         });
 
-        mockValidateRequestWithUserToken();
+        mockValidateRequestWithApiKeyAndUserToken();
 
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
-            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
@@ -53,7 +52,6 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
         });
 
         app.use(koaBody());
-        koaQs(app);
         app.use(RWAPIMicroservice.bootstrap(registerOptions));
 
         app
@@ -66,8 +64,8 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
 
         const response: Request.Response = await requester
             .get('/test')
+            .set('x-api-key', `api-key-test`)
             .set('Authorization', `Bearer ${constants.USER_TOKEN}`);
-
 
         response.status.should.equal(200);
         response.text.should.equal('ok');
@@ -82,14 +80,13 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             streams: []
         });
 
-        mockValidateRequestWithUserToken();
+        mockValidateRequestWithApiKeyAndUserToken();
 
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
-            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
@@ -100,7 +97,6 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
         });
 
         app.use(koaBody());
-        koaQs(app);
         app.use(RWAPIMicroservice.bootstrap(registerOptions));
 
         app
@@ -113,8 +109,8 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
 
         const response: Request.Response = await requester
             .delete('/test')
+            .set('X-api-key', `api-key-test`)
             .set('Authorization', `Bearer ${constants.USER_TOKEN}`);
-
 
         response.status.should.equal(200);
         response.text.should.equal('ok');
@@ -129,14 +125,13 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             streams: []
         });
 
-        mockValidateRequestWithUserToken();
+        mockValidateRequestWithApiKeyAndUserToken();
 
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
-            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
@@ -148,7 +143,6 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
         });
 
         app.use(koaBody());
-        koaQs(app);
         app.use(RWAPIMicroservice.bootstrap(registerOptions));
 
         app
@@ -161,6 +155,7 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
 
         const response: Request.Response = await requester
             .post('/test')
+            .set('X-api-key', `api-key-test`)
             .set('Authorization', `Bearer ${constants.USER_TOKEN}`)
             .send({
                 data: 'test'
@@ -179,14 +174,13 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             streams: []
         });
 
-        mockValidateRequestWithUserToken();
+        mockValidateRequestWithApiKeyAndUserToken();
 
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
-            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
@@ -198,7 +192,6 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
         });
 
         app.use(koaBody());
-        koaQs(app);
         app.use(RWAPIMicroservice.bootstrap(registerOptions));
 
         app
@@ -211,6 +204,7 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
 
         const response: Request.Response = await requester
             .patch('/test')
+            .set('X-api-key', `api-key-test`)
             .set('Authorization', `Bearer ${constants.USER_TOKEN}`)
             .send({
                 data: 'test'
@@ -229,14 +223,13 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             streams: []
         });
 
-        mockValidateRequestWithUserToken();
+        mockValidateRequestWithApiKeyAndUserToken();
 
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
-            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
@@ -248,7 +241,6 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
         });
 
         app.use(koaBody());
-        koaQs(app);
         app.use(RWAPIMicroservice.bootstrap(registerOptions));
 
         app
@@ -261,6 +253,7 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
 
         const response: Request.Response = await requester
             .put('/test')
+            .set('X-api-key', `api-key-test`)
             .set('Authorization', `Bearer ${constants.USER_TOKEN}`)
             .send({
                 data: 'test'

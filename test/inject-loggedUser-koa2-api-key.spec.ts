@@ -1,3 +1,5 @@
+// @ts-ignore
+import Koa2 from "koa2";
 import nock from 'nock';
 import chai, { expect } from 'chai';
 import { BootstrapArguments, RWAPIMicroservice } from 'main';
@@ -5,23 +7,22 @@ import type Logger from "bunyan";
 import bunyan from "bunyan";
 import type Koa from "koa";
 import Router from "koa-router";
-// @ts-ignore
-import Koa2 from "koa2";
 import koaBody from "koa-body";
 import type { Server } from "http";
 import type Request from "superagent";
 import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
-import { mockValidateRequest } from "./utils/mocks";
+import { mockValidateRequestWithApiKey } from "./utils/mocks";
 
 chai.should();
+chai.use(ChaiHttp);
 
 nock.disableNetConnect();
 nock.enableNetConnect('127.0.0.1');
 
 let requester: ChaiHttp.Agent;
 
-describe('Injecting logged user data - Koa v2.x without API key', () => {
+describe('Injecting logged user data - Koa v2.x with API key', () => {
 
     before(nock.cleanAll);
 
@@ -34,20 +35,19 @@ describe('Injecting logged user data - Koa v2.x without API key', () => {
             streams: []
         });
 
-        mockValidateRequest();
+        mockValidateRequestWithApiKey();
 
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
-            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
         testRouter.get('/test', (ctx: Koa.Context) => {
-            ctx.request.should.have.header('Authorization', `Bearer ${constants.USER_TOKEN}`);
-            expect(ctx.request.query).to.have.property('loggedUser').and.equal(JSON.stringify(constants.USER));
+            ctx.request.should.not.have.header('Authorization');
+            expect(ctx.request.query).to.have.property('requestApplication').and.equal(JSON.stringify(constants.APPLICATION));
             ctx.body = 'ok';
         });
 
@@ -64,7 +64,7 @@ describe('Injecting logged user data - Koa v2.x without API key', () => {
 
         const response: Request.Response = await requester
             .get('/test')
-            .set('Authorization', `Bearer ${constants.USER_TOKEN}`);
+            .set('x-api-key', `api-key-test`);
 
         response.status.should.equal(200);
         response.text.should.equal('ok');
@@ -79,20 +79,19 @@ describe('Injecting logged user data - Koa v2.x without API key', () => {
             streams: []
         });
 
-        mockValidateRequest();
+        mockValidateRequestWithApiKey();
 
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
-            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
         testRouter.delete('/test', (ctx: Koa.Context) => {
-            ctx.request.should.have.header('Authorization', `Bearer ${constants.USER_TOKEN}`);
-            expect(ctx.request.query).to.have.property('loggedUser').and.equal(JSON.stringify(constants.USER));
+            ctx.request.should.not.have.header('Authorization');
+            expect(ctx.request.query).to.have.property('requestApplication').and.equal(JSON.stringify(constants.APPLICATION));
             ctx.body = 'ok';
         });
 
@@ -109,8 +108,7 @@ describe('Injecting logged user data - Koa v2.x without API key', () => {
 
         const response: Request.Response = await requester
             .delete('/test')
-            .set('Authorization', `Bearer ${constants.USER_TOKEN}`);
-
+            .set('X-api-key', `api-key-test`);
 
         response.status.should.equal(200);
         response.text.should.equal('ok');
@@ -125,21 +123,20 @@ describe('Injecting logged user data - Koa v2.x without API key', () => {
             streams: []
         });
 
-        mockValidateRequest();
+        mockValidateRequestWithApiKey();
 
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
-            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
         testRouter.post('/test', (ctx: Koa.Context) => {
-            ctx.request.should.have.header('Authorization', `Bearer ${constants.USER_TOKEN}`);
+            ctx.request.should.not.have.header('Authorization');
             ctx.request.body.should.have.property('data').and.deep.equal('test');
-            ctx.request.body.should.have.property('loggedUser').and.deep.equal(constants.USER);
+            ctx.request.body.should.have.property('requestApplication').and.deep.equal(constants.APPLICATION);
             ctx.body = 'ok';
         });
 
@@ -156,7 +153,7 @@ describe('Injecting logged user data - Koa v2.x without API key', () => {
 
         const response: Request.Response = await requester
             .post('/test')
-            .set('Authorization', `Bearer ${constants.USER_TOKEN}`)
+            .set('X-api-key', `api-key-test`)
             .send({
                 data: 'test'
             });
@@ -174,21 +171,20 @@ describe('Injecting logged user data - Koa v2.x without API key', () => {
             streams: []
         });
 
-        mockValidateRequest();
+        mockValidateRequestWithApiKey();
 
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
-            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
         testRouter.patch('/test', (ctx: Koa.Context) => {
-            ctx.request.should.have.header('Authorization', `Bearer ${constants.USER_TOKEN}`);
+            ctx.request.should.not.have.header('Authorization');
             ctx.request.body.should.have.property('data').and.deep.equal('test');
-            ctx.request.body.should.have.property('loggedUser').and.deep.equal(constants.USER);
+            ctx.request.body.should.have.property('requestApplication').and.deep.equal(constants.APPLICATION);
             ctx.body = 'ok';
         });
 
@@ -205,7 +201,7 @@ describe('Injecting logged user data - Koa v2.x without API key', () => {
 
         const response: Request.Response = await requester
             .patch('/test')
-            .set('Authorization', `Bearer ${constants.USER_TOKEN}`)
+            .set('X-api-key', `api-key-test`)
             .send({
                 data: 'test'
             });
@@ -223,21 +219,20 @@ describe('Injecting logged user data - Koa v2.x without API key', () => {
             streams: []
         });
 
-        mockValidateRequest();
+        mockValidateRequestWithApiKey();
 
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
-            requireAPIKey: false,
         };
 
         const testRouter: Router = new Router();
         testRouter.put('/test', (ctx: Koa.Context) => {
-            ctx.request.should.have.header('Authorization', `Bearer ${constants.USER_TOKEN}`);
+            ctx.request.should.not.have.header('Authorization');
             ctx.request.body.should.have.property('data').and.deep.equal('test');
-            ctx.request.body.should.have.property('loggedUser').and.deep.equal(constants.USER);
+            ctx.request.body.should.have.property('requestApplication').and.deep.equal(constants.APPLICATION);
             ctx.body = 'ok';
         });
 
@@ -254,7 +249,7 @@ describe('Injecting logged user data - Koa v2.x without API key', () => {
 
         const response: Request.Response = await requester
             .put('/test')
-            .set('Authorization', `Bearer ${constants.USER_TOKEN}`)
+            .set('X-api-key', `api-key-test`)
             .send({
                 data: 'test'
             });

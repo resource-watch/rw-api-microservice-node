@@ -1,12 +1,12 @@
+// @ts-ignore
+import Fastly from '@tiagojsag/fastly-promises';
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import type { Context, Middleware, Next } from "koa";
+import type { Context, Middleware, Next, Request } from "koa";
 import cors from "@koa/cors";
 import compose from "koa-compose";
 import type corsType from "@koa/cors";
 import type request from "request";
 import type Logger from "bunyan";
-// @ts-ignore
-import Fastly from '@tiagojsag/fastly-promises';
 import { Headers } from 'request';
 import { Url } from 'url';
 import { ResponseError } from "errors/response.error";
@@ -129,12 +129,12 @@ class Microservice implements IRWAPIMicroservice {
         }
     }
 
-    private async validateRequest(logger: Logger, baseURL: string, ctx: Context): Promise<void> {
+    private async getRequestValidationData(logger: Logger, baseURL: string, request: Request): Promise<Record<string, any>> {
         logger.debug('[getLoggedUser] Obtaining loggedUser for microserviceToken');
-        if (!ctx.request.header.authorization) {
+        if (!request.header.authorization) {
             logger.debug('[getLoggedUser] No authorization header found');
         }
-        if (!ctx.request.header["x-api-key"]) {
+        if (!request.header["x-api-key"]) {
             logger.debug('[getLoggedUser] No api key header found');
             if (this.options.requireAPIKey) {
                 throw new ApiKeyError(403, 'Required API key not found');
@@ -143,11 +143,11 @@ class Microservice implements IRWAPIMicroservice {
 
         try {
             const body: Record<string, any> = {
-                userToken: ctx.request.header.authorization,
+                userToken: request.header.authorization,
             };
 
-            if (ctx.request.header["x-api-key"]) {
-                body.apiKey = ctx.request.header["x-api-key"];
+            if (request.header["x-api-key"]) {
+                body.apiKey = request.header["x-api-key"];
             }
 
             const getUserDetailsRequestConfig: AxiosRequestConfig = {
@@ -164,18 +164,35 @@ class Microservice implements IRWAPIMicroservice {
 
             logger.debug('[getLoggedUser] Retrieved microserviceToken data, response status:', response.status);
 
-            if (['GET', 'DELETE'].includes(ctx.request.method.toUpperCase())) {
-                ctx.request.query = { ...ctx.request.query, loggedUser: JSON.stringify(response.data.user) };
-            } else if (['POST', 'PATCH', 'PUT'].includes(ctx.request.method.toUpperCase())) {
-                // @ts-ignore
-                ctx.request.body.loggedUser = response.data.user;
-            }
+            return response.data;
         } catch (err) {
             this.options.logger.error('Error getting user data', err);
             if (err?.response?.data) {
                 throw new ResponseError(err.response.status, err.response.data, err.response);
             }
             throw err;
+        }
+    }
+
+    private async injectRequestValidationData(logger: Logger, requestValidationData: Record<string, any>, request: Request): Promise<void> {
+        logger.debug('[injectRequestValidationData] Obtaining loggedUser for microserviceToken');
+
+        if (['GET', 'DELETE'].includes(request.method.toUpperCase())) {
+            if (requestValidationData.user) {
+                request.query = { ...request.query, loggedUser: JSON.stringify(requestValidationData.user) };
+            }
+            if (requestValidationData.application) {
+                request.query = { ...request.query, requestApplication: JSON.stringify(requestValidationData.application) };
+            }
+        } else if (['POST', 'PATCH', 'PUT'].includes(request.method.toUpperCase())) {
+            if (requestValidationData.user) {
+                // @ts-ignore
+                request.body.loggedUser = requestValidationData.user;
+            }
+            if (requestValidationData.application) {
+                // @ts-ignore
+                request.body.requestApplication = requestValidationData.application;
+            }
         }
     }
 
@@ -194,7 +211,8 @@ class Microservice implements IRWAPIMicroservice {
 
             if (!this.options.skipGetLoggedUser) {
                 try {
-                    await this.validateRequest(logger, gatewayURL, ctx);
+                    const requestValidationData: Record<string, any> = await this.getRequestValidationData(logger, gatewayURL, ctx.request);
+                    await this.injectRequestValidationData(logger, requestValidationData, ctx.request);
                 } catch (getLoggedUserError) {
                     if (getLoggedUserError instanceof ResponseError) {
                         ctx.response.status = (getLoggedUserError as ResponseError).statusCode;
