@@ -1,3 +1,7 @@
+# v5.0.0-beta2
+
+- Fix issue with absolute path imports.
+
 # v5.0.0-beta1
 
 - Add API key tracking and usage logging.

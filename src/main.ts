@@ -9,8 +9,8 @@ import type request from "request";
 import type Logger from "bunyan";
 import { Headers } from 'request';
 import { Url } from 'url';
-import { ResponseError } from "errors/response.error";
-import { ApiKeyError } from "errors/apiKey.error";
+import { ResponseError } from "./errors/response.error";
+import { ApiKeyError } from "./errors/apiKey.error";
 import CloudWatchService from "./cloudwatch.service";
 
 export interface IRWAPIMicroservice {
