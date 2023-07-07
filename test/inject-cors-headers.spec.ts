@@ -12,6 +12,7 @@ import type { Server } from "http";
 import type Request from "superagent";
 import ChaiHttp from 'chai-http';
 import constants from './utils/test.constants';
+import { mockCloudWatchLogRequestsSequence, mockValidateRequestWithApiKey } from "./utils/mocks";
 
 chai.should();
 chai.use(ChaiHttp);
@@ -28,6 +29,8 @@ describe('Adding CORS headers', () => {
     it('GET request with a Origin header should return a response with CORS headers present (happy case)', async () => {
         const app: Koa = new Koa2();
 
+        mockCloudWatchLogRequestsSequence();
+
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
@@ -42,7 +45,6 @@ describe('Adding CORS headers', () => {
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
-            skipGetLoggedUser: true,
             requireAPIKey: false,
             awsRegion: 'eu-west-1',
             awsCloudWatchLogStreamName: 'test',
@@ -88,6 +90,8 @@ describe('Adding CORS headers', () => {
     it('DELETE request with a Origin header should return a response with CORS headers present (happy case)', async () => {
         const app: Koa = new Koa2();
 
+        mockCloudWatchLogRequestsSequence();
+
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
@@ -102,7 +106,6 @@ describe('Adding CORS headers', () => {
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
-            skipGetLoggedUser: true,
             requireAPIKey: false,
             awsRegion: 'eu-west-1',
             awsCloudWatchLogStreamName: 'test',
@@ -149,6 +152,8 @@ describe('Adding CORS headers', () => {
     it('POST request with a Origin header should return a response with CORS headers present (happy case)', async () => {
         const app: Koa = new Koa2();
 
+        mockCloudWatchLogRequestsSequence();
+
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
@@ -163,7 +168,6 @@ describe('Adding CORS headers', () => {
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
-            skipGetLoggedUser: true,
             requireAPIKey: false,
             awsRegion: 'eu-west-1',
             awsCloudWatchLogStreamName: 'test',
@@ -212,6 +216,8 @@ describe('Adding CORS headers', () => {
     it('PATCH request with a Origin header should return a response with CORS headers present (happy case)', async () => {
         const app: Koa = new Koa2();
 
+        mockCloudWatchLogRequestsSequence();
+
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
@@ -226,7 +232,6 @@ describe('Adding CORS headers', () => {
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
-            skipGetLoggedUser: true,
             requireAPIKey: false,
             awsRegion: 'eu-west-1',
             awsCloudWatchLogStreamName: 'test',
@@ -275,6 +280,8 @@ describe('Adding CORS headers', () => {
     it('PUT request with a Origin header should return a response with CORS headers present (happy case)', async () => {
         const app: Koa = new Koa2();
 
+        mockCloudWatchLogRequestsSequence();
+
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
@@ -289,7 +296,6 @@ describe('Adding CORS headers', () => {
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
-            skipGetLoggedUser: true,
             requireAPIKey: false,
             awsRegion: 'eu-west-1',
             awsCloudWatchLogStreamName: 'test',

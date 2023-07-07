@@ -89,9 +89,10 @@ const mockCloudWatchCreateLogLineRequest: ({ application, user }: {
 
                 const logLine = JSON.parse(body.logEvents[0].message);
 
-                if (body.requestApplication || application) {
-                    expect(logLine).to.have.property('requestApplication');
-                    const requestApplication = logLine.requestApplication;
+                expect(logLine).to.have.property('requestApplication');
+                const requestApplication = logLine.requestApplication;
+
+                if (application) {
                     expect(requestApplication).to.deep.equal({
                         id: application.data.id,
                         apiKeyValue: application.data.attributes.apiKeyValue,
@@ -99,11 +100,18 @@ const mockCloudWatchCreateLogLineRequest: ({ application, user }: {
                         organization: application.data.attributes.organization,
                         user: application.data.attributes.user
                     });
+                } else {
+                    expect(requestApplication).to.deep.equal({
+                        id: 'anonymous',
+                        name: 'anonymous',
+                        organization: null,
+                        user: null,
+                        apiKeyValue: null,
+                    });
                 }
 
-
-                if (body.loggedUser || user) {
-                    expect(logLine).to.have.property('loggedUser');
+                expect(logLine).to.have.property('loggedUser');
+                if (user) {
                     if (user.id === 'microservice') {
                         expect(logLine.loggedUser).to.deep.equal({
                             id: user.id,
@@ -116,6 +124,13 @@ const mockCloudWatchCreateLogLineRequest: ({ application, user }: {
                             provider: user.provider
                         });
                     }
+                } else {
+                    expect(logLine.loggedUser).to.deep.equal({
+                        id: 'anonymous',
+                        name: 'anonymous',
+                        role: 'anonymous',
+                        provider: 'anonymous'
+                    });
                 }
 
                 return true;
@@ -124,10 +139,10 @@ const mockCloudWatchCreateLogLineRequest: ({ application, user }: {
         .reply(200, { "nextSequenceToken": "49640528541606186274984579958467215700865662738895994946" });
 }
 
-export const mockCloudWatchLogRequestsSequence: ({ application, user }: {
+export const mockCloudWatchLogRequestsSequence: ({ application, user }?: {
     application?: Record<string, any>;
     user?: Record<string, any>
-}) => void = ({ application, user }): void => {
+}) => void = ({ application, user } = {}): void => {
     mockCloudWatchCreateLogGroupRequest();
     mockCloudWatchCreateLogStreamRequest();
     mockCloudWatchCreateLogLineRequest({ application, user });

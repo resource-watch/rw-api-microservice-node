@@ -22,19 +22,17 @@ export interface BootstrapArguments {
     logger: Logger;
     gatewayURL: string;
     microserviceToken: string;
-    skipGetLoggedUser?: boolean;
     fastlyEnabled: boolean | "true" | "false";
     fastlyServiceId?: string;
     fastlyAPIKey?: string;
     requireAPIKey?: boolean | "true" | "false";
     awsCloudWatchLoggingEnabled?: boolean | "true" | "false";
-    awsRegion?: string;
+    awsRegion: string;
     awsCloudWatchLogGroupName?: string;
-    awsCloudWatchLogStreamName?: string;
+    awsCloudWatchLogStreamName: string;
 }
 
 export interface ConfigurationOptions extends BootstrapArguments {
-    skipGetLoggedUser: boolean;
     fastlyEnabled: boolean;
     requireAPIKey: boolean;
     awsCloudWatchLoggingEnabled?: boolean;
@@ -117,7 +115,6 @@ class Microservice implements IRWAPIMicroservice {
             ...options,
             awsCloudWatchLoggingEnabled: ('awsCloudWatchLoggingEnabled' in options) ? (options.awsCloudWatchLoggingEnabled === true || options.awsCloudWatchLoggingEnabled === "true") : true,
             awsCloudWatchLogGroupName: options.awsCloudWatchLogGroupName || 'api-keys-usage',
-            skipGetLoggedUser: ('skipGetLoggedUser' in options) ? options.skipGetLoggedUser : false,
             fastlyEnabled: (options.fastlyEnabled === true || options.fastlyEnabled === "true"),
             requireAPIKey: !(options.requireAPIKey === false || options.requireAPIKey === "false")
         };
@@ -199,29 +196,37 @@ class Microservice implements IRWAPIMicroservice {
         }
 
         try {
-            const body: Record<string, any> = {
-                userToken: request.header.authorization,
-            };
+            const body: Record<string, any> = {};
+
+            if (request.header.authorization) {
+                body.userToken = request.header.authorization;
+            }
 
             if (request.header["x-api-key"]) {
                 body.apiKey = request.header["x-api-key"];
             }
 
-            const getUserDetailsRequestConfig: AxiosRequestConfig = {
-                method: 'POST',
-                baseURL,
-                url: `/api/v1/request/validate`,
-                headers: {
-                    'authorization': `Bearer ${this.options.microserviceToken}`
-                },
-                data: body
-            };
+            if (Object.keys(body).length > 0) {
+                const getUserDetailsRequestConfig: AxiosRequestConfig = {
+                    method: 'POST',
+                    baseURL,
+                    url: `/api/v1/request/validate`,
+                    headers: {
+                        'authorization': `Bearer ${this.options.microserviceToken}`
+                    },
+                    data: body
+                };
+                const response: AxiosResponse<Record<string, any>> = await axios(getUserDetailsRequestConfig);
 
-            const response: AxiosResponse<Record<string, any>> = await axios(getUserDetailsRequestConfig);
+                logger.debug('[getLoggedUser] Retrieved microserviceToken data, response status:', response.status);
 
-            logger.debug('[getLoggedUser] Retrieved microserviceToken data, response status:', response.status);
+                return response.data as RequestValidationResponse;
+            } else {
+                return {};
+            }
 
-            return response.data as RequestValidationResponse;
+
+
         } catch (err) {
             this.options.logger.error('Error getting user data', err);
             if (err?.response?.data) {
@@ -267,6 +272,13 @@ class Microservice implements IRWAPIMicroservice {
                 role: requestValidationData.user.role,
                 provider: requestValidationData.user.provider
             };
+        } else {
+            logContent.loggedUser = {
+                id: 'anonymous',
+                name: 'anonymous',
+                role: 'anonymous',
+                provider: 'anonymous'
+            };
         }
         if (requestValidationData.application) {
             logContent.requestApplication = {
@@ -275,6 +287,14 @@ class Microservice implements IRWAPIMicroservice {
                 organization: requestValidationData.application.data.attributes.organization,
                 user: requestValidationData.application.data.attributes.user,
                 apiKeyValue: requestValidationData.application.data.attributes.apiKeyValue,
+            };
+        } else {
+            logContent.requestApplication = {
+                id: 'anonymous',
+                name: 'anonymous',
+                organization: null,
+                user: null,
+                apiKeyValue: null,
             };
         }
 
@@ -296,7 +316,7 @@ class Microservice implements IRWAPIMicroservice {
         const bootstrapMiddleware: Middleware = async (ctx: Context, next: Next) => {
             const { logger, gatewayURL } = this.options;
 
-            if (!this.options.skipGetLoggedUser) {
+            if (!(ctx.request.path === '/api/v1/request/validate' && ctx.request.method === 'POST')) {
                 try {
                     const requestValidationData: RequestValidationResponse = await this.getRequestValidationData(logger, gatewayURL, ctx.request);
                     await this.injectRequestValidationData(logger, requestValidationData, ctx.request);

@@ -1,3 +1,8 @@
+# v5.0.0-beta3
+
+- Replace `skipGetLoggedUser` flag with request validation endpoint detection logic.
+- Explicitly log anonymous requests.
+
 # v5.0.0-beta2
 
 - Fix issue with absolute path imports.

@@ -47,6 +47,8 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             fastlyEnabled: false,
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -98,6 +100,8 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             fastlyEnabled: false,
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -149,6 +153,8 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             fastlyEnabled: false,
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -203,6 +209,8 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             fastlyEnabled: false,
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -257,6 +265,8 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             fastlyEnabled: false,
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();

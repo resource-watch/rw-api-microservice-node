@@ -12,6 +12,7 @@ import type { Server } from "http";
 import type Request from "superagent";
 import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
+import { mockValidateRequestWithUserToken } from "./utils/mocks";
 
 chai.should();
 chai.use(ChaiHttp);
@@ -44,9 +45,10 @@ describe('Fastly integration tests', () => {
             fastlyEnabled: 'true',
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId',
-            skipGetLoggedUser: true,
             requireAPIKey: false,
+            awsRegion: 'eu-west-1',
             awsCloudWatchLoggingEnabled: false,
+            awsCloudWatchLogStreamName: 'authorization',
         };
 
         const testRouter: Router = new Router();
@@ -77,6 +79,8 @@ describe('Fastly integration tests', () => {
     it('Authenticated GET requests with cache headers should not be cached by Fastly', async () => {
         const app: Koa = new Koa2();
 
+        mockValidateRequestWithUserToken();
+
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
@@ -93,9 +97,10 @@ describe('Fastly integration tests', () => {
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId',
-            skipGetLoggedUser: true,
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'authorization',
         };
 
         const testRouter: Router = new Router();
@@ -144,9 +149,10 @@ describe('Fastly integration tests', () => {
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId',
-            skipGetLoggedUser: true,
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'authorization',
         };
 
         const testRouter: Router = new Router();
@@ -194,9 +200,10 @@ describe('Fastly integration tests', () => {
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId',
-            skipGetLoggedUser: true,
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'authorization',
         };
 
         const testRouter: Router = new Router();
@@ -244,9 +251,10 @@ describe('Fastly integration tests', () => {
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId',
-            skipGetLoggedUser: true,
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'authorization',
         };
 
         const testRouter: Router = new Router();
@@ -340,9 +348,10 @@ describe('Fastly integration tests', () => {
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId',
-            skipGetLoggedUser: true,
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'authorization',
         };
 
         const testRouter: Router = new Router();
@@ -436,9 +445,10 @@ describe('Fastly integration tests', () => {
             fastlyEnabled: true,
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId',
-            skipGetLoggedUser: true,
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'authorization',
         };
 
         const testRouter: Router = new Router();
