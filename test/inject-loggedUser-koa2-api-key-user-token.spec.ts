@@ -1,9 +1,9 @@
-// @ts-ignore
-import Koa2 from "koa2";
+import Koa2 from "koa";
 import nock from 'nock';
 import chai, { expect } from 'chai';
 import { BootstrapArguments, RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
+import type { LogLevel } from "bunyan";
 import bunyan from "bunyan";
 import type Koa from "koa";
 import Router from "koa-router";
@@ -12,7 +12,7 @@ import type { Server } from "http";
 import type Request from "superagent";
 import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
-import { mockValidateRequestWithApiKeyAndUserToken } from "./utils/mocks";
+import { mockCloudWatchLogRequestsSequence, mockValidateRequestWithApiKeyAndUserToken } from "./utils/mocks";
 
 chai.should();
 chai.use(ChaiHttp);
@@ -32,16 +32,25 @@ describe('Injecting logged user data - Koa v2.x with API key and user token', ()
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         mockValidateRequestWithApiKeyAndUserToken();
+        mockCloudWatchLogRequestsSequence({
+            user: constants.USER,
+            application: constants.APPLICATION,
+        });
 
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -77,16 +86,25 @@ describe('Injecting logged user data - Koa v2.x with API key and user token', ()
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         mockValidateRequestWithApiKeyAndUserToken();
+        mockCloudWatchLogRequestsSequence({
+            user: constants.USER,
+            application: constants.APPLICATION,
+        });
 
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -122,16 +140,25 @@ describe('Injecting logged user data - Koa v2.x with API key and user token', ()
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         mockValidateRequestWithApiKeyAndUserToken();
+        mockCloudWatchLogRequestsSequence({
+            user: constants.USER,
+            application: constants.APPLICATION,
+        });
 
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -171,16 +198,25 @@ describe('Injecting logged user data - Koa v2.x with API key and user token', ()
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         mockValidateRequestWithApiKeyAndUserToken();
+        mockCloudWatchLogRequestsSequence({
+            user: constants.USER,
+            application: constants.APPLICATION,
+        });
 
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -220,16 +256,25 @@ describe('Injecting logged user data - Koa v2.x with API key and user token', ()
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         mockValidateRequestWithApiKeyAndUserToken();
+        mockCloudWatchLogRequestsSequence({
+            user: constants.USER,
+            application: constants.APPLICATION,
+        });
 
         const registerOptions: BootstrapArguments = {
             logger,
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();

@@ -11,6 +11,7 @@ import { Headers } from 'request';
 import { Url } from 'url';
 import { ResponseError } from "errors/response.error";
 import { ApiKeyError } from "errors/apiKey.error";
+import CloudWatchService from "./cloudwatch.service";
 
 export interface IRWAPIMicroservice {
     requestToMicroservice: (config: request.OptionsWithUri & RequestToMicroserviceOptions) => Promise<Record<string, any>>;
@@ -26,12 +27,18 @@ export interface BootstrapArguments {
     fastlyServiceId?: string;
     fastlyAPIKey?: string;
     requireAPIKey?: boolean | "true" | "false";
+    awsCloudWatchLoggingEnabled?: boolean | "true" | "false";
+    awsRegion?: string;
+    awsCloudWatchLogGroupName?: string;
+    awsCloudWatchLogStreamName?: string;
 }
 
 export interface ConfigurationOptions extends BootstrapArguments {
     skipGetLoggedUser: boolean;
     fastlyEnabled: boolean;
     requireAPIKey: boolean;
+    awsCloudWatchLoggingEnabled?: boolean;
+
 }
 
 export interface RequestToMicroserviceOptions {
@@ -46,8 +53,35 @@ export interface RequestToMicroserviceOptions {
     method?: string;
 }
 
+interface RequestValidationResponse {
+    user?: {
+        id: string,
+        name: string,
+        role: string,
+        provider: string,
+        email: string,
+        extraUserData: Record<string, any>
+    },
+    application?: {
+        data: {
+            type: string,
+            id: string,
+            attributes: {
+                name: string,
+                organization: null | Record<string, any>,
+                user: null | Record<string, any>,
+                apiKeyValue: string,
+                createdAt: string,
+                updatedAt: string
+            }
+        }
+    }
+}
+
 class Microservice implements IRWAPIMicroservice {
     public options: ConfigurationOptions;
+
+    private cloudWatchService: CloudWatchService;
 
     private static convertAndValidateBootstrapOptions(options: BootstrapArguments): ConfigurationOptions {
         if (
@@ -69,8 +103,20 @@ class Microservice implements IRWAPIMicroservice {
             throw new Error('RW API microservice - "requireAPIKey" needs to be a boolean');
         }
 
+        if (
+            typeof options.awsCloudWatchLoggingEnabled !== 'undefined'
+            && options.awsCloudWatchLoggingEnabled !== true
+            && options.awsCloudWatchLoggingEnabled !== false
+            && options.awsCloudWatchLoggingEnabled !== "true"
+            && options.awsCloudWatchLoggingEnabled !== "false"
+        ) {
+            throw new Error('RW API microservice - "awsCloudWatchLoggingEnabled" needs to be a boolean');
+        }
+
         const convertedOptions: ConfigurationOptions = {
             ...options,
+            awsCloudWatchLoggingEnabled: ('awsCloudWatchLoggingEnabled' in options) ? (options.awsCloudWatchLoggingEnabled === true || options.awsCloudWatchLoggingEnabled === "true") : true,
+            awsCloudWatchLogGroupName: options.awsCloudWatchLogGroupName || 'api-keys-usage',
             skipGetLoggedUser: ('skipGetLoggedUser' in options) ? options.skipGetLoggedUser : false,
             fastlyEnabled: (options.fastlyEnabled === true || options.fastlyEnabled === "true"),
             requireAPIKey: !(options.requireAPIKey === false || options.requireAPIKey === "false")
@@ -91,6 +137,17 @@ class Microservice implements IRWAPIMicroservice {
             }
             if (!convertedOptions.fastlyAPIKey) {
                 throw new Error('RW API microservice - "fastlyAPIKey" cannot be empty');
+            }
+        }
+        if (convertedOptions.awsCloudWatchLoggingEnabled === true) {
+            if (!options.awsRegion) {
+                throw new Error('RW API microservice - "awsRegion" cannot be empty');
+            }
+            if (!convertedOptions.awsCloudWatchLogGroupName) {
+                throw new Error('RW API microservice - "awsCloudWatchLogGroupName" cannot be empty');
+            }
+            if (!convertedOptions.awsCloudWatchLogStreamName) {
+                throw new Error('RW API microservice - "awsCloudWatchLogStreamName" cannot be empty');
             }
         }
 
@@ -115,7 +172,7 @@ class Microservice implements IRWAPIMicroservice {
 
             // GET anonymous requests with the `cache` header can be cached
             if (ctx.request.method === 'GET' && !ctx.request.headers?.authorization && ctx.response?.headers?.cache) {
-                let keys: number | string | string[] = ctx.response.headers.cache;
+                let keys: number | string | string[];
                 if (Array.isArray(ctx.response.headers.cache)) {
                     keys = ctx.response.headers.cache.join(' ');
                 } else {
@@ -129,14 +186,14 @@ class Microservice implements IRWAPIMicroservice {
         }
     }
 
-    private async getRequestValidationData(logger: Logger, baseURL: string, request: Request): Promise<Record<string, any>> {
+    private async getRequestValidationData(logger: Logger, baseURL: string, request: Request): Promise<RequestValidationResponse> {
         logger.debug('[getLoggedUser] Obtaining loggedUser for microserviceToken');
         if (!request.header.authorization) {
             logger.debug('[getLoggedUser] No authorization header found');
         }
         if (!request.header["x-api-key"]) {
             logger.debug('[getLoggedUser] No api key header found');
-            if (this.options.requireAPIKey) {
+            if (this.options.requireAPIKey && request.header.authorization !== `Bearer ${this.options.microserviceToken}`) {
                 throw new ApiKeyError(403, 'Required API key not found');
             }
         }
@@ -164,7 +221,7 @@ class Microservice implements IRWAPIMicroservice {
 
             logger.debug('[getLoggedUser] Retrieved microserviceToken data, response status:', response.status);
 
-            return response.data;
+            return response.data as RequestValidationResponse;
         } catch (err) {
             this.options.logger.error('Error getting user data', err);
             if (err?.response?.data) {
@@ -174,7 +231,7 @@ class Microservice implements IRWAPIMicroservice {
         }
     }
 
-    private async injectRequestValidationData(logger: Logger, requestValidationData: Record<string, any>, request: Request): Promise<void> {
+    private async injectRequestValidationData(logger: Logger, requestValidationData: RequestValidationResponse, request: Request): Promise<void> {
         logger.debug('[injectRequestValidationData] Obtaining loggedUser for microserviceToken');
 
         if (['GET', 'DELETE'].includes(request.method.toUpperCase())) {
@@ -182,7 +239,10 @@ class Microservice implements IRWAPIMicroservice {
                 request.query = { ...request.query, loggedUser: JSON.stringify(requestValidationData.user) };
             }
             if (requestValidationData.application) {
-                request.query = { ...request.query, requestApplication: JSON.stringify(requestValidationData.application) };
+                request.query = {
+                    ...request.query,
+                    requestApplication: JSON.stringify(requestValidationData.application)
+                };
             }
         } else if (['POST', 'PATCH', 'PUT'].includes(request.method.toUpperCase())) {
             if (requestValidationData.user) {
@@ -196,10 +256,37 @@ class Microservice implements IRWAPIMicroservice {
         }
     }
 
+    private async logRequestToCloudWatch(logger: Logger, requestValidationData: RequestValidationResponse): Promise<void> {
+        logger.debug('[logRequestToCloudWatch] Logging request to CloudWatch');
+
+        const logContent: Record<string, any> = {};
+        if (requestValidationData.user) {
+            logContent.loggedUser = {
+                id: requestValidationData.user.id,
+                name: requestValidationData.user.name,
+                role: requestValidationData.user.role,
+                provider: requestValidationData.user.provider
+            };
+        }
+        if (requestValidationData.application) {
+            logContent.requestApplication = {
+                id: requestValidationData.application.data.id,
+                name: requestValidationData.application.data.attributes.name,
+                organization: requestValidationData.application.data.attributes.organization,
+                user: requestValidationData.application.data.attributes.user,
+                apiKeyValue: requestValidationData.application.data.attributes.apiKeyValue,
+            };
+        }
+
+        await this.cloudWatchService.logToCloudWatch(JSON.stringify(logContent));
+    }
+
     public bootstrap(opts: BootstrapArguments): Middleware<{}, {}> {
         this.options = Microservice.convertAndValidateBootstrapOptions(opts);
-
         this.options.logger.info('RW API integration middleware registered');
+        if (this.options.awsCloudWatchLoggingEnabled) {
+            this.cloudWatchService = CloudWatchService.init(this.options.logger, this.options.awsRegion, this.options.awsCloudWatchLogGroupName, this.options.awsCloudWatchLogStreamName);
+        }
 
         const corsOptions: corsType.Options = {
             credentials: true,
@@ -211,8 +298,11 @@ class Microservice implements IRWAPIMicroservice {
 
             if (!this.options.skipGetLoggedUser) {
                 try {
-                    const requestValidationData: Record<string, any> = await this.getRequestValidationData(logger, gatewayURL, ctx.request);
+                    const requestValidationData: RequestValidationResponse = await this.getRequestValidationData(logger, gatewayURL, ctx.request);
                     await this.injectRequestValidationData(logger, requestValidationData, ctx.request);
+                    if (this.options.awsCloudWatchLoggingEnabled) {
+                        await this.logRequestToCloudWatch(logger, requestValidationData);
+                    }
                 } catch (getLoggedUserError) {
                     if (getLoggedUserError instanceof ResponseError) {
                         ctx.response.status = (getLoggedUserError as ResponseError).statusCode;

@@ -2,6 +2,11 @@ const USER_TOKEN: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFhMTB
 
 const MICROSERVICE_TOKEN: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im1pY3Jvc2VydmljZSIsImNyZWF0ZWRBdCI6IjIwMTYtMDktMTQifQ.w_nIkF6sAvFRPw-lIHrP5T1tAk7JEsINbc1R2SScwVk';
 
+const MICROSERVICE: Record<string, any> = {
+    id: "microservice",
+    createdAt: "2022-09-14"
+};
+
 const USER: Record<string, any> = {
     id: '1a10d7c6e0a37126611fd7a5',
     name: 'test user',
@@ -40,5 +45,6 @@ export default {
     USER_TOKEN,
     MICROSERVICE_TOKEN,
     USER,
+    MICROSERVICE,
     APPLICATION
 };

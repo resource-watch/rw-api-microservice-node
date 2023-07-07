@@ -1,12 +1,13 @@
+import Koa2 from "koa";
 import nock from 'nock';
-import chai, { expect } from 'chai';
+import chai from 'chai';
+import { expect } from 'chai';
 import { BootstrapArguments, RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
+import type { LogLevel } from "bunyan";
 import bunyan from "bunyan";
 import type Koa from "koa";
 import Router from "koa-router";
-// @ts-ignore
-import Koa2 from "koa2";
 import koaBody from "koa-body";
 import type { Server } from "http";
 import type Request from "superagent";
@@ -30,7 +31,7 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [],
         });
 
         nock('https://controltower.dev', {
@@ -54,6 +55,8 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -91,7 +94,10 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         nock('https://controltower.dev', {
@@ -108,6 +114,8 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -143,7 +151,10 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         nock('https://controltower.dev', {
@@ -167,6 +178,8 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();

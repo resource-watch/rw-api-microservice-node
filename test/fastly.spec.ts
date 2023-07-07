@@ -1,12 +1,12 @@
+import Koa2 from "koa";
 import nock from 'nock';
 import chai from 'chai';
 import { BootstrapArguments, RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
+import { LogLevel } from "bunyan";
 import bunyan from "bunyan";
 import type Koa from "koa";
 import Router from "koa-router";
-// @ts-ignore
-import Koa2 from "koa2";
 import koaBody from "koa-body";
 import type { Server } from "http";
 import type Request from "superagent";
@@ -31,7 +31,10 @@ describe('Fastly integration tests', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'debug',
+            }],
         });
 
         const registerOptions: BootstrapArguments = {
@@ -43,6 +46,7 @@ describe('Fastly integration tests', () => {
             fastlyServiceId: 'fastlyServiceId',
             skipGetLoggedUser: true,
             requireAPIKey: false,
+            awsCloudWatchLoggingEnabled: false,
         };
 
         const testRouter: Router = new Router();
@@ -76,7 +80,10 @@ describe('Fastly integration tests', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         const registerOptions: BootstrapArguments = {
@@ -88,6 +95,7 @@ describe('Fastly integration tests', () => {
             fastlyServiceId: 'fastlyServiceId',
             skipGetLoggedUser: true,
             requireAPIKey: false,
+            awsCloudWatchLoggingEnabled: false,
         };
 
         const testRouter: Router = new Router();
@@ -123,7 +131,10 @@ describe('Fastly integration tests', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         const registerOptions: BootstrapArguments = {
@@ -135,6 +146,7 @@ describe('Fastly integration tests', () => {
             fastlyServiceId: 'fastlyServiceId',
             skipGetLoggedUser: true,
             requireAPIKey: false,
+            awsCloudWatchLoggingEnabled: false,
         };
 
         const testRouter: Router = new Router();
@@ -169,7 +181,10 @@ describe('Fastly integration tests', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         const registerOptions: BootstrapArguments = {
@@ -181,6 +196,7 @@ describe('Fastly integration tests', () => {
             fastlyServiceId: 'fastlyServiceId',
             skipGetLoggedUser: true,
             requireAPIKey: false,
+            awsCloudWatchLoggingEnabled: false,
         };
 
         const testRouter: Router = new Router();
@@ -215,7 +231,10 @@ describe('Fastly integration tests', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         const registerOptions: BootstrapArguments = {
@@ -227,6 +246,7 @@ describe('Fastly integration tests', () => {
             fastlyServiceId: 'fastlyServiceId',
             skipGetLoggedUser: true,
             requireAPIKey: false,
+            awsCloudWatchLoggingEnabled: false,
         };
 
         const testRouter: Router = new Router();
@@ -297,7 +317,10 @@ describe('Fastly integration tests', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         nock('https://api.fastly.com')
@@ -319,6 +342,7 @@ describe('Fastly integration tests', () => {
             fastlyServiceId: 'fastlyServiceId',
             skipGetLoggedUser: true,
             requireAPIKey: false,
+            awsCloudWatchLoggingEnabled: false,
         };
 
         const testRouter: Router = new Router();
@@ -389,7 +413,10 @@ describe('Fastly integration tests', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         nock('https://api.fastly.com')
@@ -411,6 +438,7 @@ describe('Fastly integration tests', () => {
             fastlyServiceId: 'fastlyServiceId',
             skipGetLoggedUser: true,
             requireAPIKey: false,
+            awsCloudWatchLoggingEnabled: false,
         };
 
         const testRouter: Router = new Router();

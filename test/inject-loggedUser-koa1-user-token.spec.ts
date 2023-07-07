@@ -1,19 +1,23 @@
+// @ts-ignore
+import Koa1 from "koa1";
 import nock from 'nock';
 import chai, { expect } from 'chai';
 import { BootstrapArguments, RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
+import type { LogLevel } from "bunyan";
 import bunyan from "bunyan";
 import type Koa from "koa";
 import Router from "koa-router";
-// @ts-ignore
-import Koa1 from "koa1";
 import koaBody from "koa-body";
 import convert from "koa-convert";
 import type { Server } from "http";
 import type Request from "superagent";
 import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
-import { mockValidateRequestWithUserToken } from "./utils/mocks";
+import {
+    mockCloudWatchLogRequestsSequence,
+    mockValidateRequestWithUserToken
+} from "./utils/mocks";
 
 chai.should();
 chai.use(ChaiHttp);
@@ -33,10 +37,16 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         mockValidateRequestWithUserToken();
+        mockCloudWatchLogRequestsSequence({
+            user: constants.USER,
+        });
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -44,6 +54,8 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -53,15 +65,11 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             ctx.body = 'ok';
         });
 
-        // @ts-ignore
         app.use(convert.back(koaBody()));
-        // @ts-ignore
         app.use(convert.back(RWAPIMicroservice.bootstrap(registerOptions)));
 
         app
-            // @ts-ignore
             .use(convert.back(testRouter.routes()))
-            // @ts-ignore
             .use(convert.back(testRouter.allowedMethods()));
 
         const server: Server = app.listen(3010);
@@ -82,10 +90,16 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         mockValidateRequestWithUserToken();
+        mockCloudWatchLogRequestsSequence({
+            user: constants.USER,
+        });
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -93,6 +107,8 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -102,15 +118,11 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             ctx.body = 'ok';
         });
 
-        // @ts-ignore
         app.use(convert.back(koaBody()));
-        // @ts-ignore
         app.use(convert.back(RWAPIMicroservice.bootstrap(registerOptions)));
 
         app
-            // @ts-ignore
             .use(convert.back(testRouter.routes()))
-            // @ts-ignore
             .use(convert.back(testRouter.allowedMethods()));
 
         const server: Server = app.listen(3010);
@@ -132,10 +144,16 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         mockValidateRequestWithUserToken();
+        mockCloudWatchLogRequestsSequence({
+            user: constants.USER,
+        });
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -143,6 +161,8 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -153,15 +173,11 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             ctx.body = 'ok';
         });
 
-        // @ts-ignore
         app.use(convert.back(koaBody()));
-        // @ts-ignore
         app.use(convert.back(RWAPIMicroservice.bootstrap(registerOptions)));
 
         app
-            // @ts-ignore
             .use(convert.back(testRouter.routes()))
-            // @ts-ignore
             .use(convert.back(testRouter.allowedMethods()));
 
         const server: Server = app.listen(3010);
@@ -185,10 +201,16 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         mockValidateRequestWithUserToken();
+        mockCloudWatchLogRequestsSequence({
+            user: constants.USER,
+        });
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -196,6 +218,8 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -206,15 +230,11 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             ctx.body = 'ok';
         });
 
-        // @ts-ignore
         app.use(convert.back(koaBody()));
-        // @ts-ignore
         app.use(convert.back(RWAPIMicroservice.bootstrap(registerOptions)));
 
         app
-            // @ts-ignore
             .use(convert.back(testRouter.routes()))
-            // @ts-ignore
             .use(convert.back(testRouter.allowedMethods()));
 
         const server: Server = app.listen(3010);
@@ -238,10 +258,16 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         mockValidateRequestWithUserToken();
+        mockCloudWatchLogRequestsSequence({
+            user: constants.USER,
+        });
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -249,6 +275,8 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -259,15 +287,11 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             ctx.body = 'ok';
         });
 
-        // @ts-ignore
         app.use(convert.back(koaBody()));
-        // @ts-ignore
         app.use(convert.back(RWAPIMicroservice.bootstrap(registerOptions)));
 
         app
-            // @ts-ignore
             .use(convert.back(testRouter.routes()))
-            // @ts-ignore
             .use(convert.back(testRouter.allowedMethods()));
 
         const server: Server = app.listen(3010);

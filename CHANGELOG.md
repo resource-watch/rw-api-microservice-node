@@ -1,3 +1,11 @@
+# v5.0.0-beta1
+
+- Add API key tracking and usage logging.
+  - Add API key capturing from HTTP headers
+  - Library uses POST /api/v1/request/validate to load API key and user data
+  - API key is now logged to AWS CloudWatch
+- Update dependencies.
+
 # v4.0.7
 
 - Rollback `@types/koa` and `@types/koa-router`

@@ -1,12 +1,12 @@
+import Koa2 from "koa";
 import nock from 'nock';
 import chai from 'chai';
 import { BootstrapArguments, RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
+import type { LogLevel } from "bunyan";
 import bunyan from "bunyan";
 import type Koa from "koa";
 import Router from "koa-router";
-// @ts-ignore
-import Koa2 from "koa2";
 import koaBody from "koa-body";
 import type { Server } from "http";
 import type Request from "superagent";
@@ -14,6 +14,7 @@ import ChaiHttp from 'chai-http';
 import constants from './utils/test.constants';
 
 chai.should();
+chai.use(ChaiHttp);
 
 nock.disableNetConnect();
 nock.enableNetConnect('127.0.0.1');
@@ -30,7 +31,10 @@ describe('Adding CORS headers', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         const registerOptions: BootstrapArguments = {
@@ -40,6 +44,8 @@ describe('Adding CORS headers', () => {
             fastlyEnabled: false,
             skipGetLoggedUser: true,
             requireAPIKey: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -85,7 +91,10 @@ describe('Adding CORS headers', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         const registerOptions: BootstrapArguments = {
@@ -95,6 +104,8 @@ describe('Adding CORS headers', () => {
             fastlyEnabled: false,
             skipGetLoggedUser: true,
             requireAPIKey: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -141,7 +152,10 @@ describe('Adding CORS headers', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         const registerOptions: BootstrapArguments = {
@@ -151,6 +165,8 @@ describe('Adding CORS headers', () => {
             fastlyEnabled: false,
             skipGetLoggedUser: true,
             requireAPIKey: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -199,7 +215,10 @@ describe('Adding CORS headers', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         const registerOptions: BootstrapArguments = {
@@ -209,6 +228,8 @@ describe('Adding CORS headers', () => {
             fastlyEnabled: false,
             skipGetLoggedUser: true,
             requireAPIKey: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
@@ -257,7 +278,10 @@ describe('Adding CORS headers', () => {
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
             src: true,
-            streams: []
+            streams: [{
+                stream: process.stdout,
+                level: process.env['LOGGER_LEVEL'] as LogLevel || 'warn',
+            }],
         });
 
         const registerOptions: BootstrapArguments = {
@@ -267,6 +291,8 @@ describe('Adding CORS headers', () => {
             fastlyEnabled: false,
             skipGetLoggedUser: true,
             requireAPIKey: false,
+            awsRegion: 'eu-west-1',
+            awsCloudWatchLogStreamName: 'test',
         };
 
         const testRouter: Router = new Router();
