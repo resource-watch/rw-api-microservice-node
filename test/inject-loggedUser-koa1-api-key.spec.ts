@@ -2,7 +2,7 @@
 import Koa1 from "koa1";
 import nock from 'nock';
 import chai, { expect } from 'chai';
-import { BootstrapArguments, RWAPIMicroservice } from 'main';
+import { RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
 import type { LogLevel } from "bunyan";
 import bunyan from "bunyan";
@@ -15,9 +15,10 @@ import type Request from "superagent";
 import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
 import {
-    mockCloudWatchLogRequestsSequence,
     mockValidateRequestWithApiKey
 } from "./utils/mocks";
+import { mockCloudWatchLogRequestsSequence } from "../src/test-mocks";
+import { BootstrapArguments } from "../src/types";
 
 chai.should();
 chai.use(ChaiHttp);
@@ -43,7 +44,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
             }],
         });
 
-        mockValidateRequestWithApiKey();
+        mockValidateRequestWithApiKey('https://controltower.dev');
         mockCloudWatchLogRequestsSequence({
             application: constants.APPLICATION,
         });
@@ -54,7 +55,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 
@@ -96,7 +97,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
             }],
         });
 
-        mockValidateRequestWithApiKey();
+        mockValidateRequestWithApiKey('https://controltower.dev');
         mockCloudWatchLogRequestsSequence({
             application: constants.APPLICATION,
         });
@@ -107,7 +108,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 
@@ -150,7 +151,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
             }],
         });
 
-        mockValidateRequestWithApiKey();
+        mockValidateRequestWithApiKey('https://controltower.dev');
         mockCloudWatchLogRequestsSequence({
             application: constants.APPLICATION,
         });
@@ -161,7 +162,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 
@@ -207,7 +208,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
             }],
         });
 
-        mockValidateRequestWithApiKey();
+        mockValidateRequestWithApiKey('https://controltower.dev');
         mockCloudWatchLogRequestsSequence({
             application: constants.APPLICATION,
         });
@@ -218,7 +219,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 
@@ -264,7 +265,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
             }],
         });
 
-        mockValidateRequestWithApiKey();
+        mockValidateRequestWithApiKey('https://controltower.dev');
         mockCloudWatchLogRequestsSequence({
             application: constants.APPLICATION,
         });
@@ -275,7 +276,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 

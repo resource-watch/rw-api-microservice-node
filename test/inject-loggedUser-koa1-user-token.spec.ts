@@ -15,9 +15,9 @@ import type Request from "superagent";
 import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
 import {
-    mockCloudWatchLogRequestsSequence,
     mockValidateRequestWithUserToken
 } from "./utils/mocks";
+import { mockCloudWatchLogRequestsSequence } from "../src/test-mocks";
 
 chai.should();
 chai.use(ChaiHttp);
@@ -43,7 +43,7 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             }],
         });
 
-        mockValidateRequestWithUserToken();
+        mockValidateRequestWithUserToken('https://controltower.dev');
         mockCloudWatchLogRequestsSequence({
             user: constants.USER,
         });
@@ -54,7 +54,7 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 
@@ -96,7 +96,7 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             }],
         });
 
-        mockValidateRequestWithUserToken();
+        mockValidateRequestWithUserToken('https://controltower.dev');
         mockCloudWatchLogRequestsSequence({
             user: constants.USER,
         });
@@ -107,7 +107,7 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 
@@ -150,7 +150,7 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             }],
         });
 
-        mockValidateRequestWithUserToken();
+        mockValidateRequestWithUserToken('https://controltower.dev');
         mockCloudWatchLogRequestsSequence({
             user: constants.USER,
         });
@@ -161,7 +161,7 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 
@@ -207,7 +207,7 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             }],
         });
 
-        mockValidateRequestWithUserToken();
+        mockValidateRequestWithUserToken('https://controltower.dev');
         mockCloudWatchLogRequestsSequence({
             user: constants.USER,
         });
@@ -218,7 +218,7 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 
@@ -264,7 +264,7 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             }],
         });
 
-        mockValidateRequestWithUserToken();
+        mockValidateRequestWithUserToken('https://controltower.dev');
         mockCloudWatchLogRequestsSequence({
             user: constants.USER,
         });
@@ -275,7 +275,7 @@ describe('Injecting logged user data - Koa v1.x with user token', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 

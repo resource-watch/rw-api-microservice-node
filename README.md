@@ -38,7 +38,12 @@ const app = new Koa();
 app.use(RWAPIMicroservice.bootstrap({
   logger: logger,
   microserviceToken: '<your microservice token>',
-  gatewayURL: '<your gateway URL>'
+  gatewayURL: '<your gateway URL>',
+  fasltyEnabled: true,
+  fastlyServiceId: '<your Fastly service id>',
+  fastlyAPIKey: '<your Fastly API key>',
+  awsRegion: '<your AWS region>',
+  awsCloudWatchLogStreamName: '<your AWS CloudWatch log stream name>',
 }))
 
 // Make sure you add your auth-depending routes *after* bootstraping this module
@@ -55,18 +60,18 @@ These are the values you'll need to provide when using this library:
 See [this link](https://docs.fastly.com/en/guides/finding-and-managing-your-account-info) for details on how to get
 Fastly credentials.
 
-| Argument name               | Type    | Description                                                                                                                                                    | Required?         | Default value    |
-|-----------------------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|------------------|
-| logger                      | Object  | A `bunyan` logger object, for logging purposes                                                                                                                 | yes               |                  |
-| gatewayURL                  | string  | The URL of the API as a whole, where all other services will be reachable                                                                                      | yes               |                  |
-| microserviceToken           | string  | JWT token to use on calls to other services                                                                                                                    | yes               |                  |
-| skipGetLoggedUser           | boolean | If set to `true`, the library will not intercept `authorization` headers nor fetch and inject the  associated user data. Meant to be used by the user service. | no                | false            |
-| fastlyEnabled               | boolean | If set to `true`, the [Fastly](https://www.fastly.com/) integration will be enabled                                                                            | yes               |                  |
-| fastlyServiceId             | string  | Access credentials to the [Fastly](https://www.fastly.com/) API                                                                                                | if Fastly enabled |                  |
-| fastlyAPIKey                | string  | Access credentials to the [Fastly](https://www.fastly.com/) API                                                                                                | if Fastly enabled |                  |
-| requireAPIKey               | boolean | If API keys are required. If set to true, requests with no API key automatically get a HTTP 403 response.                                                      | no                | true             |
-| awsCloudWatchLoggingEnabled | boolean | If API key usage should be logged to AWS CloudWatch.                                                                                                           | no                | true             |
-| awsRegion                   | string  | Which AWS region to use when logging requests to AWS CloudWatch.                                                                                               | yes               |                  |
-| awsCloudWatchLogGroupName   | string  | Which CloudWatch Log Group name to use when logging requests to AWS CloudWatch.                                                                                | no                | 'api-keys-usage' |
-| awsCloudWatchLogStreamName  | string  | Which CloudWatch Log Stream name to use when logging requests to AWS CloudWatch.                                                                               | yes               |                  |
+| Argument name                  | Type          | Description                                                                                                                                         | Required?         | Default value    |
+|--------------------------------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|------------------|
+| logger                         | Object        | A `bunyan` logger object, for logging purposes                                                                                                      | yes               |                  |
+| gatewayURL                     | string        | The URL of the API as a whole, where all other services will be reachable                                                                           | yes               |                  |
+| microserviceToken              | string        | JWT token to use on calls to other services                                                                                                         | yes               |                  |
+| skipAPIKeyRequirementEndpoints | Array<Object> | List of object containing a `method` and `pathRegex`. Incoming requests that match one of the elements on the list will bypass API Key requirement. | no                |                  |
+| fastlyEnabled                  | boolean       | If set to `true`, the [Fastly](https://www.fastly.com/) integration will be enabled                                                                 | yes               |                  |
+| fastlyServiceId                | string        | Access credentials to the [Fastly](https://www.fastly.com/) API                                                                                     | if Fastly enabled |                  |
+| fastlyAPIKey                   | string        | Access credentials to the [Fastly](https://www.fastly.com/) API                                                                                     | if Fastly enabled |                  |
+| requireAPIKey                  | boolean       | If API keys are required. If set to true, requests with no API key automatically get a HTTP 403 response.                                           | no                | true             |
+| awsCloudWatchLoggingEnabled    | boolean       | If API key usage should be logged to AWS CloudWatch.                                                                                                | no                | true             |
+| awsRegion                      | string        | Which AWS region to use when logging requests to AWS CloudWatch.                                                                                    | yes               |                  |
+| awsCloudWatchLogGroupName      | string        | Which CloudWatch Log Group name to use when logging requests to AWS CloudWatch.                                                                     | no                | 'api-keys-usage' |
+| awsCloudWatchLogStreamName     | string        | Which CloudWatch Log Stream name to use when logging requests to AWS CloudWatch.                                                                    | yes               |                  |
 

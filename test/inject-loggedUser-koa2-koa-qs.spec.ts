@@ -1,7 +1,7 @@
 import Koa2 from "koa";
 import nock from 'nock';
 import chai, { expect } from 'chai';
-import { BootstrapArguments, RWAPIMicroservice } from 'main';
+import { RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
 import type { LogLevel } from "bunyan";
 import bunyan from "bunyan";
@@ -14,6 +14,7 @@ import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
 import koaQs from 'koa-qs';
 import { mockValidateRequestWithUserToken } from "./utils/mocks";
+import { BootstrapArguments } from "../src/types";
 
 chai.should();
 
@@ -38,7 +39,7 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             }],
         });
 
-        mockValidateRequestWithUserToken();
+        mockValidateRequestWithUserToken('https://controltower.dev');
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -47,7 +48,7 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             fastlyEnabled: false,
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 
@@ -91,7 +92,7 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             }],
         });
 
-        mockValidateRequestWithUserToken();
+        mockValidateRequestWithUserToken('https://controltower.dev');
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -100,7 +101,7 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             fastlyEnabled: false,
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 
@@ -144,7 +145,7 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             }],
         });
 
-        mockValidateRequestWithUserToken();
+        mockValidateRequestWithUserToken('https://controltower.dev');
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -153,7 +154,7 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             fastlyEnabled: false,
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 
@@ -200,7 +201,7 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             }],
         });
 
-        mockValidateRequestWithUserToken();
+        mockValidateRequestWithUserToken('https://controltower.dev');
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -209,7 +210,7 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             fastlyEnabled: false,
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 
@@ -256,7 +257,7 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             }],
         });
 
-        mockValidateRequestWithUserToken();
+        mockValidateRequestWithUserToken('https://controltower.dev');
 
         const registerOptions: BootstrapArguments = {
             logger,
@@ -265,7 +266,7 @@ describe('Injecting logged user data - Koa v2.x with Koa-qs', () => {
             fastlyEnabled: false,
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 

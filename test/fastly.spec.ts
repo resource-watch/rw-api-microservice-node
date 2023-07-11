@@ -1,7 +1,7 @@
 import Koa2 from "koa";
 import nock from 'nock';
 import chai from 'chai';
-import { BootstrapArguments, RWAPIMicroservice } from 'main';
+import { RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
 import { LogLevel } from "bunyan";
 import bunyan from "bunyan";
@@ -13,6 +13,7 @@ import type Request from "superagent";
 import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
 import { mockValidateRequestWithUserToken } from "./utils/mocks";
+import { BootstrapArguments } from "../src/types";
 
 chai.should();
 chai.use(ChaiHttp);
@@ -46,7 +47,7 @@ describe('Fastly integration tests', () => {
             fastlyAPIKey: 'fastlyAPIKey',
             fastlyServiceId: 'fastlyServiceId',
             requireAPIKey: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLoggingEnabled: false,
             awsCloudWatchLogStreamName: 'authorization',
         };
@@ -79,7 +80,7 @@ describe('Fastly integration tests', () => {
     it('Authenticated GET requests with cache headers should not be cached by Fastly', async () => {
         const app: Koa = new Koa2();
 
-        mockValidateRequestWithUserToken();
+        mockValidateRequestWithUserToken('https://controltower.dev');
 
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
@@ -99,7 +100,7 @@ describe('Fastly integration tests', () => {
             fastlyServiceId: 'fastlyServiceId',
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'authorization',
         };
 
@@ -151,7 +152,7 @@ describe('Fastly integration tests', () => {
             fastlyServiceId: 'fastlyServiceId',
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'authorization',
         };
 
@@ -202,7 +203,7 @@ describe('Fastly integration tests', () => {
             fastlyServiceId: 'fastlyServiceId',
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'authorization',
         };
 
@@ -253,7 +254,7 @@ describe('Fastly integration tests', () => {
             fastlyServiceId: 'fastlyServiceId',
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'authorization',
         };
 
@@ -350,7 +351,7 @@ describe('Fastly integration tests', () => {
             fastlyServiceId: 'fastlyServiceId',
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'authorization',
         };
 
@@ -447,7 +448,7 @@ describe('Fastly integration tests', () => {
             fastlyServiceId: 'fastlyServiceId',
             requireAPIKey: false,
             awsCloudWatchLoggingEnabled: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'authorization',
         };
 

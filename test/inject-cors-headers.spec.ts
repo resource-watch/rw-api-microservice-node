@@ -12,7 +12,7 @@ import type { Server } from "http";
 import type Request from "superagent";
 import ChaiHttp from 'chai-http';
 import constants from './utils/test.constants';
-import { mockCloudWatchLogRequestsSequence, mockValidateRequestWithApiKey } from "./utils/mocks";
+import { mockCloudWatchLogRequestsSequence } from "../src/test-mocks";
 
 chai.should();
 chai.use(ChaiHttp);
@@ -46,7 +46,7 @@ describe('Adding CORS headers', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 
@@ -107,7 +107,7 @@ describe('Adding CORS headers', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 
@@ -169,7 +169,7 @@ describe('Adding CORS headers', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 
@@ -233,7 +233,7 @@ describe('Adding CORS headers', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 
@@ -297,7 +297,7 @@ describe('Adding CORS headers', () => {
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
             requireAPIKey: false,
-            awsRegion: 'eu-west-1',
+            awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };
 

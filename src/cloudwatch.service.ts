@@ -41,9 +41,9 @@ class CloudWatchService {
                     throw error;
                 })
                 .then(() => {
-                logger.debug('CloudWatchService initialized.');
-                return CloudWatchService.instance;
-            });
+                    logger.debug('CloudWatchService initialized.');
+                    return CloudWatchService.instance;
+                });
 
         }
 

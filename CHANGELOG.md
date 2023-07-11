@@ -1,3 +1,9 @@
+# v5.0.0-beta4
+
+- Add `skipAPIKeyRequirementEndpoints` configuration parameter.
+- Add mock helper functions for ease of microservice testing.
+- Split and extend types.
+
 # v5.0.0-beta3
 
 - Replace `skipGetLoggedUser` flag with request validation endpoint detection logic.

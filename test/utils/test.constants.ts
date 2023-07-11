@@ -1,13 +1,15 @@
+import { ApplicationValidationResponse, MicroserviceValidationResponse, UserValidationResponse } from "../../src/types";
+
 const USER_TOKEN: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFhMTBkN2M2ZTBhMzcxMjY2MTFmZDdhNSIsIm5hbWUiOiJ0ZXN0IHVzZXIiLCJyb2xlIjoiVVNFUiIsInByb3ZpZGVyIjoibG9jYWwiLCJlbWFpbCI6InVzZXJAY29udHJvbC10b3dlci5vcmciLCJleHRyYVVzZXJEYXRhIjp7ImFwcHMiOlsicnciLCJnZnciLCJnZnctY2xpbWF0ZSIsInByZXAiLCJhcXVlZHVjdCIsImZvcmVzdC1hdGxhcyIsImRhdGE0c2RncyJdfX0.R_RT47-wVCLtXNmDyfy7KGhSASUayVBW6KKsdxtphPc';
 
 const MICROSERVICE_TOKEN: string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im1pY3Jvc2VydmljZSIsImNyZWF0ZWRBdCI6IjIwMTYtMDktMTQifQ.w_nIkF6sAvFRPw-lIHrP5T1tAk7JEsINbc1R2SScwVk';
 
-const MICROSERVICE: Record<string, any> = {
+const MICROSERVICE: MicroserviceValidationResponse = {
     id: "microservice",
     createdAt: "2022-09-14"
 };
 
-const USER: Record<string, any> = {
+const USER: UserValidationResponse = {
     id: '1a10d7c6e0a37126611fd7a5',
     name: 'test user',
     role: 'USER',
@@ -26,7 +28,7 @@ const USER: Record<string, any> = {
     }
 };
 
-const APPLICATION: Record<string, any> = {
+const APPLICATION: ApplicationValidationResponse = {
     data: {
         type: "applications",
         id: "649c4b204967792f3a4e52c9",
