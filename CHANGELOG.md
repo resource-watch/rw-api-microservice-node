@@ -1,5 +1,9 @@
 # v5.0.0-beta4
 
+- Fix issue with validation request URL.
+
+# v5.0.0-beta4
+
 - Add `skipAPIKeyRequirementEndpoints` configuration parameter.
 - Add mock helper functions for ease of microservice testing.
 - Split and extend types.

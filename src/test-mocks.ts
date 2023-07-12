@@ -47,7 +47,7 @@ export const mockValidateRequest = ({
             authorization: `Bearer ${microserviceToken}`,
         }
     })
-        .post('/api/v1/request/validate', body)
+        .post('/v1/request/validate', body)
         .reply(200, { user, application });
 };
 

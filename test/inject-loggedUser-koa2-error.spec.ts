@@ -40,7 +40,7 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
                 authorization: `Bearer ${constants.MICROSERVICE_TOKEN}`,
             }
         })
-            .post('/api/v1/request/validate')
+            .post('/v1/request/validate')
             .reply(404, {
                 "errors": [
                     {
@@ -106,7 +106,7 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
                 authorization: `Bearer ${constants.MICROSERVICE_TOKEN}`,
             }
         })
-            .post('/api/v1/request/validate')
+            .post('/v1/request/validate')
             .reply(500, 'Server error');
 
         const registerOptions: BootstrapArguments = {
@@ -163,7 +163,7 @@ describe('Injecting logged user data - error cases - Koa v2.x', () => {
                 authorization: `Bearer ${constants.MICROSERVICE_TOKEN}`,
             }
         })
-            .post('/api/v1/request/validate')
+            .post('/v1/request/validate')
             .reply(401, {
                 "errors": [
                     {

@@ -159,7 +159,7 @@ class Microservice implements IRWAPIMicroservice {
                 const getUserDetailsRequestConfig: AxiosRequestConfig = {
                     method: 'POST',
                     baseURL,
-                    url: `/api/v1/request/validate`,
+                    url: `/v1/request/validate`,
                     headers: {
                         'authorization': `Bearer ${this.options.microserviceToken}`
                     },
