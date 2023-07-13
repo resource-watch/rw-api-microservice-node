@@ -95,6 +95,13 @@ const mockCloudWatchCreateLogLineRequest: ({
 
                 const logLine = JSON.parse(body.logEvents[0].message);
 
+                expect(logLine).to.have.property('request');
+                const requestLog = logLine.request;
+                expect(requestLog).to.have.property('method').and.be.a('string').and.not.be.empty;
+                expect(requestLog).to.have.property('path').and.be.a('string').and.not.be.empty;
+                expect(requestLog).to.have.property('query').and.be.an('object');
+
+
                 expect(logLine).to.have.property('requestApplication');
                 const requestApplication = logLine.requestApplication;
 

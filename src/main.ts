@@ -209,10 +209,19 @@ class Microservice implements IRWAPIMicroservice {
         }
     }
 
-    private async logRequestToCloudWatch(logger: Logger, requestValidationData: RequestValidationResponse): Promise<void> {
+    private async logRequestToCloudWatch(logger: Logger, request: Request, requestValidationData: RequestValidationResponse): Promise<void> {
         logger.debug('[logRequestToCloudWatch] Logging request to CloudWatch');
 
-        const logContent: Record<string, any> = {};
+        const logQuery: Record<string, any> = { ...request.query };
+        delete logQuery.loggedUser;
+        delete logQuery.requestApplication;
+        const logContent: Record<string, any> = {
+            request: {
+                method: request.method,
+                path: request.path,
+                query: logQuery,
+            }
+        };
         if (requestValidationData.user) {
             if (requestValidationData.user.id === 'microservice') {
                 logContent.loggedUser = {
@@ -284,7 +293,7 @@ class Microservice implements IRWAPIMicroservice {
                     const requestValidationData: RequestValidationResponse = await this.getRequestValidationData(logger, gatewayURL, ctx.request);
                     await this.injectRequestValidationData(logger, requestValidationData, ctx.request);
                     if (this.options.awsCloudWatchLoggingEnabled) {
-                        await this.logRequestToCloudWatch(logger, requestValidationData);
+                        await this.logRequestToCloudWatch(logger, ctx.request, requestValidationData);
                     }
                 } catch (getLoggedUserError) {
                     if (getLoggedUserError instanceof ResponseError) {

@@ -1,4 +1,8 @@
-# v5.0.0-beta4
+# v5.0.0-beta6
+
+- Add request details logging to AWS CloudWatch.
+
+# v5.0.0-beta5
 
 - Fix issue with validation request URL.
 
