@@ -1,3 +1,7 @@
+# v5.0.0-rc1
+
+- Make application logging to AWS CloudWatch more flexible.
+
 # v5.0.0-beta6
 
 - Add request details logging to AWS CloudWatch.

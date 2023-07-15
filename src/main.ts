@@ -244,13 +244,11 @@ class Microservice implements IRWAPIMicroservice {
             };
         }
         if (requestValidationData.application) {
-            logContent.requestApplication = {
-                id: requestValidationData.application.data.id,
-                name: requestValidationData.application.data.attributes.name,
-                organization: requestValidationData.application.data.attributes.organization,
-                user: requestValidationData.application.data.attributes.user,
-                apiKeyValue: requestValidationData.application.data.attributes.apiKeyValue,
-            };
+            logContent.requestApplication = {...requestValidationData.application.data, ...requestValidationData.application.data.attributes};
+            delete logContent.requestApplication.attributes;
+            delete logContent.requestApplication.type;
+            delete logContent.requestApplication.createdAt;
+            delete logContent.requestApplication.updatedAt;
         } else {
             logContent.requestApplication = {
                 id: 'anonymous',
