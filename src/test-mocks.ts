@@ -152,7 +152,7 @@ const mockCloudWatchCreateLogLineRequest: ({
         .reply(200, { "nextSequenceToken": "49640528541606186274984579958467215700865662738895994946" });
 }
 
-export const mockCloudWatchLogRequestsSequence: ({
+export const mockCloudWatchLogRequest: ({
                                                      application,
                                                      user,
                                                      awsRegion,
@@ -171,7 +171,22 @@ export const mockCloudWatchLogRequestsSequence: ({
                   logGroupName = 'api-keys-usage',
                   logStreamName = 'test'
               } = {}): void => {
+    mockCloudWatchCreateLogLineRequest({ application, user, awsRegion, logGroupName, logStreamName });
+}
+
+export const mockCloudWatchSetupRequestsSequence: ({
+                                                     awsRegion,
+                                                     logGroupName,
+                                                     logStreamName
+                                                 }?: {
+    logGroupName?: string,
+    logStreamName?: string,
+    awsRegion?: string
+}) => void = ({
+                  awsRegion = 'us-east-1',
+                  logGroupName = 'api-keys-usage',
+                  logStreamName = 'test'
+              } = {}): void => {
     mockCloudWatchCreateLogGroupRequest(awsRegion, logGroupName);
     mockCloudWatchCreateLogStreamRequest(awsRegion, logGroupName, logStreamName);
-    mockCloudWatchCreateLogLineRequest({ application, user, awsRegion, logGroupName, logStreamName });
 }

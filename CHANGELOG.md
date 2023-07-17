@@ -1,3 +1,7 @@
+# v5.0.0-rc5
+
+- Improvements to AWS CloudWatch logging mocks.
+
 # v5.0.0-rc4
 
 - Fix bug in API Key validation logic when making calls to `requestToMicroservice`.
