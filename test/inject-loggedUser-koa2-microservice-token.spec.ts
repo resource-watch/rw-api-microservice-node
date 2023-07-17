@@ -50,6 +50,7 @@ describe('Injecting logged user data - Koa v2.x with MICROSERVICE token', () => 
             gatewayURL: 'https://controltower.dev',
             microserviceToken: constants.MICROSERVICE_TOKEN,
             fastlyEnabled: false,
+            requireAPIKey: false,
             awsRegion: 'us-east-1',
             awsCloudWatchLogStreamName: 'test',
         };

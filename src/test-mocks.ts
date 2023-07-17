@@ -9,7 +9,7 @@ import {
 
 chai.should();
 
-type mockValidateRequestArgType = {
+export type mockValidateRequestArgType = {
     gatewayUrl: string,
     microserviceToken: string,
     user?: LoggedUserValidationResponse,

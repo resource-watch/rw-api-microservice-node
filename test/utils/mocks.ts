@@ -1,4 +1,4 @@
-import { mockValidateRequest } from "../../src/test-mocks";
+import { mockValidateRequest, mockValidateRequestArgType } from "../../src/test-mocks";
 import constants from "./test.constants";
 import { ApplicationValidationResponse, LoggedUserValidationResponse } from "../../src/types";
 
@@ -11,12 +11,19 @@ export const mockValidateRequestWithApiKey = (gatewayUrl: string, apiKey: string
 };
 
 export const mockValidateRequestWithApiKeyAndUserToken = (
-    gatewayUrl: string,
-    apiKey: string = 'api-key-test',
-    token: string = constants.USER_TOKEN,
-    application: ApplicationValidationResponse = constants.APPLICATION,
-    user: LoggedUserValidationResponse = constants.USER
-): void => {
+    {
+        gatewayUrl,
+        apiKey = 'api-key-test',
+        token = constants.USER_TOKEN,
+        application = constants.APPLICATION,
+        user = constants.USER
+    }: {
+        gatewayUrl:string,
+        apiKey?: string,
+        token?: string,
+        application?: ApplicationValidationResponse,
+        user?: LoggedUserValidationResponse
+    }): void => {
     mockValidateRequest({
         gatewayUrl,
         microserviceToken: constants.MICROSERVICE_TOKEN,

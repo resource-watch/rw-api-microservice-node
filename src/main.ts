@@ -137,11 +137,8 @@ class Microservice implements IRWAPIMicroservice {
         if (!request.header.authorization) {
             logger.debug('[getLoggedUser] No authorization header found');
         }
-        if (!request.header["x-api-key"]) {
-            logger.debug('[getLoggedUser] No api key header found');
-            if (this.options.requireAPIKey && request.header.authorization !== `Bearer ${this.options.microserviceToken}`) {
-                throw new ApiKeyError(403, 'Required API key not found');
-            }
+        if (!request.header["x-api-key"] && this.options.requireAPIKey) {
+            throw new ApiKeyError(403, 'Required API key not found');
         }
 
         try {
@@ -337,6 +334,10 @@ class Microservice implements IRWAPIMicroservice {
             axiosRequestConfig.url = requestConfig.uri.toString();
 
             axiosRequestConfig.headers = Object.assign(requestConfig.headers || {}, { authorization: `Bearer ${this.options.microserviceToken}` });
+            if (this.options.requireAPIKey && !axiosRequestConfig.headers.api_key) {
+                throw new ApiKeyError(403, 'API key required when making requests to other microservices');
+            }
+
             if (requestConfig.application) {
                 axiosRequestConfig.headers.app_key = JSON.stringify({ application: requestConfig.application });
             }
