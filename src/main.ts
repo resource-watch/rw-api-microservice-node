@@ -334,7 +334,7 @@ class Microservice implements IRWAPIMicroservice {
             axiosRequestConfig.url = requestConfig.uri.toString();
 
             axiosRequestConfig.headers = Object.assign(requestConfig.headers || {}, { authorization: `Bearer ${this.options.microserviceToken}` });
-            if (this.options.requireAPIKey && !axiosRequestConfig.headers.api_key) {
+            if (this.options.requireAPIKey && !axiosRequestConfig.headers['x-api-key']) {
                 throw new ApiKeyError(403, 'API key required when making requests to other microservices');
             }
 

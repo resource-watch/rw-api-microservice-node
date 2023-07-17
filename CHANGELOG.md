@@ -1,3 +1,8 @@
+# v5.0.0-rc4
+
+- Fix bug in API Key validation logic when making calls to `requestToMicroservice`.
+
+
 # v5.0.0-rc3
 
 - Modify `requireAPIKey` logic.
