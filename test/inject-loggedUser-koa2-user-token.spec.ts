@@ -13,8 +13,8 @@ import type Request from "superagent";
 import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
 import { mockValidateRequestWithUserToken } from "./utils/mocks";
-import { mockCloudWatchLogRequestsSequence } from "../src/test-mocks";
 import { BootstrapArguments } from "../src/types";
+import { mockCloudWatchLogRequest, mockCloudWatchSetupRequestsSequence } from "../src/test-mocks";
 
 chai.should();
 
@@ -40,7 +40,8 @@ describe('Injecting logged user data - Koa v2.x with user token', () => {
         });
 
         mockValidateRequestWithUserToken('https://controltower.dev');
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             user: constants.USER,
         });
 
@@ -93,7 +94,8 @@ describe('Injecting logged user data - Koa v2.x with user token', () => {
         });
 
         mockValidateRequestWithUserToken('https://controltower.dev');
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             user: constants.USER,
         });
 
@@ -147,7 +149,8 @@ describe('Injecting logged user data - Koa v2.x with user token', () => {
         });
 
         mockValidateRequestWithUserToken('https://controltower.dev');
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             user: constants.USER,
         });
 
@@ -204,7 +207,8 @@ describe('Injecting logged user data - Koa v2.x with user token', () => {
         });
 
         mockValidateRequestWithUserToken('https://controltower.dev');
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             user: constants.USER,
         });
 
@@ -261,7 +265,8 @@ describe('Injecting logged user data - Koa v2.x with user token', () => {
         });
 
         mockValidateRequestWithUserToken('https://controltower.dev');
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             user: constants.USER,
         });
 

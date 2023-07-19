@@ -15,7 +15,10 @@ import type Request from "superagent";
 import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
 import { mockValidateRequestWithApiKeyAndUserToken } from "./utils/mocks";
-import { mockCloudWatchLogRequestsSequence } from "../src/test-mocks";
+import {
+    mockCloudWatchLogRequest,
+    mockCloudWatchSetupRequestsSequence
+} from "../src/test-mocks";
 import { BootstrapArguments } from "../src/types";
 
 chai.should();
@@ -43,7 +46,8 @@ describe('Injecting logged user data - Koa v1.x with API key and user token', ()
         });
 
         mockValidateRequestWithApiKeyAndUserToken({ gatewayUrl: 'https://controltower.dev' });
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             application: constants.APPLICATION,
             user: constants.USER,
         });
@@ -98,7 +102,8 @@ describe('Injecting logged user data - Koa v1.x with API key and user token', ()
         });
 
         mockValidateRequestWithApiKeyAndUserToken({ gatewayUrl: 'https://controltower.dev' });
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             application: constants.APPLICATION,
             user: constants.USER,
         });
@@ -154,7 +159,8 @@ describe('Injecting logged user data - Koa v1.x with API key and user token', ()
         });
 
         mockValidateRequestWithApiKeyAndUserToken({ gatewayUrl: 'https://controltower.dev' });
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             application: constants.APPLICATION,
             user: constants.USER,
         });
@@ -213,7 +219,8 @@ describe('Injecting logged user data - Koa v1.x with API key and user token', ()
         });
 
         mockValidateRequestWithApiKeyAndUserToken({ gatewayUrl: 'https://controltower.dev' });
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             application: constants.APPLICATION,
             user: constants.USER,
         });
@@ -272,7 +279,8 @@ describe('Injecting logged user data - Koa v1.x with API key and user token', ()
         });
 
         mockValidateRequestWithApiKeyAndUserToken({ gatewayUrl: 'https://controltower.dev' });
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             application: constants.APPLICATION,
             user: constants.USER,
         });

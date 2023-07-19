@@ -181,27 +181,20 @@ class Microservice implements IRWAPIMicroservice {
         }
     }
 
-    private async injectRequestValidationData(logger: Logger, requestValidationData: RequestValidationResponse, request: Request): Promise<void> {
+    private async injectRequestValidationData(logger: Logger, requestValidationData: RequestValidationResponse, ctx: Context): Promise<void> {
         logger.debug('[injectRequestValidationData] Obtaining loggedUser for microserviceToken');
+        if (requestValidationData.application) {
+            ctx.state.requestApplication = requestValidationData.application
+        }
+        if (['GET', 'DELETE'].includes(ctx.request.method.toUpperCase())) {
+            if (requestValidationData.user) {
+                ctx.request.query = { ...ctx.request.query, loggedUser: JSON.stringify(requestValidationData.user) };
+            }
 
-        if (['GET', 'DELETE'].includes(request.method.toUpperCase())) {
-            if (requestValidationData.user) {
-                request.query = { ...request.query, loggedUser: JSON.stringify(requestValidationData.user) };
-            }
-            if (requestValidationData.application) {
-                request.query = {
-                    ...request.query,
-                    requestApplication: JSON.stringify(requestValidationData.application)
-                };
-            }
-        } else if (['POST', 'PATCH', 'PUT'].includes(request.method.toUpperCase())) {
+        } else if (['POST', 'PATCH', 'PUT'].includes(ctx.request.method.toUpperCase())) {
             if (requestValidationData.user) {
                 // @ts-ignore
-                request.body.loggedUser = requestValidationData.user;
-            }
-            if (requestValidationData.application) {
-                // @ts-ignore
-                request.body.requestApplication = requestValidationData.application;
+                ctx.request.body.loggedUser = requestValidationData.user;
             }
         }
     }
@@ -211,7 +204,6 @@ class Microservice implements IRWAPIMicroservice {
 
         const logQuery: Record<string, any> = { ...request.query };
         delete logQuery.loggedUser;
-        delete logQuery.requestApplication;
         const logContent: Record<string, any> = {
             request: {
                 method: request.method,
@@ -286,7 +278,7 @@ class Microservice implements IRWAPIMicroservice {
             if (!this.shouldSkipAPIKeyValidation(ctx)) {
                 try {
                     const requestValidationData: RequestValidationResponse = await this.getRequestValidationData(logger, gatewayURL, ctx.request);
-                    await this.injectRequestValidationData(logger, requestValidationData, ctx.request);
+                    await this.injectRequestValidationData(logger, requestValidationData, ctx);
                     if (this.options.awsCloudWatchLoggingEnabled) {
                         await this.logRequestToCloudWatch(logger, ctx.request, requestValidationData);
                     }

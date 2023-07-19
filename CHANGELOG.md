@@ -1,3 +1,7 @@
+# v5.0.0-rc6
+
+- Move `requestApplication` into context state.
+
 # v5.0.0-rc5
 
 - Improvements to AWS CloudWatch logging mocks.

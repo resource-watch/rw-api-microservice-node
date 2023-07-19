@@ -13,8 +13,8 @@ import type Request from "superagent";
 import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
 import { mockValidateRequestWithUserToken } from "./utils/mocks";
-import { mockCloudWatchLogRequestsSequence } from "../src/test-mocks";
 import { BootstrapArguments } from "../src/types";
+import { mockCloudWatchLogRequest, mockCloudWatchSetupRequestsSequence } from "../src/test-mocks";
 
 chai.should();
 chai.use(ChaiHttp);
@@ -41,7 +41,8 @@ describe('Injecting logged user data - Koa v2.x with MICROSERVICE token', () => 
         });
 
         mockValidateRequestWithUserToken('https://controltower.dev', constants.MICROSERVICE, constants.MICROSERVICE_TOKEN);
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             user: constants.MICROSERVICE,
         });
 
@@ -94,7 +95,8 @@ describe('Injecting logged user data - Koa v2.x with MICROSERVICE token', () => 
         });
 
         mockValidateRequestWithUserToken('https://controltower.dev', constants.MICROSERVICE, constants.MICROSERVICE_TOKEN);
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             user: constants.MICROSERVICE,
         });
 
@@ -148,7 +150,8 @@ describe('Injecting logged user data - Koa v2.x with MICROSERVICE token', () => 
         });
 
         mockValidateRequestWithUserToken('https://controltower.dev', constants.MICROSERVICE, constants.MICROSERVICE_TOKEN);
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             user: constants.MICROSERVICE,
         });
 
@@ -205,7 +208,8 @@ describe('Injecting logged user data - Koa v2.x with MICROSERVICE token', () => 
         });
 
         mockValidateRequestWithUserToken('https://controltower.dev', constants.MICROSERVICE, constants.MICROSERVICE_TOKEN);
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             user: constants.MICROSERVICE,
         });
 
@@ -262,7 +266,8 @@ describe('Injecting logged user data - Koa v2.x with MICROSERVICE token', () => 
         });
 
         mockValidateRequestWithUserToken('https://controltower.dev', constants.MICROSERVICE, constants.MICROSERVICE_TOKEN);
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             user: constants.MICROSERVICE,
         });
 

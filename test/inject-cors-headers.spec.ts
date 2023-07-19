@@ -1,7 +1,7 @@
 import Koa2 from "koa";
 import nock from 'nock';
 import chai from 'chai';
-import { BootstrapArguments, RWAPIMicroservice } from 'main';
+import { RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
 import type { LogLevel } from "bunyan";
 import bunyan from "bunyan";
@@ -12,7 +12,8 @@ import type { Server } from "http";
 import type Request from "superagent";
 import ChaiHttp from 'chai-http';
 import constants from './utils/test.constants';
-import { mockCloudWatchLogRequestsSequence } from "../src/test-mocks";
+import { mockCloudWatchLogRequest, mockCloudWatchSetupRequestsSequence } from "../src/test-mocks";
+import { BootstrapArguments } from "../src/types";
 
 chai.should();
 chai.use(ChaiHttp);
@@ -29,7 +30,8 @@ describe('Adding CORS headers', () => {
     it('GET request with a Origin header should return a response with CORS headers present (happy case)', async () => {
         const app: Koa = new Koa2();
 
-        mockCloudWatchLogRequestsSequence();
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest();
 
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
@@ -90,7 +92,8 @@ describe('Adding CORS headers', () => {
     it('DELETE request with a Origin header should return a response with CORS headers present (happy case)', async () => {
         const app: Koa = new Koa2();
 
-        mockCloudWatchLogRequestsSequence();
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest();
 
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
@@ -152,7 +155,8 @@ describe('Adding CORS headers', () => {
     it('POST request with a Origin header should return a response with CORS headers present (happy case)', async () => {
         const app: Koa = new Koa2();
 
-        mockCloudWatchLogRequestsSequence();
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest();
 
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
@@ -216,7 +220,8 @@ describe('Adding CORS headers', () => {
     it('PATCH request with a Origin header should return a response with CORS headers present (happy case)', async () => {
         const app: Koa = new Koa2();
 
-        mockCloudWatchLogRequestsSequence();
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest();
 
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',
@@ -280,7 +285,8 @@ describe('Adding CORS headers', () => {
     it('PUT request with a Origin header should return a response with CORS headers present (happy case)', async () => {
         const app: Koa = new Koa2();
 
-        mockCloudWatchLogRequestsSequence();
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest();
 
         const logger: Logger = bunyan.createLogger({
             name: 'logger name',

@@ -15,7 +15,10 @@ import type Request from "superagent";
 import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
 import { mockValidateRequestWithApiKeyAndUserToken, mockValidateRequestWithUserToken } from "./utils/mocks";
-import { mockCloudWatchLogRequestsSequence } from "../src/test-mocks";
+import {
+    mockCloudWatchLogRequest,
+    mockCloudWatchSetupRequestsSequence
+} from "../src/test-mocks";
 import { BootstrapArguments } from "../src/types";
 
 chai.should();
@@ -47,7 +50,8 @@ describe('Injecting logged user data - Koa v1.x with API key and MICROSERVICE to
             user: constants.MICROSERVICE,
             token: constants.MICROSERVICE_TOKEN
         });
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             user: constants.MICROSERVICE,
             application: constants.APPLICATION
         });
@@ -105,7 +109,8 @@ describe('Injecting logged user data - Koa v1.x with API key and MICROSERVICE to
             user: constants.MICROSERVICE,
             token: constants.MICROSERVICE_TOKEN
         });
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             user: constants.MICROSERVICE,
             application: constants.APPLICATION
         });
@@ -164,7 +169,8 @@ describe('Injecting logged user data - Koa v1.x with API key and MICROSERVICE to
             user: constants.MICROSERVICE,
             token: constants.MICROSERVICE_TOKEN
         });
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             user: constants.MICROSERVICE,
             application: constants.APPLICATION
         });
@@ -226,7 +232,8 @@ describe('Injecting logged user data - Koa v1.x with API key and MICROSERVICE to
             user: constants.MICROSERVICE,
             token: constants.MICROSERVICE_TOKEN
         });
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             user: constants.MICROSERVICE,
             application: constants.APPLICATION
         });
@@ -288,7 +295,8 @@ describe('Injecting logged user data - Koa v1.x with API key and MICROSERVICE to
             user: constants.MICROSERVICE,
             token: constants.MICROSERVICE_TOKEN
         });
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             user: constants.MICROSERVICE,
             application: constants.APPLICATION
         });

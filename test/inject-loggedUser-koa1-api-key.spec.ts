@@ -17,8 +17,8 @@ import ChaiHttp from 'chai-http';
 import {
     mockValidateRequestWithApiKey
 } from "./utils/mocks";
-import { mockCloudWatchLogRequestsSequence } from "../src/test-mocks";
 import { BootstrapArguments } from "../src/types";
+import { mockCloudWatchLogRequest, mockCloudWatchSetupRequestsSequence } from "../src/test-mocks";
 
 chai.should();
 chai.use(ChaiHttp);
@@ -45,7 +45,8 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
         });
 
         mockValidateRequestWithApiKey('https://controltower.dev');
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             application: constants.APPLICATION,
         });
 
@@ -62,7 +63,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
         const testRouter: Router = new Router();
         testRouter.get('/test', (ctx: Koa.Context) => {
             ctx.request.should.not.have.header('Authorization');
-            expect(ctx.request.query).to.have.property('requestApplication').and.equal(JSON.stringify(constants.APPLICATION));
+            expect(ctx.state).to.have.property('requestApplication').and.deep.equal(constants.APPLICATION);
             ctx.body = 'ok';
         });
 
@@ -98,7 +99,8 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
         });
 
         mockValidateRequestWithApiKey('https://controltower.dev');
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             application: constants.APPLICATION,
         });
 
@@ -115,7 +117,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
         const testRouter: Router = new Router();
         testRouter.delete('/test', (ctx: Koa.Context) => {
             ctx.request.should.not.have.header('Authorization');
-            expect(ctx.request.query).to.have.property('requestApplication').and.equal(JSON.stringify(constants.APPLICATION));
+            expect(ctx.state).to.have.property('requestApplication').and.deep.equal(constants.APPLICATION);
             ctx.body = 'ok';
         });
 
@@ -152,7 +154,8 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
         });
 
         mockValidateRequestWithApiKey('https://controltower.dev');
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             application: constants.APPLICATION,
         });
 
@@ -170,7 +173,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
         testRouter.post('/test', (ctx: Koa.Context) => {
             ctx.request.should.not.have.header('Authorization');
             ctx.request.body.should.have.property('data').and.deep.equal('test');
-            ctx.request.body.should.have.property('requestApplication').and.deep.equal(constants.APPLICATION);
+            expect(ctx.state).to.have.property('requestApplication').and.deep.equal(constants.APPLICATION);
             ctx.body = 'ok';
         });
 
@@ -209,7 +212,8 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
         });
 
         mockValidateRequestWithApiKey('https://controltower.dev');
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             application: constants.APPLICATION,
         });
 
@@ -227,7 +231,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
         testRouter.patch('/test', (ctx: Koa.Context) => {
             ctx.request.should.not.have.header('Authorization');
             ctx.request.body.should.have.property('data').and.deep.equal('test');
-            ctx.request.body.should.have.property('requestApplication').and.deep.equal(constants.APPLICATION);
+            expect(ctx.state).to.have.property('requestApplication').and.deep.equal(constants.APPLICATION);
             ctx.body = 'ok';
         });
 
@@ -266,7 +270,8 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
         });
 
         mockValidateRequestWithApiKey('https://controltower.dev');
-        mockCloudWatchLogRequestsSequence({
+        mockCloudWatchSetupRequestsSequence();
+        mockCloudWatchLogRequest({
             application: constants.APPLICATION,
         });
 
@@ -284,7 +289,7 @@ describe('Injecting logged user data - Koa v1.x with API key', () => {
         testRouter.put('/test', (ctx: Koa.Context) => {
             ctx.request.should.not.have.header('Authorization');
             ctx.request.body.should.have.property('data').and.deep.equal('test');
-            ctx.request.body.should.have.property('requestApplication').and.deep.equal(constants.APPLICATION);
+            expect(ctx.state).to.have.property('requestApplication').and.deep.equal(constants.APPLICATION);
             ctx.body = 'ok';
         });
 
