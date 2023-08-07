@@ -2,7 +2,6 @@ import Koa2 from "koa";
 import nock from 'nock';
 import chai from 'chai';
 import { expect } from 'chai';
-import { RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
 import type { LogLevel } from "bunyan";
 import bunyan from "bunyan";
@@ -14,6 +13,7 @@ import type Request from "superagent";
 import constants from './utils/test.constants';
 import ChaiHttp from 'chai-http';
 import { BootstrapArguments } from "../src/types";
+import { RWAPIMicroservice } from "../src/main";
 
 chai.should();
 

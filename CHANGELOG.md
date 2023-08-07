@@ -1,3 +1,13 @@
+# v5.1.0-rc2
+
+- Fix issue with AWS SDK library update.
+
+# v5.1.0-rc1
+
+- Bump nodejs version requirement to >=18
+- Update AWS SDK library to v3
+- Update dependencies
+
 # v5.0.0-rc7
 
 - Replace whitespaces in log group and stream names.

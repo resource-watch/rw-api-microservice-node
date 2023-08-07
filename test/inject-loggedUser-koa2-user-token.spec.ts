@@ -1,7 +1,6 @@
 import Koa2 from "koa";
 import nock from 'nock';
 import chai, { expect } from 'chai';
-import { RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
 import type { LogLevel } from "bunyan";
 import bunyan from "bunyan";
@@ -15,6 +14,7 @@ import ChaiHttp from 'chai-http';
 import { mockValidateRequestWithUserToken } from "./utils/mocks";
 import { BootstrapArguments } from "../src/types";
 import { mockCloudWatchLogRequest, mockCloudWatchSetupRequestsSequence } from "../src/test-mocks";
+import { RWAPIMicroservice } from "../src/main";
 
 chai.should();
 
@@ -283,7 +283,7 @@ describe('Injecting logged user data - Koa v2.x with user token', () => {
         const testRouter: Router = new Router();
         testRouter.put('/test', (ctx: Koa.Context) => {
             ctx.request.should.have.header('Authorization', `Bearer ${constants.USER_TOKEN}`);
-            ctx.request.body.should.have.property('data').and.deep.equal('test');
+            (ctx.request.body as Request).should.have.property('data').and.deep.equal('test');
             ctx.request.body.should.have.property('loggedUser').and.deep.equal(constants.USER);
             ctx.body = 'ok';
         });

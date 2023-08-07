@@ -1,5 +1,12 @@
-import AWS, { CloudWatchLogs } from "aws-sdk";
+import {
+    CloudWatchLogs,
+    CreateLogGroupCommand,
+    CreateLogStreamCommand,
+    PutLogEventsCommand,
+    PutLogEventsResponse
+} from "@aws-sdk/client-cloudwatch-logs";
 import Logger from "bunyan";
+import { CloudWatchLogsClientConfig } from "@aws-sdk/client-cloudwatch-logs/dist-types/CloudWatchLogsClient";
 
 
 class CloudWatchService {
@@ -8,21 +15,24 @@ class CloudWatchService {
 
     private cloudWatchService: CloudWatchLogs;
     private logger: Logger;
-    private logGroupName: string;
-    private logStreamName: string;
+    private readonly logGroupName: string;
+    private readonly logStreamName: string;
 
     private constructor(logger: Logger, region: string, logGroupName: string, logStreamName: string) {
         this.logger = logger;
-        this.cloudWatchService = new AWS.CloudWatchLogs({ region });
         this.logGroupName = logGroupName;
         this.logStreamName = logStreamName;
 
+        const args: CloudWatchLogsClientConfig = { region };
+
         if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
-            AWS.config.update({
+            args.credentials = {
                 accessKeyId: process.env.AWS_ACCESS_KEY_ID,
                 secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-            });
+            }
         }
+
+        this.cloudWatchService = new CloudWatchLogs(args);
 
         this.logInitPromise = new Promise((resolve, reject) => {
             this.createLogGroup(this.logGroupName).catch(reject).then(() => {
@@ -51,15 +61,16 @@ class CloudWatchService {
     }
 
     async createLogGroup(logGroupName: string): Promise<void> {
-        const createLogGroupParams: AWS.CloudWatchLogs.CreateLogGroupRequest = {
-            logGroupName
-        };
+        const createLogGroupCommand: CreateLogGroupCommand =
+            new CreateLogGroupCommand({ logGroupName });
+
 
         try {
-            await this.cloudWatchService.createLogGroup(createLogGroupParams).promise();
+            await this.cloudWatchService.send(createLogGroupCommand);
+
             this.logger.debug(`Log group '${logGroupName}' created successfully.`);
         } catch (createLogGroupError) {
-            if (createLogGroupError.code === 'ResourceAlreadyExistsException') {
+            if (createLogGroupError.name === 'ResourceAlreadyExistsException') {
                 this.logger.debug(`Log group '${logGroupName}' already exists.`);
                 return;
             }
@@ -69,16 +80,16 @@ class CloudWatchService {
     }
 
     async createLogStream(logGroupName: string, logStreamName: string): Promise<void> {
-        const createLogStreamParams: AWS.CloudWatchLogs.CreateLogStreamRequest = {
+        const createLogStreamCommand: CreateLogStreamCommand = new CreateLogStreamCommand({
             logGroupName,
             logStreamName
-        };
+        });
 
         try {
-            await this.cloudWatchService.createLogStream(createLogStreamParams).promise();
+            await this.cloudWatchService.send(createLogStreamCommand);
             this.logger.debug(`Log stream '${logStreamName}' created successfully.`);
         } catch (createLogStreamError) {
-            if (createLogStreamError.code === 'ResourceAlreadyExistsException') {
+            if (createLogStreamError.name === 'ResourceAlreadyExistsException') {
                 this.logger.debug(`Log stream '${logStreamName}' already exists.`);
                 return;
             }
@@ -88,7 +99,7 @@ class CloudWatchService {
     }
 
     async logToCloudWatch(logMessage: string): Promise<void> {
-        const putLogEventsParams: AWS.CloudWatchLogs.PutLogEventsRequest = {
+        const putLogEventsCommand: PutLogEventsCommand = new PutLogEventsCommand({
             logGroupName: this.logGroupName,
             logStreamName: this.logStreamName,
             logEvents: [
@@ -97,10 +108,10 @@ class CloudWatchService {
                     timestamp: new Date().getTime()
                 }
             ]
-        };
+        })
 
         try {
-            const putLogEventsResponse: AWS.CloudWatchLogs.PutLogEventsResponse = await this.cloudWatchService.putLogEvents(putLogEventsParams).promise();
+            const putLogEventsResponse: PutLogEventsResponse = await this.cloudWatchService.send(putLogEventsCommand);
             this.logger.debug('Successfully logged to CloudWatch:', putLogEventsResponse);
         } catch (putLogEventsError) {
             this.logger.error('Error logging to CloudWatch:', putLogEventsError);

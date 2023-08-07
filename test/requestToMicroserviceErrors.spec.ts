@@ -1,9 +1,10 @@
 import nock from 'nock';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { RequestToMicroserviceOptions, RWAPIMicroservice } from "main";
 import request from "request";
 import { ResponseError } from "../src/errors/response.error";
+import { RWAPIMicroservice } from "../src/main";
+import { RequestToMicroserviceOptions } from "../src/types";
 
 chai.should();
 chai.use(chaiAsPromised);
