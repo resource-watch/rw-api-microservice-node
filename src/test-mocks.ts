@@ -48,7 +48,7 @@ export const mockValidateRequest = ({
         }
     })
         .post('/v1/request/validate', body)
-        .reply(200, { user, application });
+        .reply(200, { user: { data: user }, application });
 };
 
 
@@ -153,12 +153,12 @@ const mockCloudWatchCreateLogLineRequest: ({
 }
 
 export const mockCloudWatchLogRequest: ({
-                                                     application,
-                                                     user,
-                                                     awsRegion,
-                                                     logGroupName,
-                                                     logStreamName
-                                                 }?: {
+                                            application,
+                                            user,
+                                            awsRegion,
+                                            logGroupName,
+                                            logStreamName
+                                        }?: {
     application?: ApplicationValidationResponse;
     user?: LoggedUserValidationResponse,
     logGroupName?: string,
@@ -175,10 +175,10 @@ export const mockCloudWatchLogRequest: ({
 }
 
 export const mockCloudWatchSetupRequestsSequence: ({
-                                                     awsRegion,
-                                                     logGroupName,
-                                                     logStreamName
-                                                 }?: {
+                                                       awsRegion,
+                                                       logGroupName,
+                                                       logStreamName
+                                                   }?: {
     logGroupName?: string,
     logStreamName?: string,
     awsRegion?: string

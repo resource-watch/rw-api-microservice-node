@@ -1,7 +1,6 @@
 import Koa2 from "koa";
 import nock from 'nock';
 import chai, { expect } from 'chai';
-import { RWAPIMicroservice } from 'main';
 import type Logger from "bunyan";
 import type { LogLevel } from "bunyan";
 import bunyan from "bunyan";
@@ -15,6 +14,7 @@ import ChaiHttp from 'chai-http';
 import koaQs from 'koa-qs';
 import { mockValidateRequestWithUserToken } from "./utils/mocks";
 import { BootstrapArguments } from "../src/types";
+import { RWAPIMicroservice } from "../src/main";
 
 chai.should();
 

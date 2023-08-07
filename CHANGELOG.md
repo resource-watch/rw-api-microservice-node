@@ -1,3 +1,9 @@
+# v5.0.0-rc7
+
+- Replace whitespaces in log group and stream names.
+- Fix issue in loading user data
+- Allow microservice requests to be made without an api key
+
 # v5.0.0-rc6
 
 - Move `requestApplication` into context state.
@@ -9,7 +15,6 @@
 # v5.0.0-rc4
 
 - Fix bug in API Key validation logic when making calls to `requestToMicroservice`.
-
 
 # v5.0.0-rc3
 

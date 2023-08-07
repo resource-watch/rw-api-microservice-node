@@ -36,13 +36,13 @@ class CloudWatchService {
             CloudWatchService.instance = new CloudWatchService(logger, region, logGroupName, logStreamName);
 
             CloudWatchService.instance.logInitPromise
-                .catch((error) => {
-                    logger.error(`CloudWatchService logging initialization failed: ${error.toString()}`);
-                    throw error;
-                })
                 .then(() => {
                     logger.debug('CloudWatchService initialized.');
                     return CloudWatchService.instance;
+                })
+                .catch((error) => {
+                    logger.error(`CloudWatchService logging initialization failed: ${error.toString()}`);
+                    throw error;
                 });
 
         }

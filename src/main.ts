@@ -55,7 +55,8 @@ class Microservice implements IRWAPIMicroservice {
         const convertedOptions: ConfigurationOptions = {
             ...options,
             awsCloudWatchLoggingEnabled: ('awsCloudWatchLoggingEnabled' in options) ? (options.awsCloudWatchLoggingEnabled === true || options.awsCloudWatchLoggingEnabled === "true") : true,
-            awsCloudWatchLogGroupName: options.awsCloudWatchLogGroupName || 'api-keys-usage',
+            awsCloudWatchLogGroupName: (options.awsCloudWatchLogGroupName || 'api-keys-usage').replace(/ /g, "_"),
+            awsCloudWatchLogStreamName: options.awsCloudWatchLogStreamName.replace(/ /g, "_"),
             fastlyEnabled: (options.fastlyEnabled === true || options.fastlyEnabled === "true"),
             requireAPIKey: !(options.requireAPIKey === false || options.requireAPIKey === "false"),
             skipAPIKeyRequirementEndpoints: (options.skipAPIKeyRequirementEndpoints || []).concat(
@@ -133,12 +134,9 @@ class Microservice implements IRWAPIMicroservice {
     }
 
     private async getRequestValidationData(logger: Logger, baseURL: string, request: Request): Promise<RequestValidationResponse> {
-        logger.debug('[getLoggedUser] Obtaining loggedUser for microserviceToken');
+        logger.debug('[getLoggedUser] Validating request');
         if (!request.header.authorization) {
             logger.debug('[getLoggedUser] No authorization header found');
-        }
-        if (!request.header["x-api-key"] && this.options.requireAPIKey) {
-            throw new ApiKeyError(403, 'Required API key not found');
         }
 
         try {
@@ -166,8 +164,17 @@ class Microservice implements IRWAPIMicroservice {
 
                 logger.debug('[getLoggedUser] Retrieved microserviceToken data, response status:', response.status);
 
-                return response.data as RequestValidationResponse;
+                const validationResponse: RequestValidationResponse = response.data as RequestValidationResponse;
+
+                if (this.options.requireAPIKey && !validationResponse.application && validationResponse.user?.data?.id !== 'microservice') {
+                    throw new ApiKeyError(403, 'Required API key not found');
+                }
+
+                return validationResponse;
             } else {
+                if (this.options.requireAPIKey) {
+                    throw new ApiKeyError(403, 'Required API key not found');
+                }
                 return {};
             }
 
@@ -187,14 +194,14 @@ class Microservice implements IRWAPIMicroservice {
             ctx.state.requestApplication = requestValidationData.application
         }
         if (['GET', 'DELETE'].includes(ctx.request.method.toUpperCase())) {
-            if (requestValidationData.user) {
-                ctx.request.query = { ...ctx.request.query, loggedUser: JSON.stringify(requestValidationData.user) };
+            if (requestValidationData.user && requestValidationData.user.data) {
+                ctx.request.query = { ...ctx.request.query, loggedUser: JSON.stringify(requestValidationData.user.data) };
             }
 
         } else if (['POST', 'PATCH', 'PUT'].includes(ctx.request.method.toUpperCase())) {
-            if (requestValidationData.user) {
+            if (requestValidationData.user && requestValidationData.user.data) {
                 // @ts-ignore
-                ctx.request.body.loggedUser = requestValidationData.user;
+                ctx.request.body.loggedUser = requestValidationData.user.data;
             }
         }
     }
@@ -211,17 +218,17 @@ class Microservice implements IRWAPIMicroservice {
                 query: logQuery,
             }
         };
-        if (requestValidationData.user) {
-            if (requestValidationData.user.id === 'microservice') {
+        if (requestValidationData.user && requestValidationData.user.data) {
+            if (requestValidationData.user.data.id === 'microservice') {
                 logContent.loggedUser = {
-                    id: (requestValidationData.user as MicroserviceValidationResponse).id,
+                    id: (requestValidationData.user.data as MicroserviceValidationResponse).id,
                 };
             } else {
                 logContent.loggedUser = {
-                    id: (requestValidationData.user as UserValidationResponse).id,
-                    name: (requestValidationData.user as UserValidationResponse).name,
-                    role: (requestValidationData.user as UserValidationResponse).role,
-                    provider: (requestValidationData.user as UserValidationResponse).provider
+                    id: (requestValidationData.user.data as UserValidationResponse).id,
+                    name: (requestValidationData.user.data as UserValidationResponse).name,
+                    role: (requestValidationData.user.data as UserValidationResponse).role,
+                    provider: (requestValidationData.user.data as UserValidationResponse).provider
                 };
             }
         } else {

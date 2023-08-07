@@ -79,6 +79,6 @@ export type ApplicationValidationResponse = {
 }
 
 export interface RequestValidationResponse {
-    user?: LoggedUserValidationResponse,
+    user?: { data: LoggedUserValidationResponse },
     application?: ApplicationValidationResponse
 }
