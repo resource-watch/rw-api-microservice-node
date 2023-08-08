@@ -1,6 +1,6 @@
 {
   "name": "rw-api-microservice-node",
-  "version": "5.1.0-rc.2",
+  "version": "5.1.0",
   "description": "Integration library for the RW API microservice",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
@@ -51,9 +51,11 @@
   },
   "homepage": "https://github.com/resource-watch/rw-api-microservice-node",
   "dependencies": {
+    "@aws-sdk/client-cloudwatch-logs": "^3.385.0",
     "@koa/cors": "^4.0.0",
     "@tiagojsag/fastly-promises": "^1.0.1",
-    "@aws-sdk/client-cloudwatch-logs": "^3.385.0",
+    "@types/koa": "^2.13.8",
+    "@types/request": "^2.48.8",
     "axios": "^1.4.0",
     "koa-compose": "^4.1.0"
   },
@@ -62,7 +64,6 @@
     "@types/chai": "^4.3.5",
     "@types/chai-as-promised": "^7.1.5",
     "@types/debug": "^4.1.8",
-    "@types/koa": "^2.13.8",
     "@types/koa-convert": "^1.2.4",
     "@types/koa-qs": "^2.0.0",
     "@types/koa-router": "^7.4.4",

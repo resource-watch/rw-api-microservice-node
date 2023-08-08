@@ -1,3 +1,11 @@
+# v5.1.0
+
+- Add TypeScript dependencies
+
+# v5.1.0-rc4
+
+- Add missing dev dependencies
+
 # v5.1.0-rc2
 
 - Fix issue with AWS SDK library update.
