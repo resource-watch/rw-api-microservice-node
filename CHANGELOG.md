@@ -1,3 +1,7 @@
+# v5.1.2
+
+- Allow `requestToMicroservice` without api key.
+
 # v5.1.1
 
 - Minor improvement to testing helper function.
