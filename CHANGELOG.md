@@ -1,3 +1,7 @@
+# v5.1.3
+
+- Improve test helper mocks to account for parallel mocks on the same domain and path.
+
 # v5.1.2
 
 - Allow `requestToMicroservice` without api key.

@@ -87,63 +87,67 @@ const mockCloudWatchCreateLogLineRequest: ({
 }) => void = ({ application, user, awsRegion, logGroupName, logStreamName }): void => {
     nock(`https://logs.${awsRegion}.amazonaws.com:443`)
         .post('/', (body) => {
-                expect(body).to.have.property('logGroupName').and.equal(logGroupName);
-                expect(body).to.have.property('logStreamName').and.equal(logStreamName.replace(/ /g, '_'));
-                expect(body).to.have.property('logEvents').and.be.an('array').and.lengthOf(1);
-                expect(body.logEvents[0]).to.have.property('message').and.be.a('string');
-                expect(body.logEvents[0]).to.have.property('timestamp').and.be.a('number');
+                try {
+                    expect(body).to.have.property('logGroupName').and.equal(logGroupName);
+                    expect(body).to.have.property('logStreamName').and.equal(logStreamName.replace(/ /g, '_'));
+                    expect(body).to.have.property('logEvents').and.be.an('array').and.lengthOf(1);
+                    expect(body.logEvents[0]).to.have.property('message').and.be.a('string');
+                    expect(body.logEvents[0]).to.have.property('timestamp').and.be.a('number');
 
-                const logLine = JSON.parse(body.logEvents[0].message);
+                    const logLine = JSON.parse(body.logEvents[0].message);
 
-                expect(logLine).to.have.property('request');
-                const requestLog = logLine.request;
-                expect(requestLog).to.have.property('method').and.be.a('string').and.not.be.empty;
-                expect(requestLog).to.have.property('path').and.be.a('string').and.not.be.empty;
-                expect(requestLog).to.have.property('query').and.be.an('object');
+                    expect(logLine).to.have.property('request');
+                    const requestLog = logLine.request;
+                    expect(requestLog).to.have.property('method').and.be.a('string').and.not.be.empty;
+                    expect(requestLog).to.have.property('path').and.be.a('string').and.not.be.empty;
+                    expect(requestLog).to.have.property('query').and.be.an('object');
 
 
-                expect(logLine).to.have.property('requestApplication');
-                const requestApplication = logLine.requestApplication;
+                    expect(logLine).to.have.property('requestApplication');
+                    const requestApplication = logLine.requestApplication;
 
-                if (application) {
-                    expect(requestApplication).to.deep.equal({
-                        id: application.data.id,
-                        apiKeyValue: application.data.attributes.apiKeyValue,
-                        name: application.data.attributes.name,
-                        organization: application.data.attributes.organization,
-                        user: application.data.attributes.user
-                    });
-                } else {
-                    expect(requestApplication).to.deep.equal({
-                        id: 'anonymous',
-                        name: 'anonymous',
-                        organization: null,
-                        user: null,
-                        apiKeyValue: null,
-                    });
-                }
-
-                expect(logLine).to.have.property('loggedUser');
-                if (user) {
-                    if (user.id === 'microservice') {
-                        expect(logLine.loggedUser).to.deep.equal({
-                            id: (user as MicroserviceValidationResponse).id,
+                    if (application) {
+                        expect(requestApplication).to.deep.equal({
+                            id: application.data.id,
+                            apiKeyValue: application.data.attributes.apiKeyValue,
+                            name: application.data.attributes.name,
+                            organization: application.data.attributes.organization,
+                            user: application.data.attributes.user
                         });
                     } else {
-                        expect(logLine.loggedUser).to.deep.equal({
-                            id: (user as UserValidationResponse).id,
-                            name: (user as UserValidationResponse).name,
-                            role: (user as UserValidationResponse).role,
-                            provider: (user as UserValidationResponse).provider
+                        expect(requestApplication).to.deep.equal({
+                            id: 'anonymous',
+                            name: 'anonymous',
+                            organization: null,
+                            user: null,
+                            apiKeyValue: null,
                         });
                     }
-                } else {
-                    expect(logLine.loggedUser).to.deep.equal({
-                        id: 'anonymous',
-                        name: 'anonymous',
-                        role: 'anonymous',
-                        provider: 'anonymous'
-                    });
+
+                    expect(logLine).to.have.property('loggedUser');
+                    if (user) {
+                        if (user.id === 'microservice') {
+                            expect(logLine.loggedUser).to.deep.equal({
+                                id: (user as MicroserviceValidationResponse).id,
+                            });
+                        } else {
+                            expect(logLine.loggedUser).to.deep.equal({
+                                id: (user as UserValidationResponse).id,
+                                name: (user as UserValidationResponse).name,
+                                role: (user as UserValidationResponse).role,
+                                provider: (user as UserValidationResponse).provider
+                            });
+                        }
+                    } else {
+                        expect(logLine.loggedUser).to.deep.equal({
+                            id: 'anonymous',
+                            name: 'anonymous',
+                            role: 'anonymous',
+                            provider: 'anonymous'
+                        });
+                    }
+                } catch (e) {
+                    return false
                 }
 
                 return true;
