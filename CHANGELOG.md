@@ -1,3 +1,7 @@
+# v5.1.1
+
+- Minor improvement to testing helper function.
+
 # v5.1.0
 
 - Add TypeScript dependencies

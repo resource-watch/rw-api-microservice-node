@@ -88,7 +88,7 @@ const mockCloudWatchCreateLogLineRequest: ({
     nock(`https://logs.${awsRegion}.amazonaws.com:443`)
         .post('/', (body) => {
                 expect(body).to.have.property('logGroupName').and.equal(logGroupName);
-                expect(body).to.have.property('logStreamName').and.equal(logStreamName);
+                expect(body).to.have.property('logStreamName').and.equal(logStreamName.replace(/ /g, '_'));
                 expect(body).to.have.property('logEvents').and.be.an('array').and.lengthOf(1);
                 expect(body.logEvents[0]).to.have.property('message').and.be.a('string');
                 expect(body.logEvents[0]).to.have.property('timestamp').and.be.a('number');
